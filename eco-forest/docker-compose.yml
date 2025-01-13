@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./Backend
+    ports:
+      - "5085:80"  # Map backend's port (5085) to container's port (80)
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+
+  frontend:
+    build:
+      context: ./ClientApp
+    ports:
+      - "4200:80"  # Frontend will run on port 4200
