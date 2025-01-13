@@ -1,12 +1,5 @@
 /Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/appsettings.Development.json
 /Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/appsettings.json
-/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/ClientApp/angular.json
-/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/ClientApp/dist/prerendered-routes.json
-/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/ClientApp/package-lock.json
-/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/ClientApp/package.json
-/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/ClientApp/tsconfig.app.json
-/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/ClientApp/tsconfig.json
-/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/ClientApp/tsconfig.spec.json
 /Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/package-lock.json
 /Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/Backend.staticwebassets.endpoints.json
 /Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/Backend
@@ -40,4 +33,3 @@
 /Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/obj/Debug/net9.0/Backend.pdb
 /Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/obj/Debug/net9.0/Backend.genruntimeconfig.cache
 /Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/obj/Debug/net9.0/ref/Backend.dll
-/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/bin/Debug/net9.0/ClientApp/dist/client-app/prerendered-routes.json

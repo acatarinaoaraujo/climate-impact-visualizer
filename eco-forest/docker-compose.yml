@@ -1,16 +1,24 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  backend:
-    build:
-      context: ./Backend
-    ports:
-      - "5085:80"  # Map backend's port (5085) to container's port (80)
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-
   frontend:
     build:
-      context: ./ClientApp
+      context: ./  # Path relative to the docker-compose.yml
+      dockerfile: ClientApp/Dockerfile  # Correct path for frontend Dockerfile
     ports:
-      - "4200:80"  # Frontend will run on port 4200
+      - "4200:4200"  # Frontend exposed on port 4200 (Angular development)
+    networks:
+      - eco-forest-network
+
+  backend:
+    build:
+      context: ./  # Path relative to the docker-compose.yml
+      dockerfile: Backend/Dockerfile  # Correct path for backend Dockerfile
+    ports:
+      - "5085:5085"  # Static files served via ASP.NET on HTTP (or HTTPS)
+    networks:
+      - eco-forest-network
+
+networks:
+  eco-forest-network:
+    driver: bridge
