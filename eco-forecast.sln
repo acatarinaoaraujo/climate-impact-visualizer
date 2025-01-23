@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eco-forest", "eco-forest", "{366C1E66-0669-4E91-6881-915826DB9ECA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "eco-forest\Backend\Backend.csproj", "{0E83915C-AE83-0350-8E9E-3BB46895E2C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E83915C-AE83-0350-8E9E-3BB46895E2C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E83915C-AE83-0350-8E9E-3BB46895E2C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E83915C-AE83-0350-8E9E-3BB46895E2C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E83915C-AE83-0350-8E9E-3BB46895E2C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0E83915C-AE83-0350-8E9E-3BB46895E2C0} = {366C1E66-0669-4E91-6881-915826DB9ECA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D2F7098-6EF3-49D5-A7EC-65B4D43F853D}
+	EndGlobalSection
+EndGlobal
