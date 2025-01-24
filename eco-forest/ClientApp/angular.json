@@ -21,15 +21,15 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+  {
+    "glob": "**/*",
+    "input": "src/assets"
+  }
+],
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": ["node_modules/globe.gl/dist/globe.gl.js"],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
@@ -88,14 +88,16 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               {
-                "glob": "**/*",
-                "input": "public"
+                 "glob": "**/*",
+    "input": "src/assets"
               }
             ],
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/globe.gl/dist/globe.gl.js"
+            ]
           }
         }
       }
