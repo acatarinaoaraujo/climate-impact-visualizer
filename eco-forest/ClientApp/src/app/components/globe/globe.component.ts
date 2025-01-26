@@ -2,7 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateYlOrRd } from 'd3-scale-chromatic';
+import { interpolateGreens, interpolateYlOrRd } from 'd3-scale-chromatic';
 
 @Component({
   selector: 'app-globe',
@@ -19,7 +19,7 @@ export class GlobeComponent implements AfterViewInit {
     if (typeof window !== 'undefined') {
       import('globe.gl').then((module) => {
         const Globe = module.default;  // Get the default export
-        const colorScale = scaleSequentialSqrt(interpolateYlOrRd);
+        const colorScale = scaleSequentialSqrt(interpolateGreens);
 
         const getVal = (feat: any) => feat.properties.GDP_MD_EST / Math.max(1e5, feat.properties.POP_EST);
 
@@ -31,12 +31,11 @@ export class GlobeComponent implements AfterViewInit {
           if (globeElement) {
             const world = new Globe(globeElement)
               .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
-              .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
               .lineHoverPrecision(0)
               .polygonsData(countries.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
               .polygonAltitude(0.06)
               .polygonCapColor((feat: any) => colorScale(getVal(feat)))
-              .polygonSideColor(() => 'rgba(0, 100, 0, 0.15)')
+              .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
               .polygonStrokeColor(() => '#111')
               .polygonLabel(({ properties: d }: any) => `
                 <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
@@ -45,7 +44,7 @@ export class GlobeComponent implements AfterViewInit {
               `)
               .onPolygonHover((hoverD: any) => world
                 .polygonAltitude((d: any) => d === hoverD ? 0.12 : 0.06)
-                .polygonCapColor((d: any) => d === hoverD ? 'steelblue' : colorScale(getVal(d)))
+                .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(getVal(d)))
               )
               .polygonsTransitionDuration(300);
           }
