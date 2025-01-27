@@ -1,18 +1,45 @@
-<mat-drawer-container class="container" autosize>
-    <mat-drawer #drawer class="sidenav" mode="side">
-      <p>Auto-resizing sidenav</p>
-      @if (showFiller) {
-        <p>Lorem, ipsum dolor sit amet consectetur.</p>
-      }
-      <button (click)="showFiller = !showFiller" mat-raised-button>
-        Toggle extra text
-      </button>
-    </mat-drawer>
-
+<mat-drawer-container class="container">
+  <mat-drawer
+    #drawer
+    class="sidenav"
+    mode="side"
+    [opened]="!isCollapsed"
+    [style.width]="isCollapsed ? '20px' : '300px'"
+  >
     <div class="sidenav-content">
-      <button type="button" mat-button (click)="drawer.toggle()">
-        Toggle sidenav
-      </button>
-    </div>
+      <p [style.display]="isCollapsed ? 'none' : 'block'">
+        Auto-resizing sidenav
+      </p>
+      <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
+        <input matSliderThumb>
+      </mat-slider>
 
-  </mat-drawer-container>
+      <mat-divider [inset]="true"></mat-divider>
+
+      <form>
+        <h4>mat-select</h4>
+        <mat-form-field>
+          <mat-label>Favorite food</mat-label>
+          <mat-select [(ngModel)]="selectedValue" name="food">
+            @for (food of foods; track food) {
+              <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <p> Selected food: {{selectedValue}} </p>
+
+      </form>
+
+    </div>
+  </mat-drawer>
+
+  <div class="main-content">
+    <button
+      mat-icon-button
+      class="toggle-btn"
+      (click)="toggleSidebar()"
+    >
+      <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+    </button>
+  </div>
+</mat-drawer-container>
