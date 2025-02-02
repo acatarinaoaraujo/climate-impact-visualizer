@@ -9,6 +9,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
+import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
 
 interface Food {
   value: string;
@@ -25,7 +26,7 @@ interface Car {
   standalone: true,
   templateUrl: 'sidebar.component.html',
   styleUrls: ['sidebar.component.css'],
-  imports: [MatSidenavModule, MatButtonModule, MatIconModule, CommonModule, MatSliderModule, MatDividerModule, MatInputModule, MatSelectModule, MatFormFieldModule, FormsModule],
+  imports: [MatSidenavModule, MatButtonModule, MatIconModule, CommonModule, MatSliderModule, MatDividerModule, MatInputModule, MatSelectModule, MatFormFieldModule, FormsModule, SidebarListComponent],
 })
 export class SidebarComponent {
   isCollapsed = false;

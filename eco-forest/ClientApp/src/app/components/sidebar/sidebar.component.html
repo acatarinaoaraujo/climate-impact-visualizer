@@ -7,17 +7,8 @@
     [style.width]="isCollapsed ? '20px' : '300px'"
   >
     <div class="sidenav-content">
-      <p [style.display]="isCollapsed ? 'none' : 'block'">
-        Auto-resizing sidenav
-      </p>
-      <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
-        <input matSliderThumb>
-      </mat-slider>
-
-      <mat-divider [inset]="true"></mat-divider>
-
       <form>
-        <h4>mat-select</h4>
+        <h4>Variable</h4>
         <mat-form-field>
           <mat-label>Favorite food</mat-label>
           <mat-select [(ngModel)]="selectedValue" name="food">
@@ -26,9 +17,20 @@
             }
           </mat-select>
         </mat-form-field>
-        <p> Selected food: {{selectedValue}} </p>
+
+        <mat-divider [inset]="true"></mat-divider>
 
       </form>
+
+      <p [style.display]="isCollapsed ? 'none' : 'block'">
+        Auto-resizing sidenav
+      </p>
+      <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
+        <input matSliderThumb>
+      </mat-slider>
+
+     <app-sidebar-list></app-sidebar-list>
+
 
     </div>
   </mat-drawer>
