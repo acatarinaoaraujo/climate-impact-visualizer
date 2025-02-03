@@ -1,22 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RenewableEnergyDataService, RenewableEnergyDataModel } from '../../../services/renewable-energy-data.service';
+import { RenewableEnergyDataService } from '../../../services/renewable-energy-data.service';
 
 @Component({
   selector: 'renewable-energy',
   templateUrl: './renewable-energy.component.html',
-  styleUrls: ['./renewable-energy.component.css'],
-  standalone: true,
-  imports: [CommonModule]  // Ensure CommonModule is imported
+  styleUrls: ['./renewable-energy.component.css']
 })
 export class RenewableEnergyComponent implements OnInit {
-  data: RenewableEnergyDataModel[] = [];
+  data: any[] = [];
 
-  constructor(private renewableEnergyDataService: RenewableEnergyDataService) {}
+  constructor(private dataService: RenewableEnergyDataService) {}
 
   ngOnInit(): void {
-    this.renewableEnergyDataService.getData().subscribe((response) => {
-      this.data = response;
-    });
+    this.dataService.getAggregatedData().subscribe(
+      (response) => {
+        this.data = response;
+        console.log('Aggregated Data:', this.data);
+      },
+      (error) => {
+        console.error('Error fetching aggregated data:', error);
+      }
+    );
   }
 }

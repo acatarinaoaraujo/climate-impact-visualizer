@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Backend.Models;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace Backend.Services
 {
@@ -80,5 +81,38 @@ namespace Backend.Services
                 return new List<RenewableEnergyDataModel>();
             }
         }
+
+       public async Task<List<AggregatedDataModel>> GetAggregatedDataAsync()
+{
+    var dataList = await GetProcessedDataAsync();
+
+    // Aggregate data by country
+    var aggregatedData = dataList
+        .GroupBy(d => d.Country)
+        .Select(g => new AggregatedDataModel
+        {
+            Country = g.Key,
+            Technologies = g
+                .GroupBy(d => d.Technology)
+                .Select(tg => new TechnologyDataModel
+                {
+                    Technology = tg.Key,
+                    Unit = tg.First().Unit,
+                    YearlyData = tg
+                        .SelectMany(d => d.YearlyData)
+                        .GroupBy(d => d.Key)
+                        .ToDictionary(
+                            d => d.Key,
+                            d => d.Sum(v => v.Value ?? 0)
+                        )
+                })
+                .ToList()
+        })
+        .ToList();
+
+    _logger.LogInformation($"Aggregated {aggregatedData.Count} records.");
+    return aggregatedData;
+}
+
     }
 }
