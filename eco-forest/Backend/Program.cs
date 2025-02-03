@@ -1,7 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();  // Add this line to support controllers
+// builder.Services.AddControllers();  // Add this line to support controllers
+builder.Services.AddHttpClient<RenewableEnergyDataService>();
 
 builder.Services.AddOpenApi();
 
