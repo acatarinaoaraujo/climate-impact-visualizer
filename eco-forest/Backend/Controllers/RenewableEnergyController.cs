@@ -1,6 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Backend.Services;
+using Backend.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 
 namespace Backend.Controllers
 {
@@ -15,10 +18,10 @@ namespace Backend.Controllers
             _renewableEnergyDataService = renewableEnergyDataService;
         }
 
-        [HttpGet("data")]
-        public async Task<IActionResult> GetData()
+        [HttpGet]
+        public async Task<ActionResult<List<RenewableEnergyDataModel>>> Get()
         {
-            var data = await rRenewableEnergyDataService.GetProcessedDataAsync();
+            var data = await _renewableEnergyDataService.GetProcessedDataAsync();
             return Ok(data);
         }
     }

@@ -13,7 +13,7 @@ export interface RenewableEnergyDataModel {
   providedIn: 'root',
 })
 export class RenewableEnergyDataService {
-  private apiUrl = 'https://your-backend-url/api/RenewableEnergy/data';
+  private apiUrl = '/api/renewableenergy';
 
   constructor(private http: HttpClient) {}
 
@@ -21,5 +21,3 @@ export class RenewableEnergyDataService {
     return this.http.get<RenewableEnergyDataModel[]>(this.apiUrl);
   }
 }
-
-

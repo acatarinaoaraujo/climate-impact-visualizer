@@ -7,7 +7,7 @@ import { RenewableEnergyDataService, RenewableEnergyDataModel } from '../../../s
   templateUrl: './renewable-energy.component.html',
   styleUrls: ['./renewable-energy.component.css'],
   standalone: true,
-  // imports: [CommonModule]  // Ensure CommonModule is imported
+  imports: [CommonModule]  // Ensure CommonModule is imported
 })
 export class RenewableEnergyComponent implements OnInit {
   data: RenewableEnergyDataModel[] = [];
@@ -20,5 +20,3 @@ export class RenewableEnergyComponent implements OnInit {
     });
   }
 }
-
-
