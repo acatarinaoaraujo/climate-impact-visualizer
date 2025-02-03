@@ -4,38 +4,37 @@
     class="sidenav"
     mode="side"
     [opened]="!isCollapsed"
-    [style.width]="isCollapsed ? '20px' : '300px'"
+    [style.width]="isCollapsed ? '20px' : '460px'"
   >
     <div class="sidenav-content">
+
+      <p [style.display]="isCollapsed ? 'none' : 'block'">
+        Years Range
+      </p>
+      <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
+        <input matSliderStartThumb [(ngModel)]="startValue" name="start">
+        <input matSliderEndThumb [(ngModel)]="endValue" name="end">
+      </mat-slider>
+
       <form>
-        <h4>Variable</h4>
         <mat-form-field>
-          <mat-label>Favorite food</mat-label>
+          <mat-label>Indicators</mat-label>
           <mat-select [(ngModel)]="selectedValue" name="food">
             @for (food of foods; track food) {
               <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
             }
           </mat-select>
+          <mat-icon matSuffix>travel_explore</mat-icon>
         </mat-form-field>
 
-        <mat-divider [inset]="true"></mat-divider>
-
       </form>
-
-      <p [style.display]="isCollapsed ? 'none' : 'block'">
-        Auto-resizing sidenav
-      </p>
-      <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
-        <input matSliderThumb>
-      </mat-slider>
-
      <app-sidebar-list></app-sidebar-list>
 
 
     </div>
   </mat-drawer>
 
-  <div class="main-content">
+
     <button
       mat-icon-button
       class="toggle-btn"
@@ -43,5 +42,5 @@
     >
       <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
     </button>
-  </div>
+
 </mat-drawer-container>
