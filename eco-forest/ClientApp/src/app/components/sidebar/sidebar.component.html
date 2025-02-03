@@ -7,17 +7,8 @@
     [style.width]="isCollapsed ? '20px' : '460px'"
   >
     <div class="sidenav-content">
-
-      <p [style.display]="isCollapsed ? 'none' : 'block'">
-        Years Range
-      </p>
-      <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
-        <input matSliderStartThumb [(ngModel)]="startValue" name="start">
-        <input matSliderEndThumb [(ngModel)]="endValue" name="end">
-      </mat-slider>
-
       <form>
-        <mat-form-field>
+        <mat-form-field appearance="outline" >
           <mat-label>Indicators</mat-label>
           <mat-select [(ngModel)]="selectedValue" name="food">
             @for (food of foods; track food) {
@@ -28,11 +19,23 @@
         </mat-form-field>
 
       </form>
-     <app-sidebar-list></app-sidebar-list>
+
+     <p [style.display]="isCollapsed ? 'none' : 'block'">
+      Years Range
+    </p>
+    <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
+      <input matSliderStartThumb [(ngModel)]="startValue" name="start">
+      <input matSliderEndThumb [(ngModel)]="endValue" name="end">
+    </mat-slider>
+
+    <app-sidebar-list></app-sidebar-list>
 
 
     </div>
+
+
   </mat-drawer>
+
 
 
     <button

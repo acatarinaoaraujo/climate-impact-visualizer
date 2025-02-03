@@ -4,13 +4,34 @@
     overflow: auto;
   }
 
+.mat-column-id {
+  border-right: 1px solid currentColor;
+}
+
 .mat-mdc-form-field {
   font-size: 14px;
   width: 100%;
 
+}
 
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+  font-weight: bold;
 }
 
 td, th {
   width: 15%;
+}
+
+
+.country-filter {
+  margin-bottom: -20px;
+  border-radius: 0 !important;
+
 }

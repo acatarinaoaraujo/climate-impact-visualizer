@@ -4,6 +4,7 @@ import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface UserData {
   id: string;
@@ -47,7 +48,7 @@ const NAMES: string[] = [
 
 @Component({
   selector: 'app-sidebar-list',
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatFormFieldModule, MatIconModule],
   templateUrl: './sidebar-list.component.html',
   styleUrl: './sidebar-list.component.css'
 })

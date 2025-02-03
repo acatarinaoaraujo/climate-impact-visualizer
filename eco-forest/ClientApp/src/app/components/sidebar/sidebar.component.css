@@ -12,6 +12,8 @@
   flex-direction: column;
   align-items: center;
   transition: width 0.3s ease;
+  padding-top: 20px;
+
 }
 
 .sidenav-content {
@@ -30,24 +32,6 @@ form {
   width: 90%;
 }
 
-.custom-form-field {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.custom-form-field .mat-form-field-outline {
-  border-color: #6200ea;
-}
-
-.custom-form-field .mat-form-field-label {
-  color: #6200ea;
-}
-
-.custom-form-field .mat-select-arrow {
-  color: #6200ea;
-}
-
-
 mat-drawer-container {
   display: flex;
   flex-direction: row;
@@ -63,7 +47,9 @@ mat-form-field {
 }
 
 mat-slider {
-  width: 400px;
+  width: 200px;
+  margin-top: -20px;
+
 }
 
 
