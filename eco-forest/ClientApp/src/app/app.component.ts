@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { GlobeComponent } from './components/globe/globe.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, GlobeComponent, SidebarComponent],
+  imports: [RouterOutlet, GlobeComponent, SidebarComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

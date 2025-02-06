@@ -23,26 +23,12 @@
       </form>
 
       <p>Year Range</p>
-      <mat-slider
-        min="2000"
-        max="2025"
-        step="1"
-        showTickMarks
-        [displayWith]="formatLabel"
-        thumbLabel
-        [(ngModel)]="startYear"
-        (ngModelChange)="onYearRangeChange()"
-      ></mat-slider>
-      <mat-slider
-        min="2000"
-        max="2025"
-        step="1"
-        showTickMarks
-        [displayWith]="formatLabel"
-        thumbLabel
-        [(ngModel)]="endYear"
-        (ngModelChange)="onYearRangeChange()"
-      ></mat-slider>
+
+      <mat-slider min="2020" max="2023" step="1" showTickMarks discrete [displayWith]="formatLabel" (ngModelChange)="onYearRangeChange()">
+        <input matSliderStartThumb [(ngModel)]="startYear" name="start">
+        <input matSliderEndThumb [(ngModel)]="endYear" name="end">
+      </mat-slider>
+
 
       <app-sidebar-list></app-sidebar-list>
     </div>
