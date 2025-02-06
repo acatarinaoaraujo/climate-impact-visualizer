@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,16 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
-
-interface Food {
-  value: string;
-  viewValue: string;
-}
-
-interface Car {
-  value: string;
-  viewValue: string;
-}
 
 @Component({
   selector: 'sidebar',
@@ -42,31 +32,29 @@ interface Car {
 })
 export class SidebarComponent {
   isCollapsed = false;
-  selectedValue?: string;
-  selectedCar?: string;
-  startValue: number = 0;
-  endValue: number = 100000;
+  selectedEnergyType: string = 'Fossil fuels';
+  startYear: number = 2000;
+  endYear: number = 2025;
+
+  energyTypes: string[] = ['Fossil fuels', 'Solar', 'Wind', 'Hydro'];
+
+  @Output() energyTypeChange = new EventEmitter<string>();
+  @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
   }
 
   formatLabel(value: number): string {
-    if (value >= 1000) {
-      return Math.round(value / 1000) + 'k';
-    }
     return `${value}`;
   }
 
-  foods: Food[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' },
-  ];
+  onEnergyTypeChange() {
+    this.energyTypeChange.emit(this.selectedEnergyType);
+  }
 
-  cars: Car[] = [
-    { value: 'volvo', viewValue: 'Volvo' },
-    { value: 'saab', viewValue: 'Saab' },
-    { value: 'mercedes', viewValue: 'Mercedes' },
-  ];
+  onYearRangeChange() {
+    this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear });
+  }
 }
+

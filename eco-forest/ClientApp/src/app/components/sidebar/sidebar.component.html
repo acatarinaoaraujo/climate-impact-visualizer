@@ -8,42 +8,50 @@
   >
     <div class="sidenav-content">
       <form>
-        <mat-form-field appearance="outline" >
-          <mat-label>Indicators</mat-label>
-          <mat-select [(ngModel)]="selectedValue" name="food">
-            @for (food of foods; track food) {
-              <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
-            }
+        <mat-form-field appearance="outline">
+          <mat-label>Energy Type</mat-label>
+          <mat-select
+            [(ngModel)]="selectedEnergyType"
+            name="energyType"
+            (selectionChange)="onEnergyTypeChange()"
+          >
+            <mat-option *ngFor="let energy of energyTypes" [value]="energy">
+              {{ energy }}
+            </mat-option>
           </mat-select>
-          <mat-icon matSuffix>travel_explore</mat-icon>
         </mat-form-field>
-
       </form>
 
-     <p [style.display]="isCollapsed ? 'none' : 'block'">
-      Years Range
-    </p>
-    <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
-      <input matSliderStartThumb [(ngModel)]="startValue" name="start">
-      <input matSliderEndThumb [(ngModel)]="endValue" name="end">
-    </mat-slider>
+      <p>Year Range</p>
+      <mat-slider
+        min="2000"
+        max="2025"
+        step="1"
+        showTickMarks
+        [displayWith]="formatLabel"
+        thumbLabel
+        [(ngModel)]="startYear"
+        (ngModelChange)="onYearRangeChange()"
+      ></mat-slider>
+      <mat-slider
+        min="2000"
+        max="2025"
+        step="1"
+        showTickMarks
+        [displayWith]="formatLabel"
+        thumbLabel
+        [(ngModel)]="endYear"
+        (ngModelChange)="onYearRangeChange()"
+      ></mat-slider>
 
-    <app-sidebar-list></app-sidebar-list>
-
-
+      <app-sidebar-list></app-sidebar-list>
     </div>
-
-
   </mat-drawer>
 
-
-
-    <button
-      mat-icon-button
-      class="toggle-btn"
-      (click)="toggleSidebar()"
-    >
-      <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
-    </button>
-
+  <button mat-icon-button class="toggle-btn" (click)="toggleSidebar()">
+    <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+  </button>
 </mat-drawer-container>
+
+
+

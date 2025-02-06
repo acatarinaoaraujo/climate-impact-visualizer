@@ -1,55 +1,148 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateGreens, interpolateYlOrRd } from 'd3-scale-chromatic';
+import { interpolateGreens } from 'd3-scale-chromatic';
 
 @Component({
   selector: 'app-globe',
-  standalone: true,
   templateUrl: './globe.component.html',
   styleUrls: ['./globe.component.css'],
-  imports: [HttpClientModule, CommonModule],
+  imports: [CommonModule],
 })
-export class GlobeComponent implements AfterViewInit {
+export class GlobeComponent implements OnChanges {
+  @Input() energyType: string = 'Fossil fuels'; // Default value
+  @Input() startYear: number = 2000;
+  @Input() endYear: number = 2025;
+
+  private globeInstance: any;
+  private geoJsonData: any;
 
   constructor(private http: HttpClient) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['energyType'] || changes['startYear'] || changes['endYear']) {
+      this.updateGlobeVisualization();
+    }
+  }
+
   ngAfterViewInit(): void {
+    this.loadGlobe();
+  }
+
+  private loadGlobe(): void {
     if (typeof window !== 'undefined') {
       import('globe.gl').then((module) => {
-        const Globe = module.default;  // Get the default export
-        const colorScale = scaleSequentialSqrt(interpolateGreens);
+        const Globe = module.default;
+        this.globeInstance = new Globe(document.getElementById('globeViz') as HTMLElement)
+          .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+          .lineHoverPrecision(0)
+          .polygonAltitude(0.06)
+          .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
+          .polygonStrokeColor(() => '#111')
+          .polygonsTransitionDuration(300);
 
-        const getVal = (feat: any) => feat.properties.GDP_MD_EST / Math.max(1e5, feat.properties.POP_EST);
-
-        this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((countries: any) => {
-          const maxVal = Math.max(...countries.features.map(getVal));
-          colorScale.domain([0, maxVal]);
-
-          const globeElement = document.getElementById('globeViz');
-          if (globeElement) {
-            const world = new Globe(globeElement)
-              .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
-              .lineHoverPrecision(0)
-              .polygonsData(countries.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
-              .polygonAltitude(0.06)
-              .polygonCapColor((feat: any) => colorScale(getVal(feat)))
-              .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
-              .polygonStrokeColor(() => '#111')
-              .polygonLabel(({ properties: d }: any) => `
-                <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-                GDP: <i>${d.GDP_MD_EST}</i> M$<br/>
-                Population: <i>${d.POP_EST}</i>
-              `)
-              .onPolygonHover((hoverD: any) => world
-                .polygonAltitude((d: any) => d === hoverD ? 0.12 : 0.06)
-                .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(getVal(d)))
-              )
-              .polygonsTransitionDuration(300);
-          }
-        });
+        this.fetchData();
       });
     }
+  }
+
+  private fetchData(): void {
+    this.http
+      .get('../../../assets/datasets/ne_110m_admin_0_countries.geojson')
+      .subscribe((geoJsonData: any) => {
+        this.http
+          .get('http://localhost:5085/api/renewableenergy/aggregated')
+          .subscribe((aggregatedData: any) => {
+            this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
+            this.updateGlobeVisualization();
+          });
+      });
+  }
+
+  private transformData(geoJsonData: any, aggregatedData: any): any {
+    const dataMap = new Map();
+    aggregatedData.forEach((item: any) => {
+      dataMap.set(item.country.toLowerCase(), item);
+    });
+
+    geoJsonData.features.forEach((feature: any) => {
+      const countryName = feature.properties.ADMIN.toLowerCase();
+      if (dataMap.has(countryName)) {
+        feature.properties.aggregatedData = dataMap.get(countryName);
+      }
+    });
+
+    return geoJsonData;
+  }
+
+  private updateGlobeVisualization(): void {
+    if (this.globeInstance && this.geoJsonData) {
+      const colorScale = scaleSequentialSqrt(interpolateGreens);
+      this.globeInstance
+        .polygonsData(
+          this.geoJsonData.features.filter(
+            (d: any) => d.properties.ISO_A2 !== 'AQ'
+          )
+        )
+        .polygonCapColor((feat: any) => {
+          const value = this.getEnergyValue(
+            feat,
+            this.energyType,
+            this.startYear,
+            this.endYear
+          );
+          return colorScale(value);
+        })
+        .polygonLabel(({ properties: d }: any) => `
+          <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
+          ${this.energyType} (${this.startYear}-${this.endYear}): <i>${this.getEnergyValue(
+            { properties: d },
+            this.energyType,
+            this.startYear,
+            this.endYear
+          )}</i> GWh
+        `)
+        .onPolygonHover((hoverD: any) =>
+          this.globeInstance
+            .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
+            .polygonCapColor((d: any) =>
+              d === hoverD
+                ? 'yellow'
+                : colorScale(
+                    this.getEnergyValue(
+                      d,
+                      this.energyType,
+                      this.startYear,
+                      this.endYear
+                    )
+                  )
+            )
+        );
+    }
+  }
+
+  private getEnergyValue(
+    feature: any,
+    technology: string,
+    startYear: number,
+    endYear: number
+  ): number {
+    const data = feature.properties.aggregatedData;
+    if (data) {
+      const techData = data.technologies.find(
+        (tech: any) => tech.technology === technology
+      );
+      if (techData) {
+        let total = 0;
+        for (let year = startYear; year <= endYear; year++) {
+          if (techData.yearlyData[`F${year}`] !== undefined) {
+            total += techData.yearlyData[`F${year}`];
+          }
+        }
+        return total;
+      }
+    }
+    return 0;
   }
 }

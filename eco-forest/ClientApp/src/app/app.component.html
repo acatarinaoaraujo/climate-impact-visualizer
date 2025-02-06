@@ -174,12 +174,18 @@
   }
 </style>
 
+<!-- app.component.html -->
 <main class="main">
   <div class="content">
-    <sidebar></sidebar>
-    <app-globe></app-globe>
-
-
+    <sidebar
+      (energyTypeChange)="onEnergyTypeChange($event)"
+      (yearRangeChange)="onYearRangeChange($event)"
+    ></sidebar>
+    <app-globe
+      [energyType]="selectedEnergyType"
+      [startYear]="startYear"
+      [endYear]="endYear"
+    ></app-globe>
 
 
     <!-- <div class="left-side">
