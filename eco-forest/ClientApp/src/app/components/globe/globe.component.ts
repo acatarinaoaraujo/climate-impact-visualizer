@@ -11,7 +11,7 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   imports: [CommonModule],
 })
 export class GlobeComponent implements OnChanges {
-  @Input() energyType: string = 'Fossil fuels'; // Default value
+  @Input() energyType: string = 'Fossil fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
 
@@ -48,16 +48,12 @@ export class GlobeComponent implements OnChanges {
   }
 
   private fetchData(): void {
-    this.http
-      .get('../../../assets/datasets/ne_110m_admin_0_countries.geojson')
-      .subscribe((geoJsonData: any) => {
-        this.http
-          .get('http://localhost:5085/api/renewableenergy/aggregated')
-          .subscribe((aggregatedData: any) => {
-            this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
-            this.updateGlobeVisualization();
-          });
+    this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
+      this.http.get('http://localhost:5085/api/renewableenergy/aggregated').subscribe((aggregatedData: any) => {
+        this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
+        this.updateGlobeVisualization();
       });
+    });
   }
 
   private transformData(geoJsonData: any, aggregatedData: any): any {
@@ -81,17 +77,10 @@ export class GlobeComponent implements OnChanges {
       const colorScale = scaleSequentialSqrt(interpolateGreens);
       this.globeInstance
         .polygonsData(
-          this.geoJsonData.features.filter(
-            (d: any) => d.properties.ISO_A2 !== 'AQ'
-          )
+          this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ')
         )
         .polygonCapColor((feat: any) => {
-          const value = this.getEnergyValue(
-            feat,
-            this.energyType,
-            this.startYear,
-            this.endYear
-          );
+          const value = this.getEnergyValue(feat, this.energyType, this.startYear, this.endYear);
           return colorScale(value);
         })
         .polygonLabel(({ properties: d }: any) => `
@@ -110,29 +99,19 @@ export class GlobeComponent implements OnChanges {
               d === hoverD
                 ? 'yellow'
                 : colorScale(
-                    this.getEnergyValue(
-                      d,
-                      this.energyType,
-                      this.startYear,
-                      this.endYear
-                    )
+                    this.getEnergyValue(d, this.energyType, this.startYear, this.endYear)
                   )
             )
         );
     }
   }
 
-  private getEnergyValue(
-    feature: any,
-    technology: string,
-    startYear: number,
-    endYear: number
-  ): number {
+  private getEnergyValue(feature: any, technology: string, startYear: number, endYear: number): number {
     const data = feature.properties.aggregatedData;
     if (data) {
-      const techData = data.technologies.find(
-        (tech: any) => tech.technology === technology
-      );
+      console.log(data.technologies);
+      const techData = data.technologies.find((tech: any) => tech.technology.trim().toLowerCase() === technology.trim().toLowerCase());
+      console.log(techData);
       if (techData) {
         let total = 0;
         for (let year = startYear; year <= endYear; year++) {

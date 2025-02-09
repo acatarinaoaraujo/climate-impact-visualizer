@@ -1,3 +1,4 @@
+<!-- Sidebar html -->
 <mat-drawer-container class="container">
   <mat-drawer
     #drawer
@@ -13,7 +14,7 @@
           <mat-select
             [(ngModel)]="selectedEnergyType"
             name="energyType"
-            (selectionChange)="onEnergyTypeChange()"
+            (ngModelChange)="onEnergyTypeChange()"
           >
             <mat-option *ngFor="let energy of energyTypes" [value]="energy">
               {{ energy }}
@@ -24,11 +25,10 @@
 
       <p>Year Range</p>
 
-      <mat-slider min="2020" max="2023" step="1" showTickMarks discrete [displayWith]="formatLabel" (ngModelChange)="onYearRangeChange()">
-        <input matSliderStartThumb [(ngModel)]="startYear" name="start">
-        <input matSliderEndThumb [(ngModel)]="endYear" name="end">
+      <mat-slider min="2000" max="2025" step="1" showTickMarks discrete>
+        <input matSliderStartThumb [(ngModel)]="startYear" name="start" (ngModelChange)="onYearRangeChange()">
+        <input matSliderEndThumb [(ngModel)]="endYear" name="end" (ngModelChange)="onYearRangeChange()">
       </mat-slider>
-
 
       <app-sidebar-list></app-sidebar-list>
     </div>
@@ -38,6 +38,3 @@
     <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
   </button>
 </mat-drawer-container>
-
-
-

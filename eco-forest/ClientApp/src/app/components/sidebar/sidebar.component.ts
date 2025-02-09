@@ -36,7 +36,7 @@ export class SidebarComponent {
   startYear: number = 2000;
   endYear: number = 2025;
 
-  energyTypes: string[] = ['Fossil fuels', 'Solar', 'Wind', 'Hydro'];
+  energyTypes: string[] = ['Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy',];
 
   @Output() energyTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
