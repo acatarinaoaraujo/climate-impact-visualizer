@@ -2,31 +2,50 @@
   width: 100%;
   height: 100vh;
   display: flex;
+  background-color: antiquewhite;
 
 }
 
 .sidenav {
-  background-color: #0f0101;
+  background-color: #f0e5e5;
   color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: width 0.3s ease;
-  padding-top: 20px;
+  transition: width 0.3s ease-in-out;
+  overflow: hidden;
+
 
 }
 
 .sidenav-content {
   display: flex;
+  margin-top: 40px;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   gap: 4px;
-    background-color: #0f0101;
+}
+.toggle-btn {
+  top: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: #f20808;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s ease-in-out;
+  overflow: hidden;
 }
 
-.toggle-btn {
-  color: #f20808;
+.sidenav.collapsed + .toggle-btn {
+  left: 30px;
 }
+
+
 
 form {
   width: 90%;
