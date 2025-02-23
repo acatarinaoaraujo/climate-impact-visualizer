@@ -9,20 +9,20 @@ using System.Linq;
 
 namespace Backend.Services
 {
-    public class RenewableEnergyDataService
+    public class IncomeLossDataService
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger<RenewableEnergyDataService> _logger;
+        private readonly ILogger<IncomeLossDataService> _logger;
 
-        public RenewableEnergyDataService(HttpClient httpClient, ILogger<RenewableEnergyDataService> logger)
+        public IncomeLossDataService(HttpClient httpClient, ILogger<IncomeLossDataService> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
         }
 
-        public async Task<List<RenewableEnergyDataModel>> GetProcessedDataAsync()
+        public async Task<List<IncomeLossDataModel>> GetProcessedDataAsync()
         {
-            var dataList = new List<RenewableEnergyDataModel>();
+            var dataList = new List<IncomeLossDataModel>();
             int offset = 0;
             int limit = 1000; // Default maxRecordCount
 
@@ -30,7 +30,8 @@ namespace Backend.Services
             {
                 while (true)
                 {
-                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_4/FeatureServer/0/query?where=1%3D1&outFields=Country,Technology,Unit,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_16_4/FeatureServer/0/query?where=Indicator%20%3D%20'POTENTIAL%20NATIONAL%20INCOME%20LOSS%20FROM%20CLIMATE%20RISKS'&outFields=Country,Variable,F2023,F2024,F2025,F2026,F2027,F2028,F2029,F2030,F2031,F2032,F2033,F2034,F2035,F2036,F2037,F2038,F2039,F2040,ISO2,Unit&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+
                     _logger.LogInformation($"Fetching data from: {url}");
 
                     var response = await _httpClient.GetStringAsync(url);
@@ -43,15 +44,16 @@ namespace Backend.Services
                     foreach (var feature in features.EnumerateArray())
                     {
                         var attributes = feature.GetProperty("attributes");
-                        var data = new RenewableEnergyDataModel
+                        var data = new IncomeLossDataModel
                         {
                             Country = attributes.GetProperty("Country").GetString(),
-                            Technology = attributes.GetProperty("Technology").GetString(),
+                            ISO2 = attributes.GetProperty("ISO2").GetString(),
+                            Variable = attributes.GetProperty("Variable").GetString(),
                             Unit = attributes.GetProperty("Unit").GetString(),
                             YearlyData = new Dictionary<string, double?>()
                         };
 
-                        for (int year = 2000; year <= 2023; year++)
+                        for (int year = 2023; year <= 2040; year++)
                         {
                             string key = $"F{year}";
                             data.YearlyData[key] = attributes.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.Number ? value.GetDouble() : null;
@@ -74,21 +76,21 @@ namespace Backend.Services
         }
 
 
-        public async Task<List<AggregatedDataModel>> GetAggregatedDataAsync()
+        public async Task<List<IncomeLossAggDataModel>> GetIncomeLossAggDataAsync()
         {
             var dataList = await GetProcessedDataAsync();
 
             // Aggregate data by country
             var aggregatedData = dataList
                 .GroupBy(d => d.Country)
-                .Select(g => new AggregatedDataModel
+                .Select(g => new IncomeLossAggDataModel
                 {
                     Country = g.Key,
-                    Technologies = g
-                        .GroupBy(d => d.Technology)
-                        .Select(tg => new TechnologyDataModel
+                    Variables = g
+                        .GroupBy(d => d.Variable)
+                        .Select(tg => new IncomeLossVariableDataModel
                         {
-                            Technology = tg.Key,
+                            Variable = tg.Key,
                             Unit = tg.First().Unit,
                             YearlyData = tg
                                 .SelectMany(d => d.YearlyData)

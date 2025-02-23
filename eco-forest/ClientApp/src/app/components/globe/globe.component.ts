@@ -137,7 +137,6 @@ export class GlobeComponent implements OnChanges {
   }
 
 
-
   private updateGlobeVisualization(): void {
     if (this.globeInstance && this.geoJsonData) {
       const values = this.geoJsonData.features.map((feat: any) =>

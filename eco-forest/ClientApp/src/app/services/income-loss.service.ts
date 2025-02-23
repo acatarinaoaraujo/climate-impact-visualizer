@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class RenewableEnergyDataService {
-  private apiUrl = 'api/renewableenergy/aggregated';
+export class IncomeLossDataService {
+  private apiUrl = '/api/incomeloss/aggregated';
 
   constructor(private http: HttpClient) {}
 
