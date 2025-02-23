@@ -20,13 +20,13 @@
 
     <!-- Value Column -->
     <ng-container matColumnDef="value">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Value ({{ energyType }})</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
       <td mat-cell *matCellDef="let row"> {{row.value}} GWh </td>
     </ng-container>
 
     <!-- Rate Change Column -->
     <ng-container matColumnDef="rateChange">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Rate Change</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ROC</th>
       <td mat-cell *matCellDef="let row"> {{row.rateChange}} </td>
     </ng-container>
 
