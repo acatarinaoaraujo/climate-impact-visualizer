@@ -18,9 +18,9 @@ namespace Backend.Controllers
         }
 
         [HttpGet("aggregated")]
-        public async Task<ActionResult<List<IncomeLossAggDataModel>>> GetAggregatedData()
+        public async Task<ActionResult<List<IncomeLossDataModel>>> GetAggregatedData()
         {
-            var data = await _incomeLossDataService.GetAggregatedDataAsync();
+            var data = await _incomeLossDataService.GetIncomeLossAggDataAsync();
             return Ok(data);
         }
     }

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class RenewableEnergyDataService {
-  private apiUrl = '/api/renewable-energy/aggregated';
+  private apiUrl = 'api/renewableenergy/aggregated';
 
   constructor(private http: HttpClient) {}
 

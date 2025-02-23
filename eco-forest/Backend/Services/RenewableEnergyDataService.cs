@@ -21,90 +21,90 @@ namespace Backend.Services
         }
 
         public async Task<List<RenewableEnergyDataModel>> GetProcessedDataAsync()
-{
-    var dataList = new List<RenewableEnergyDataModel>();
-    int offset = 0;
-    int limit = 1000; // Default maxRecordCount
-
-    try
-    {
-        while (true)
         {
-            var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_4/FeatureServer/0/query?where=1%3D1&outFields=Country,Technology,Unit,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
-            _logger.LogInformation($"Fetching data from: {url}");
+            var dataList = new List<RenewableEnergyDataModel>();
+            int offset = 0;
+            int limit = 1000; // Default maxRecordCount
 
-            var response = await _httpClient.GetStringAsync(url);
-            if (string.IsNullOrEmpty(response)) break;
-
-            using var jsonDoc = JsonDocument.Parse(response);
-            var root = jsonDoc.RootElement;
-            if (!root.TryGetProperty("features", out var features) || features.GetArrayLength() == 0) break;
-
-            foreach (var feature in features.EnumerateArray())
+            try
             {
-                var attributes = feature.GetProperty("attributes");
-                var data = new RenewableEnergyDataModel
+                while (true)
                 {
-                    Country = attributes.GetProperty("Country").GetString(),
-                    Technology = attributes.GetProperty("Technology").GetString(),
-                    Unit = attributes.GetProperty("Unit").GetString(),
-                    YearlyData = new Dictionary<string, double?>()
-                };
+                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_4/FeatureServer/0/query?where=1%3D1&outFields=Country,Technology,Unit,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+                    _logger.LogInformation($"Fetching data from: {url}");
 
-                for (int year = 2000; year <= 2023; year++)
-                {
-                    string key = $"F{year}";
-                    data.YearlyData[key] = attributes.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.Number ? value.GetDouble() : null;
+                    var response = await _httpClient.GetStringAsync(url);
+                    if (string.IsNullOrEmpty(response)) break;
+
+                    using var jsonDoc = JsonDocument.Parse(response);
+                    var root = jsonDoc.RootElement;
+                    if (!root.TryGetProperty("features", out var features) || features.GetArrayLength() == 0) break;
+
+                    foreach (var feature in features.EnumerateArray())
+                    {
+                        var attributes = feature.GetProperty("attributes");
+                        var data = new RenewableEnergyDataModel
+                        {
+                            Country = attributes.GetProperty("Country").GetString(),
+                            Technology = attributes.GetProperty("Technology").GetString(),
+                            Unit = attributes.GetProperty("Unit").GetString(),
+                            YearlyData = new Dictionary<string, double?>()
+                        };
+
+                        for (int year = 2000; year <= 2023; year++)
+                        {
+                            string key = $"F{year}";
+                            data.YearlyData[key] = attributes.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.Number ? value.GetDouble() : null;
+                        }
+
+                        dataList.Add(data);
+                    }
+
+                    offset += limit;
                 }
 
-                dataList.Add(data);
+                _logger.LogInformation($"Processed {dataList.Count} records.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error fetching or processing data: {ex.Message}");
             }
 
-            offset += limit;
+            return dataList;
         }
 
-        _logger.LogInformation($"Processed {dataList.Count} records.");
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError($"Error fetching or processing data: {ex.Message}");
-    }
 
-    return dataList;
-}
-
-
-       public async Task<List<AggregatedDataModel>> GetAggregatedDataAsync()
-{
-    var dataList = await GetProcessedDataAsync();
-
-    // Aggregate data by country
-    var aggregatedData = dataList
-        .GroupBy(d => d.Country)
-        .Select(g => new AggregatedDataModel
+        public async Task<List<AggregatedDataModel>> GetAggregatedDataAsync()
         {
-            Country = g.Key,
-            Technologies = g
-                .GroupBy(d => d.Technology)
-                .Select(tg => new TechnologyDataModel
-                {
-                    Technology = tg.Key,
-                    Unit = tg.First().Unit,
-                    YearlyData = tg
-                        .SelectMany(d => d.YearlyData)
-                        .GroupBy(d => d.Key)
-                        .ToDictionary(
-                            d => d.Key,
-                            d => d.Sum(v => v.Value ?? 0)
-                        )
-                })
-                .ToList()
-        })
-        .ToList();
+            var dataList = await GetProcessedDataAsync();
 
-    _logger.LogInformation($"Aggregated {aggregatedData.Count} records.");
-    return aggregatedData;
-}
+            // Aggregate data by country
+            var aggregatedData = dataList
+                .GroupBy(d => d.Country)
+                .Select(g => new AggregatedDataModel
+                {
+                    Country = g.Key,
+                    Technologies = g
+                        .GroupBy(d => d.Technology)
+                        .Select(tg => new TechnologyDataModel
+                        {
+                            Technology = tg.Key,
+                            Unit = tg.First().Unit,
+                            YearlyData = tg
+                                .SelectMany(d => d.YearlyData)
+                                .GroupBy(d => d.Key)
+                                .ToDictionary(
+                                    d => d.Key,
+                                    d => d.Sum(v => v.Value ?? 0)
+                                )
+                        })
+                        .ToList()
+                })
+                .ToList();
+
+            _logger.LogInformation($"Aggregated {aggregatedData.Count} records.");
+            return aggregatedData;
+        }
 
     }
 }

@@ -30,7 +30,8 @@ namespace Backend.Services
             {
                 while (true)
                 {
-                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_16_4/FeatureServer/0/query?where=Indicator%20%3D%20'POTENTIAL%20NATIONAL%20INCOME%20LOSS%20FROM%20CLIMATE%20RISKS'&outFields=Country,Variable,F2023,F2024,F2025,F2026,F2027,F2028,F2029,F2030,F2031,F2032,F2033,F2034,F2035,F2036,F2037,F2038,F2039,F2040,ISO2,Unit&outSR=4326&f=json";
+                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_16_4/FeatureServer/0/query?where=Indicator%20%3D%20'POTENTIAL%20NATIONAL%20INCOME%20LOSS%20FROM%20CLIMATE%20RISKS'&outFields=Country,Variable,F2023,F2024,F2025,F2026,F2027,F2028,F2029,F2030,F2031,F2032,F2033,F2034,F2035,F2036,F2037,F2038,F2039,F2040,ISO2,Unit&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+
                     _logger.LogInformation($"Fetching data from: {url}");
 
                     var response = await _httpClient.GetStringAsync(url);
@@ -75,7 +76,7 @@ namespace Backend.Services
         }
 
 
-        public async Task<List<IncomeLossAggDataModel>> GetAggregatedDataAsync()
+        public async Task<List<IncomeLossAggDataModel>> GetIncomeLossAggDataAsync()
         {
             var dataList = await GetProcessedDataAsync();
 

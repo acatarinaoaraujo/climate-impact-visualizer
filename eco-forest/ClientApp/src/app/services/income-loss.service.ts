@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class IncomeLossDataService {
-  private apiUrl = '/api/income-loss/aggregated';
+  private apiUrl = '/api/incomeloss/aggregated';
 
   constructor(private http: HttpClient) {}
 
