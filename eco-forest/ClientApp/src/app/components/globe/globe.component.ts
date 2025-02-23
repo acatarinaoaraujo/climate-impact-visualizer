@@ -49,7 +49,7 @@ export class GlobeComponent implements OnChanges {
 
   private fetchData(): void {
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
-      this.http.get('http://localhost:5085/api/renewableenergy/aggregated').subscribe((aggregatedData: any) => {
+      this.http.get('http://localhost:5085/api/renewable-energy/aggregated').subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.updateGlobeVisualization();
       });
@@ -135,7 +135,6 @@ export class GlobeComponent implements OnChanges {
 
     return geoJsonData;
   }
-
 
 
   private updateGlobeVisualization(): void {
