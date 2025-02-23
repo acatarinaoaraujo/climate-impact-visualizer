@@ -89,7 +89,10 @@ app-globe {
 
 <!-- app.component.html -->
 <main class="main">
+  <app-navbar></app-navbar>
   <div class="content">
+
+
     <sidebar
       (energyTypeChange)="onEnergyTypeChange($event)"
       (yearRangeChange)="onYearRangeChange($event)"

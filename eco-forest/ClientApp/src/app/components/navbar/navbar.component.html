@@ -1,0 +1,136 @@
+<!-- navbar.component.html -->
+<nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <img src="assets/logo.png" alt="Logo" class="logo" />
+      </div>
+      <ul class="navbar-right">
+        <li><a routerLink="/home">Home</a></li>
+        <li class="dropdown">
+          <a href="#">GDP Losses and Benefits</a>
+          <ul class="dropdown-menu">
+            <li><a href="https://climatedata.imf.org/pages/ngfs/#ngfs7" target="_blank">Potential National Income Loss</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">Greenhouse Emissions</a>
+          <ul class="dropdown-menu">
+            <li><a href="https://climatedata.imf.org/pages/greenhouse-gas-emissions#gg4" target="_blank">Carbon Footprints</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">Adaptation</a>
+          <ul class="dropdown-menu">
+            <li><a href="https://climatedata.imf.org/pages/adaptation#ad1" target="_blank">Climate-related Disasters</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">Climate and Weather</a>
+          <ul class="dropdown-menu">
+            <li><a href="https://climatedata.imf.org/pages/climate-and-weather#cc1" target="_blank">Annual Surface Temperature Change</a></li>
+            <li><a href="https://climatedata.imf.org/pages/climate-and-weather#cc3" target="_blank">Change in Mean Sea Levels</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">Mitigation</a>
+          <ul class="dropdown-menu">
+            <li><a href="https://climatedata.imf.org/pages/mitigation#mi6" target="_blank">Forest and Carbon</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <style>
+  body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .navbar {
+    width: 100%;
+    background: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+  }
+
+  .navbar-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+  }
+
+  .navbar-left .logo {
+    height: 40px;
+  }
+
+  .navbar-right {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .navbar-right a {
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+  .navbar-right a:hover {
+    color: #00bcd4;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    color: black;
+    list-style: none;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 60px);
+    margin-top: 60px;
+  }
+
+  .sidebar {
+    width: 250px;
+    height: 100%;
+    background: #f4f4f4;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .content {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  </style>
