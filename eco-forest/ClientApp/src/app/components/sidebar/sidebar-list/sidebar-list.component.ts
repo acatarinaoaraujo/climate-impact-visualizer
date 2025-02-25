@@ -8,19 +8,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
-
+import { CommonModule } from '@angular/common';
 
 export interface CountryData {
   id: number;
   name: string;
   value: number;
-  rateChange: string;
+  rateChange: number; // Rate change should be a number
 }
 
 @Component({
   selector: 'app-sidebar-list',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginator, MatIconModule],
+  imports: [MatFormFieldModule, CommonModule, MatInputModule, MatTableModule, MatSortModule, MatPaginator, MatIconModule],
   templateUrl: './sidebar-list.component.html',
   styleUrls: ['./sidebar-list.component.css']
 })
@@ -59,7 +59,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       id: index + 1,
       name: item.country,
       value: this.getEnergyValue(item),
-      rateChange: `${(Math.random() * 10 - 5).toFixed(2)}%`
+      rateChange: parseFloat((Math.random() * 10 - 5).toFixed(2)), // Ensure rateChange is a number
     }));
   }
 
@@ -75,7 +75,6 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
 
     return parseFloat(total.toFixed(1));
   }
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
