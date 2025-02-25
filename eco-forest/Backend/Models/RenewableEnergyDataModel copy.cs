@@ -6,8 +6,9 @@ namespace Backend.Models
     {
         public string Country { get; set; }
 
+        public string ISO2 { get; set; }
+
         public string Technology { get; set; }
-        public string Unit { get; set; }
         public Dictionary<string, double?> YearlyData { get; set; }
     }
 }

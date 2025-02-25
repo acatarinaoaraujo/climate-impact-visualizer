@@ -10,7 +10,6 @@ namespace Backend.Models
 
         public string Variable { get; set; }
 
-        public string Unit { get; set; }
         public Dictionary<string, double?> YearlyData { get; set; }
     }
 }

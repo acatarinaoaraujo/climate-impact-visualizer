@@ -30,7 +30,7 @@ namespace Backend.Services
             {
                 while (true)
                 {
-                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_4/FeatureServer/0/query?where=1%3D1&outFields=Country,Technology,Unit,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_4/FeatureServer/0/query?where=1%3D1&outFields=Country,Technology,ISO2,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
                     _logger.LogInformation($"Fetching data from: {url}");
 
                     var response = await _httpClient.GetStringAsync(url);
@@ -43,11 +43,16 @@ namespace Backend.Services
                     foreach (var feature in features.EnumerateArray())
                     {
                         var attributes = feature.GetProperty("attributes");
+
+                        var iso2 = attributes.GetProperty("ISO2").GetString();
+                        if (string.IsNullOrEmpty(iso2))
+                            continue;
+
                         var data = new RenewableEnergyDataModel
                         {
                             Country = attributes.GetProperty("Country").GetString(),
+                            ISO2 = iso2,
                             Technology = attributes.GetProperty("Technology").GetString(),
-                            Unit = attributes.GetProperty("Unit").GetString(),
                             YearlyData = new Dictionary<string, double?>()
                         };
 
@@ -84,12 +89,12 @@ namespace Backend.Services
                 .Select(g => new AggregatedDataModel
                 {
                     Country = g.Key,
+                    ISO2 = g.First().ISO2,
                     Technologies = g
                         .GroupBy(d => d.Technology)
                         .Select(tg => new TechnologyDataModel
                         {
                             Technology = tg.Key,
-                            Unit = tg.First().Unit,
                             YearlyData = tg
                                 .SelectMany(d => d.YearlyData)
                                 .GroupBy(d => d.Key)
