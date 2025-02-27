@@ -14,7 +14,7 @@ export interface CountryData {
   id: number;
   name: string;
   value: number;
-  rateChange: number; // Rate change should be a number
+  rateChange: number;
 }
 
 @Component({
@@ -25,6 +25,7 @@ export interface CountryData {
   styleUrls: ['./sidebar-list.component.css']
 })
 export class SidebarListComponent implements AfterViewInit, OnChanges {
+  @Input() apiType: string = 'default';  // Added apiType input
   @Input() energyType: string = 'Fossil fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
@@ -43,14 +44,27 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['energyType'] || changes['startYear'] || changes['endYear']) {
+    if (changes['energyType'] || changes['startYear'] || changes['endYear'] || changes['apiType']) {
       this.fetchData();
     }
   }
 
   private fetchData(): void {
-    this.http.get<any[]>('http://localhost:5085/api/renewableenergy/aggregated').subscribe((data) => {
-      this.dataSource.data = this.transformData(data);
+    let url = '';
+
+    // Set the URL based on the apiType and fetch data
+    if (this.apiType === 'incomeLoss') {
+      url = 'http://localhost:5085/api/incomeloss/aggregated';
+    } else {
+      url = 'http://localhost:5085/api/renewableenergy/aggregated';
+    }
+
+    this.http.get<any[]>(url).subscribe({
+      next: (data) => {
+        // Update data based on the selected apiType
+        this.dataSource.data = this.transformData(data);
+      },
+      error: (err) => console.error(`Error fetching ${this.apiType} data:`, err),
     });
   }
 
@@ -58,20 +72,23 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     return aggregatedData.map((item, index) => ({
       id: index + 1,
       name: item.country,
-      value: this.getEnergyValue(item),
-      rateChange: parseFloat((Math.random() * 10 - 5).toFixed(2)), // Ensure rateChange is a number
+      value: this.getValue(item),
+      rateChange: parseFloat((Math.random() * 10 - 5).toFixed(2)),
     }));
   }
 
-  private getEnergyValue(item: any): number {
-    const techData = item.technologies.find((tech: any) =>
-      tech.technology.trim().toLowerCase() === this.energyType.trim().toLowerCase()
+  private getValue(item: any): number {
+    // For renewable energy, use 'technologies'. For income loss, use 'variables'.
+    const dataKey = this.apiType === 'incomeLoss' ? 'variables' : 'technologies';
+    const techOrVarData = item[dataKey].find((techOrVar: any) =>
+      techOrVar.name.trim().toLowerCase() === this.energyType.trim().toLowerCase()
     );
-    if (!techData) return 0;
+    if (!techOrVarData) return 0;
 
-    const total = Object.keys(techData.yearlyData)
+    // Calculate the sum for the selected range of years
+    const total = Object.keys(techOrVarData.yearlyData)
       .filter(year => +year.replace('F', '') >= this.startYear && +year.replace('F', '') <= this.endYear)
-      .reduce((sum, year) => sum + (techData.yearlyData[year] || 0), 0);
+      .reduce((sum, year) => sum + (techOrVarData.yearlyData[year] || 0), 0);
 
     return parseFloat(total.toFixed(1));
   }
@@ -80,5 +97,13 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.dataSource.filter = filterValue;
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
+  }
+
+  // Method to update data based on new inputs from the sidebar
+  updateData(data: any[], settings: any) {
+    this.energyType = settings.energyType;
+    this.startYear = settings.startYear;
+    this.endYear = settings.endYear;
+    this.dataSource.data = this.transformData(data);
   }
 }

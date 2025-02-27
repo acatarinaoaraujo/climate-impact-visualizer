@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class IncomeLossDataService {
-  private apiUrl = '/api/incomeloss/aggregated';
+export class IncomeLossDataService implements DataService {
+  private apiUrl = 'api/incomeloss/aggregated';
 
   constructor(private http: HttpClient) {}
 

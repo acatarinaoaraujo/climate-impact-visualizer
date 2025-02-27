@@ -8,7 +8,7 @@
         <li class="dropdown">
           <a href="#">GDP Losses and Benefits</a>
           <ul class="dropdown-menu">
-            <li><a href="https://climatedata.imf.org/pages/ngfs/#ngfs7" target="_blank">Potential National Income Loss</a></li>
+            <li><a routerLink="/income-loss" (click)="changeApiType('income-loss')">Income Loss</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -33,7 +33,7 @@
         <li class="dropdown">
           <a href="#">Mitigation</a>
           <ul class="dropdown-menu">
-            <li><a routerLink="/renewable-energy">Renewable Energy</a></li>
+            <li><a routerLink="/renewable-energy" (click)="changeApiType('renewable-energy')">Renewable Energy</a></li>
             <li><a href="https://climatedata.imf.org/pages/mitigation#mi6" target="_blank">Forest and Carbon</a></li>
           </ul>
         </li>

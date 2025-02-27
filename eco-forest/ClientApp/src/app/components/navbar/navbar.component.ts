@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  @Output() apiTypeChange = new EventEmitter<string>();
 
+  changeApiType(apiType: string) {
+    this.apiTypeChange.emit(apiType);
+  }
 }

@@ -5,7 +5,6 @@ import { GlobeComponent } from './components/globe/globe.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 
-
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, GlobeComponent, SidebarComponent, NavbarComponent, HttpClientModule],
@@ -17,6 +16,7 @@ export class AppComponent {
   selectedEnergyType: string = 'Fossil fuels';
   startYear: number = 2000;
   endYear: number = 2025;
+  selectedApiType: string = 'renewable-energy';
 
   onEnergyTypeChange(energyType: string) {
     this.selectedEnergyType = energyType;
@@ -26,5 +26,8 @@ export class AppComponent {
     this.startYear = yearRange.startYear;
     this.endYear = yearRange.endYear;
   }
-}
 
+  onApiTypeChange(apiType: string) {
+    this.selectedApiType = apiType;
+  }
+}

@@ -124,12 +124,15 @@ app-globe {
 
 <!-- app.component.html -->
 <main class="main">
-  <app-navbar></app-navbar>
+  <app-navbar (apiTypeChange)="onApiTypeChange($event)"></app-navbar>
   <div class="container">
+
     <sidebar class="sidebar"
-      (energyTypeChange)="onEnergyTypeChange($event)"
-      (yearRangeChange)="onYearRangeChange($event)">
-    </sidebar>
+    [apiType]="selectedApiType"
+    (energyTypeChange)="onEnergyTypeChange($event)"
+    (yearRangeChange)="onYearRangeChange($event)">
+  </sidebar>
+
     <div class="content">
       <app-globe
         [energyType]="selectedEnergyType"

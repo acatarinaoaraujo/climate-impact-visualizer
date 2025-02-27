@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
+
 
 @Component({
   selector: 'sidebar',
@@ -30,16 +31,46 @@ import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
     SidebarListComponent,
   ],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnChanges {
+  @Input() apiType: string = 'renewable-energy'; // Receive API type from parent
   isCollapsed = false;
   selectedEnergyType: string = 'Fossil fuels';
   startYear: number = 2000;
   endYear: number = 2025;
 
-  energyTypes: string[] = ['Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy',];
-
+  energyTypes: string[] = ['Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'];
   @Output() energyTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
+
+  @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['apiType']) {
+      console.log('Selected API Type:', this.apiType);
+      this.fetchData(); // Fetch data when API type changes
+    }
+  }
+
+  fetchData() {
+    let url = '';
+    let data = { energyType: this.selectedEnergyType, startYear: this.startYear, endYear: this.endYear };
+
+    // Set the URL based on the API type and fetch data
+    if (this.apiType === 'incomeLoss') {
+      url = 'http://localhost:5085/api/incomeloss/aggregated';
+    } else {
+      url = 'http://localhost:5085/api/renewableenergy/aggregated';
+    }
+
+    this.http.get<any[]>(url).subscribe({
+      next: (response) => {
+        if (this.sidebarList) {
+          this.sidebarList.updateData(response, data); // Pass data to SidebarListComponent
+        }
+      },
+      error: (err) => console.error(`Error fetching ${this.apiType} data:`, err),
+    });
+  }
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
@@ -57,4 +88,3 @@ export class SidebarComponent {
     this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear });
   }
 }
-
