@@ -34,55 +34,65 @@ import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
 export class SidebarComponent {
   @Input() apiType: string = 'renewable-energy'; // Receive API type from parent
   isCollapsed = false;
-  selectedEnergyType: string = 'Fossil fuels';
+  selectedEnergyType: string = 'Fossil fuels'; // Default for renewable energy
   startYear: number = 2000;
   endYear: number = 2025;
 
-  energyTypes: string[] = this.apiType === 'income-loss'
-  ? ['Acute climate damages', 'Business confidence losses', 'Chronic climate damages', 'Mitigation policy costs', 'Total GDP risk']
-  : ['Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'];
-
+  energyTypes: string[] = [];
+  yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable energy
 
   @Output() energyTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
 
-  @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;  // Corrected ViewChild import
+  @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
 
-  constructor(private http: HttpClient) {}  // Inject HttpClient
+  constructor(private http: HttpClient) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['apiType']) {
       console.log('Selected API Type:', this.apiType);
-      this.updateEnergyTypes();
-      this.fetchData(); // Fetch data when API type changes
+      this.updateEnergyTypes();  // Update energy types when apiType changes
+      this.updateYearRange();    // Update year range when apiType changes
+      this.fetchData();          // Fetch data when API type changes
     }
   }
 
-    // Dynamically update energy types based on apiType
-    updateEnergyTypes() {
-      if (this.apiType === 'income-loss') {
-        this.energyTypes = [
-          'Acute climate damages',
-          'Business confidence losses',
-          'Chronic climate damages',
-          'Mitigation policy costs',
-          'Total GDP risk'
-        ];
-      } else {
-        this.energyTypes = [
-          'Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
-        ];
-      }
-
-      // Optionally, set the selectedEnergyType to the first element in the updated array
-      this.selectedEnergyType = this.energyTypes[0] || '';
+  // Dynamically update energy types based on apiType
+  updateEnergyTypes() {
+    if (this.apiType === 'income-loss') {
+      this.energyTypes = [
+        'Acute climate damages',
+        'Business confidence losses',
+        'Chronic climate damages',
+        'Mitigation policy costs',
+        'Total GDP risk'
+      ];
+    } else {
+      this.energyTypes = [
+        'Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
+      ];
     }
+
+    this.selectedEnergyType = this.energyTypes[0] || '';
+  }
+
+  // Dynamically update year range based on apiType
+  updateYearRange() {
+    if (this.apiType === 'income-loss') {
+      this.yearRange = { min: 2025, max: 2040 }; // Set the range for income-loss
+      this.startYear = 2025;  // Set start year to 2024 for income-loss
+      this.endYear = 2040;    // Set end year to 2025 for income-loss
+    } else {
+      this.yearRange = { min: 2000, max: 2025 }; // Set the range for renewable-energy
+      this.startYear = 2000;  // Default for renewable energy
+      this.endYear = 2025;    // Default for renewable energy
+    }
+  }
 
   fetchData() {
     let url = '';
     let data = { energyType: this.selectedEnergyType, startYear: this.startYear, endYear: this.endYear };
 
-    // Set the URL based on the API type and fetch data
     if (this.apiType === 'income-loss') {
       url = 'http://localhost:5085/api/incomeloss/aggregated';
     } else {
@@ -90,12 +100,12 @@ export class SidebarComponent {
     }
 
     this.http.get<any[]>(url).subscribe({
-      next: (response: any[]) => {  // Explicitly define the type of response
+      next: (response: any[]) => {
         if (this.sidebarList) {
-          this.sidebarList.updateData(response, data); // Pass data to SidebarListComponent
+          this.sidebarList.updateData(response, data);
         }
       },
-      error: (err: any) => {  // Explicitly define the type of error
+      error: (err: any) => {
         console.error(`Error fetching ${this.apiType} data:`, err);
       }
     });

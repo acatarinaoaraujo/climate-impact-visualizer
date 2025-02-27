@@ -25,18 +25,23 @@
 
       <p>Year Range</p>
 
-      <mat-slider min="2000" max="2025" step="1" showTickMarks discrete>
+      <mat-slider
+        [min]="yearRange.min"
+        [max]="yearRange.max"
+        [step]="1"
+        [showTickMarks]="true"
+        [discrete]="true"
+      >
         <input matSliderStartThumb [(ngModel)]="startYear" name="start" (ngModelChange)="onYearRangeChange()">
         <input matSliderEndThumb [(ngModel)]="endYear" name="end" (ngModelChange)="onYearRangeChange()">
       </mat-slider>
 
       <app-sidebar-list
-  [apiType]="apiType"
-  [energyType]="selectedEnergyType"
-  [startYear]="startYear"
-  [endYear]="endYear">
-</app-sidebar-list>
-
+        [apiType]="apiType"
+        [energyType]="selectedEnergyType"
+        [startYear]="startYear"
+        [endYear]="endYear">
+      </app-sidebar-list>
 
     </div>
   </mat-drawer>
