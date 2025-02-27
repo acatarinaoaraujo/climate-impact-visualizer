@@ -41,6 +41,8 @@ export class SidebarComponent {
   energyTypes: string[] = this.apiType === 'income-loss'
   ? ['Acute climate damages', 'Business confidence losses', 'Chronic climate damages', 'Mitigation policy costs', 'Total GDP risk']
   : ['Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'];
+
+
   @Output() energyTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
 
@@ -51,9 +53,30 @@ export class SidebarComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['apiType']) {
       console.log('Selected API Type:', this.apiType);
+      this.updateEnergyTypes();
       this.fetchData(); // Fetch data when API type changes
     }
   }
+
+    // Dynamically update energy types based on apiType
+    updateEnergyTypes() {
+      if (this.apiType === 'income-loss') {
+        this.energyTypes = [
+          'Acute climate damages',
+          'Business confidence losses',
+          'Chronic climate damages',
+          'Mitigation policy costs',
+          'Total GDP risk'
+        ];
+      } else {
+        this.energyTypes = [
+          'Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
+        ];
+      }
+
+      // Optionally, set the selectedEnergyType to the first element in the updated array
+      this.selectedEnergyType = this.energyTypes[0] || '';
+    }
 
   fetchData() {
     let url = '';
