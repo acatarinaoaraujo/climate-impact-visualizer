@@ -56,7 +56,6 @@ export class GlobeComponent implements OnChanges {
     });
   }
 
-
   private transformData(geoJsonData: any, aggregatedData: any): any {
     const dataMap = new Map();
     aggregatedData.forEach((item: any) => {
@@ -101,11 +100,10 @@ export class GlobeComponent implements OnChanges {
     }
   }
 
-
   private getEnergyValue(feature: any, technology: string, startYear: number, endYear: number): number {
     const data = feature.properties.aggregatedData;
     if (data) {
-      const techData = data.technologies.find((tech: any) => tech.technology.trim().toLowerCase() === technology.trim().toLowerCase());
+      const techData = data.technologies.find((tech: any) => tech.name.trim().toLowerCase() === technology.trim().toLowerCase());
       if (techData) {
         let total = 0;
         for (let year = startYear; year <= endYear; year++) {

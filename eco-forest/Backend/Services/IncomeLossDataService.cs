@@ -96,7 +96,7 @@ namespace Backend.Services
                         .GroupBy(d => d.Variable)
                         .Select(tg => new IncomeLossVariableDataModel
                         {
-                            Variable = tg.Key,
+                            Name = tg.Key,
                             YearlyData = tg
                                 .SelectMany(d => d.YearlyData)
                                 .GroupBy(d => d.Key)

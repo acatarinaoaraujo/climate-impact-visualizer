@@ -94,7 +94,7 @@ namespace Backend.Services
                         .GroupBy(d => d.Technology)
                         .Select(tg => new TechnologyDataModel
                         {
-                            Technology = tg.Key,
+                            Name = tg.Key,
                             YearlyData = tg
                                 .SelectMany(d => d.YearlyData)
                                 .GroupBy(d => d.Key)
