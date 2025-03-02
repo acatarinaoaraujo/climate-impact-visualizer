@@ -30,7 +30,7 @@ namespace Backend.Services
             {
                 while (true)
                 {
-                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_11_1_Physical_Risks_Climate_related_disasters_frequency/FeatureServer/0/query?where=1%3D1&outFields=Country,ISO2,Indicator,F1980,F1981,F1982,F1983,F1984,F1985,F1986,F1987,F1988,F1989,F1990,F1991,F1992,F1993,F1994,F1995,F1996,F1997,F1998,F1999,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023,F2024&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_7_1_Trade_related_Indicators_CO2_emissions_embodied_in_trade/FeatureServer/0/query?where=1%3D1&outFields=Country,ISO2,Indicator,F1995,F1996,F1997,F1998,F1999,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
 
                     _logger.LogInformation($"Fetching data from: {url}");
 
