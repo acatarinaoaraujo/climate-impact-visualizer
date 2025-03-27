@@ -1160,19 +1160,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/anaaraujo/.nuget/packages/": {}
+    "/Users/homeofficer/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/Backend.csproj",
+      "projectUniqueName": "/Users/homeofficer/Documents/GitHub/eco-forecast/eco-forest/Backend/Backend.csproj",
       "projectName": "Backend",
-      "projectPath": "/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/Backend.csproj",
-      "packagesPath": "/Users/anaaraujo/.nuget/packages/",
-      "outputPath": "/Users/anaaraujo/Documents/GitHub/eco-forecast/eco-forest/Backend/obj/",
+      "projectPath": "/Users/homeofficer/Documents/GitHub/eco-forecast/eco-forest/Backend/Backend.csproj",
+      "packagesPath": "/Users/homeofficer/.nuget/packages/",
+      "outputPath": "/Users/homeofficer/Documents/GitHub/eco-forecast/eco-forest/Backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/anaaraujo/.nuget/NuGet/NuGet.Config"
+        "/Users/homeofficer/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -1196,7 +1196,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -1234,7 +1234,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
