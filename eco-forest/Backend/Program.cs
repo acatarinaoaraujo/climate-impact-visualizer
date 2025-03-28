@@ -17,6 +17,18 @@ builder.Services.AddScoped<RenewableEnergyDataService>();
 builder.Services.AddHttpClient<IncomeLossDataService>();
 builder.Services.AddScoped<IncomeLossDataService>();
 
+// Register ForestCarbonDataService service
+builder.Services.AddHttpClient<ForestCarbonDataService>();
+builder.Services.AddScoped<ForestCarbonDataService>();
+
+// Register EmissionsDataService service
+builder.Services.AddHttpClient<EmissionsDataService>();
+builder.Services.AddScoped<EmissionsDataService>();
+
+// Register ClimateDisastersDataService service
+builder.Services.AddHttpClient<ClimateDisastersDataService>();
+builder.Services.AddScoped<ClimateDisastersDataService>();
+
 // Add Swagger for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
