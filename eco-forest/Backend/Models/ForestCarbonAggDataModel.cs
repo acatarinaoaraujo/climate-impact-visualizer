@@ -2,10 +2,10 @@ namespace Backend.Models
 {
      public class ForestCarbonAggDataModel
     {
-        public string Country { get; set; }
+        public required string Country { get; set; }
 
-        public string ISO2 { get; set; }
-        public List<ForestCarbonIndicatorDataModel> Indicators { get; set; }
+        public required string ISO2 { get; set; }
+        public required List<ForestCarbonIndicatorDataModel> Indicators { get; set; }
     }
 
 }

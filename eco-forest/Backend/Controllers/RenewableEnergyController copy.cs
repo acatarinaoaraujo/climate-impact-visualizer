@@ -18,7 +18,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("aggregated")]
-        public async Task<ActionResult<List<AggregatedDataModel>>> GetAggregatedData()
+        public async Task<ActionResult<List<RenewableEnergyAggDataModel>>> GetAggregatedData()
         {
             var data = await _renewableEnergyDataService.GetAggregatedDataAsync();
             return Ok(data);

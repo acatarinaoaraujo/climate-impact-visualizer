@@ -51,9 +51,9 @@ namespace Backend.Services
 
                         var data = new IncomeLossDataModel
                         {
-                            Country = attributes.GetProperty("Country").GetString(),
+                            Country = attributes.GetProperty("Country").GetString()!,
                             ISO2 = iso2,
-                            Variable = attributes.GetProperty("Variable").GetString(),
+                            Variable = attributes.GetProperty("Variable").GetString()!,
                             YearlyData = new Dictionary<string, double?>()
                         };
 

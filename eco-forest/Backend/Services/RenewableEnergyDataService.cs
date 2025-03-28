@@ -50,9 +50,9 @@ namespace Backend.Services
 
                         var data = new RenewableEnergyDataModel
                         {
-                            Country = attributes.GetProperty("Country").GetString(),
+                            Country = attributes.GetProperty("Country").GetString()!,
                             ISO2 = iso2,
-                            Technology = attributes.GetProperty("Technology").GetString(),
+                            Technology = attributes.GetProperty("Technology").GetString()!,
                             YearlyData = new Dictionary<string, double?>()
                         };
 
@@ -79,20 +79,20 @@ namespace Backend.Services
         }
 
 
-        public async Task<List<AggregatedDataModel>> GetAggregatedDataAsync()
+        public async Task<List<RenewableEnergyAggDataModel>> GetAggregatedDataAsync()
         {
             var dataList = await GetProcessedDataAsync();
 
             // Aggregate data by country
             var aggregatedData = dataList
                 .GroupBy(d => d.Country)
-                .Select(g => new AggregatedDataModel
+                .Select(g => new RenewableEnergyAggDataModel
                 {
                     Country = g.Key,
                     ISO2 = g.First().ISO2,
                     Technologies = g
                         .GroupBy(d => d.Technology)
-                        .Select(tg => new TechnologyDataModel
+                        .Select(tg => new RenewableEnergyTechDataModel
                         {
                             Name = tg.Key,
                             YearlyData = tg

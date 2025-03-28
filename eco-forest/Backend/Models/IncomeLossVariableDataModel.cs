@@ -2,8 +2,8 @@ namespace Backend.Models
 {
      public class IncomeLossVariableDataModel
     {
-        public string Name { get; set; }
-        public Dictionary<string, double> YearlyData { get; set; }
+        public required string Name { get; set; }
+        public required Dictionary<string, double> YearlyData { get; set; }
     }
 
 }

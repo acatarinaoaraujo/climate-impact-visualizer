@@ -51,9 +51,9 @@ namespace Backend.Services
 
                         var data = new EmissionsDataModel
                         {
-                            Country = attributes.GetProperty("Country").GetString(),
+                            Country = attributes.GetProperty("Country").GetString()!,
                             ISO2 = iso2,
-                            Indicator = attributes.GetProperty("Indicator").GetString(),
+                            Indicator = attributes.GetProperty("Indicator").GetString()!,
                             YearlyData = new Dictionary<string, double?>()
                         };
 

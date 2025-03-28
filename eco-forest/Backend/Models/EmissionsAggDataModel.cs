@@ -2,10 +2,10 @@ namespace Backend.Models
 {
      public class EmissionsAggDataModel
     {
-        public string Country { get; set; }
+        public required string Country { get; set; }
 
-        public string ISO2 { get; set; }
-        public List<EmissionsIndicatorDataModel> Indicators { get; set; }
+        public required string ISO2 { get; set; }
+        public required List<EmissionsIndicatorDataModel> Indicators { get; set; }
     }
 
 }
