@@ -67,9 +67,19 @@ export class SidebarComponent {
         'Mitigation policy costs',
         'Total GDP risk'
       ];
-    } else {
+    } else if (this.apiType === 'renewable-energy') {
       this.energyTypes = [
         'Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
+      ];
+    } else if (this.apiType === 'climate-disasters') {
+      this.energyTypes = [
+        'Climate related disasters frequency, Number of Disasters: Drought',
+        'Climate related disasters frequency, Number of Disasters: Earthquake',
+        'Climate related disasters frequency, Number of Disasters: Extreme temperature',
+        'Climate related disasters frequency, Number of Disasters: Flood',
+        'Climate related disasters frequency, Number of Disasters: Landslide',
+        'Climate related disasters frequency, Number of Disasters: Storm',
+        'Climate related disasters frequency, Number of Disasters: Wildfire'
       ];
     }
 
@@ -82,10 +92,14 @@ export class SidebarComponent {
       this.yearRange = { min: 2025, max: 2040 }; // Set the range for income-loss
       this.startYear = 2025;  // Set start year to 2024 for income-loss
       this.endYear = 2040;    // Set end year to 2025 for income-loss
-    } else {
+    }  else if (this.apiType === 'renewable-energy') {
       this.yearRange = { min: 2000, max: 2025 }; // Set the range for renewable-energy
       this.startYear = 2000;  // Default for renewable energy
       this.endYear = 2025;    // Default for renewable energy
+    } else if (this.apiType === 'climate-disasters') {
+      this.yearRange = { min: 1980, max: 2024 }; // Set the range for climate-disasters
+      this.startYear = 1980;  // Default for climate disasters
+      this.endYear = 2024;    // Default for climate disasters
     }
   }
 

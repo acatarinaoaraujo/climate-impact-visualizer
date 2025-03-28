@@ -15,11 +15,17 @@
           </ul>
         </li>
         <li class="dropdown">
-          <a href="#">Adaptation</a>
+          <a>Adaptation</a>
           <ul class="dropdown-menu">
-            <li><a href="https://climatedata.imf.org/pages/adaptation#ad1" target="_blank">Climate-related Disasters</a></li>
+            <li>
+              <a [routerLink]="['/adaptation/climate-disasters']" (click)="changeApiType('climate-disasters')">
+                Climate-related Disasters
+              </a>
+            </li>
           </ul>
         </li>
+        
+        
         <li class="dropdown">
           <a href="#">Climate and Weather</a>
           <ul class="dropdown-menu">

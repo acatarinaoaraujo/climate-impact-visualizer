@@ -57,7 +57,7 @@ namespace Backend.Services
                             YearlyData = new Dictionary<string, double?>()
                         };
 
-                        for (int year = 2023; year <= 2040; year++)
+                        for (int year = 1980; year <= 2024; year++)
                         {
                             string key = $"F{year}";
                             data.YearlyData[key] = attributes.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.Number
