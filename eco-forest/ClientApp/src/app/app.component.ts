@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';  
 import { RouterOutlet } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -6,6 +6,7 @@ import { GlobeComponent } from './components/globe/globe.component';
 import { DisasterGlobeComponent } from './components/globe/climate-disasters/disaster-globe.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -22,6 +23,20 @@ export class AppComponent {
   selectedApiType: string = 'renewable-energy';
 
   selectedIndicatorType = 'Climate related disasters frequency, Number of Disasters: Landslide';
+
+  constructor(private router: Router, private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.router.events.subscribe(() => {
+      // Check the current route and update selectedApiType accordingly
+      const url = this.router.url;
+      if (url.includes('climate-disasters')) {
+        this.selectedApiType = 'climate-disasters';
+      } else if (url.includes('renewable-energy')) {
+        this.selectedApiType = 'renewable-energy';
+      }
+    });
+  }
 
   onIndicatorTypeChange(indicatorType: string) {
     this.selectedIndicatorType = indicatorType;

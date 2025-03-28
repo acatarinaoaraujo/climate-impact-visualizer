@@ -56,8 +56,10 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     console.log('Selected API Type:', this.apiType);
     if (this.apiType === 'income-loss') {
       url = 'http://localhost:5085/api/incomeloss/aggregated';
-    } else {
+    } else if (this.apiType === 'renewable-energy') {
       url = 'http://localhost:5085/api/renewableenergy/aggregated';
+    } else if (this.apiType === 'climate-disasters') {
+      url = 'http://localhost:5085/api/climatedisasters/aggregated';
     }
 
     this.http.get<any[]>(url).subscribe({
@@ -80,7 +82,17 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
 
   private getValue(item: any): number {
     // For renewable energy, use 'technologies'. For income loss, use 'variables'.
-    const dataKey = this.apiType === 'income-loss' ? 'variables' : 'technologies';
+
+    let dataKey = '';
+
+    if (this.apiType === 'income-loss') {
+      dataKey = 'variables';
+    } else if (this.apiType === 'renewable-energy') {
+      dataKey = 'technologies';
+    } else if (this.apiType === 'climate-disasters') {
+      dataKey = 'indicators';
+    }
+    
     const techOrVarData = item[dataKey].find((techOrVar: any) =>
       techOrVar.name.trim().toLowerCase() === this.energyType.trim().toLowerCase()
     );

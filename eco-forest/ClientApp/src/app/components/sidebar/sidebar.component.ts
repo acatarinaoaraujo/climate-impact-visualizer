@@ -109,8 +109,10 @@ export class SidebarComponent {
 
     if (this.apiType === 'income-loss') {
       url = 'http://localhost:5085/api/incomeloss/aggregated';
-    } else {
+    } else if (this.apiType === 'renewable-energy') {
       url = 'http://localhost:5085/api/renewableenergy/aggregated';
+    } else if (this.apiType === 'climate-disasters') {
+      url = 'http://localhost:5085/api/climatedisasters/aggregated';
     }
 
     this.http.get<any[]>(url).subscribe({
