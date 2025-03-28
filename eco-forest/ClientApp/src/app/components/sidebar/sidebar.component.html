@@ -5,7 +5,8 @@
     class="sidenav"
     mode="side"
     [opened]="!isCollapsed"
-    [style.width]="isCollapsed ? '30px' : '470px'"
+    [style.width]="isCollapsed ? '40px' : '470px'"
+    [ngClass]="{ 'collapsed': isCollapsed }"
   >
     <div class="sidenav-content">
       <form>
@@ -23,7 +24,7 @@
         </mat-form-field>
       </form>
 
-      <p>Year Range</p>
+      <p class="year-range">Year Range</p>
 
       <mat-slider
         [min]="yearRange.min"

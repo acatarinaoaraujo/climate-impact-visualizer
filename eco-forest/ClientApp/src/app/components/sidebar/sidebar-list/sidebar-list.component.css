@@ -1,8 +1,13 @@
-
 .table-container {
-    height: 400px;
-    overflow: auto;
-  }
+  height: 400px;
+  overflow: auto;
+  width: 100%; /* Ensure full width */
+}
+
+table {
+  table-layout: fixed; /* Prevent table from resizing based on content */
+  width: 100%; /* Ensure table takes full width */
+}
 
 .mat-column-id {
   border-right: 1px solid currentColor;
@@ -26,12 +31,42 @@
 }
 
 td, th {
-  width: 15%;
+  overflow: hidden; /* Hide overflowed text */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
+.id-column {
+  width: 14%; 
+}
+
+.name-column {
+  width: 30%;
+}
 
 .country-filter {
   margin-bottom: -20px;
   border-radius: 0 !important;
+  overflow: auto;
+  width: 100%; /* Ensure full width */
 
 }
+
+.text-blue {
+  color: green; /* Blue color for positive change */
+}
+
+.text-red {
+  color: red; /* Red color for negative change */
+}
+
+.rate-change-container {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+.small-icon {
+  font-size: 22px; /* Adjust the icon size */
+  margin-right: 5px; /* Optional: Add some space between the icon and the value */
+}
+

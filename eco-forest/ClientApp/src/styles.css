@@ -1,13 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: hsl(0, 0%, 99%);
     margin: 0;
     padding: 0;
   }
 
   h1 {
-    color: #333;
+    color: #923030;
   }
 
 html, body { height: 100%; }

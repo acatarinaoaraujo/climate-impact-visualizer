@@ -9,19 +9,16 @@ body {
 
   .navbar {
     width: 100%;
-    background: #222;
-    color: white;
+    background: white;
+    color: var(--gray-700);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 20px;
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
     z-index: 1000;
-    box-sizing: border-box;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* box-sizing: border-box;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
   }
 
   .navbar-container {
@@ -33,46 +30,38 @@ body {
     margin: 0 auto;
   }
 
-  .navbar-left .logo {
-    height: 40px;
-    transition: 0.3s;
-  }
 
-  .navbar-left .logo:hover {
-    transform: scale(1.1);
-  }
-
-  .navbar-right {
+  .nav {
     list-style: none;
     display: flex;
-    gap: 30px;
+    gap: 110px;
     align-items: center;
   }
 
-  .navbar-right a {
-    color: white;
+  .nav a {
+    color: var(--gray-700);
     text-decoration: none;
     font-size: 16px;
     font-weight: 500;
     transition: 0.3s;
   }
 
-  .navbar-right a:hover {
+  .nav a:hover {
     color: #00bcd4;
     transform: scale(1.1);
   }
 
-  .navbar-right .dropdown {
+  .nav .dropdown {
     position: relative;
   }
 
-  .navbar-right .dropdown-menu {
+  .nav .dropdown-menu {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
-    background: #444;
-    color: white;
+    background: white;
+    color: var(--gray-700);
     list-style: none;
     padding: 10px;
     border-radius: 5px;
@@ -80,36 +69,21 @@ body {
     min-width: 150px;
   }
 
-  .navbar-right .dropdown:hover .dropdown-menu {
+  .nav .dropdown:hover .dropdown-menu {
     display: block;
   }
 
-  .navbar-right .dropdown-menu li {
+  .nav .dropdown-menu li {
     padding: 8px 10px;
   }
 
-  .navbar-right .dropdown-menu li a {
-    color: #ddd;
+  .nav .dropdown-menu li a {
+    color: var(--gray-700);
     font-size: 14px;
     transition: 0.3s;
   }
 
-  .navbar-right .dropdown-menu li a:hover {
+  .nav .dropdown-menu li a:hover {
     color: #00bcd4;
     transform: scale(1.05);
-  }
-
-  /* Responsive design for mobile */
-  @media screen and (max-width: 768px) {
-    .navbar-left .logo {
-      height: 30px;
-    }
-
-    .navbar-right {
-      gap: 15px;
-    }
-
-    .navbar-right a {
-      font-size: 14px;
-    }
   }
