@@ -66,6 +66,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       next: (data) => {
         // Update data based on the selected apiType
         this.dataSource.data = this.transformData(data);
+        console.log('Data fetched:', this.dataSource.data);
       },
       error: (err) => console.error(`Error fetching ${this.apiType} data:`, err),
     });
@@ -91,7 +92,9 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       dataKey = 'technologies';
     } else if (this.apiType === 'climate-disasters') {
       dataKey = 'indicators';
+  
     }
+
     
     const techOrVarData = item[dataKey].find((techOrVar: any) =>
       techOrVar.name.trim().toLowerCase() === this.energyType.trim().toLowerCase()

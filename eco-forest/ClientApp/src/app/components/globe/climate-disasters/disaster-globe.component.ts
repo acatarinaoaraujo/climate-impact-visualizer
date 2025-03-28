@@ -53,7 +53,6 @@ export class DisasterGlobeComponent implements OnChanges {
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
       this.http.get('http://localhost:5085/api/climatedisasters/aggregated').subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
-        console.log(this.geoJsonData);
         this.updateGlobeVisualization();
       });
     });
@@ -105,7 +104,6 @@ export class DisasterGlobeComponent implements OnChanges {
 
   private getDisasterNumbers(feature: any, indicators: string, startYear: number, endYear: number): number {
     const data = feature.properties.aggregatedData;
-    console.log(data);
     if (data) {
       const indicatorData = data.indicators.find((tech: any) => tech.name.trim().toLowerCase() === indicators.trim().toLowerCase());
       if (indicatorData) {

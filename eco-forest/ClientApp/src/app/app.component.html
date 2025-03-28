@@ -106,6 +106,15 @@ app-globe {
   align-items: center;
 }
 
+app-disaster-globe {
+  flex-grow: 1;
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
   @media screen and (max-width: 650px) {
     .content {
@@ -142,7 +151,7 @@ app-globe {
       [endYear]="endYear">
     </app-globe>
 
-    <app-disaster-globe *ngIf="selectedApiType === 'disaster-indicators'"
+    <app-disaster-globe *ngIf="selectedApiType === 'climate-disasters'"
       [indicatorType]="selectedIndicatorType"
       [startYear]="startYear"
       [endYear]="endYear">
