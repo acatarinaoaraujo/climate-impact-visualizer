@@ -11,7 +11,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: true, 
   imports: [CommonModule, RouterOutlet, GlobeComponent, DisasterGlobeComponent, SidebarComponent, NavbarComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -28,16 +27,22 @@ export class AppComponent {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.route.url.subscribe(() => {
+    this.router.events.subscribe(() => {
+      // Check the current route and update selectedApiType accordingly
       const url = this.router.url;
-      this.selectedApiType = url.includes('climate-disasters') ? 'climate-disasters' : 'renewable-energy';
+      if (url.includes('climate-disasters')) {
+        this.selectedApiType = 'climate-disasters';
+      } else if (url.includes('renewable-energy')) {
+        this.selectedApiType = 'renewable-energy';
+      }
     });
   }
-  
-  onIndicatorTypeChange(indicatorType: string) {
-    this.selectedIndicatorType = indicatorType;
-  }
 
+  onIndicatorTypeChange(indicatorType: string) {
+    if (this.selectedApiType === 'climate-disasters') {
+      this.selectedIndicatorType = indicatorType;
+    }
+  }
 
   onEnergyTypeChange(energyType: string) {
     this.selectedEnergyType = energyType;

@@ -31,19 +31,23 @@ import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
     SidebarListComponent,
   ],
 })
+
 export class SidebarComponent {
-  @Input() apiType: string = 'renewable-energy'; // Receive API type from parent
+  @Input() apiType: string = 'renewable-energy';
   isCollapsed = false;
-  selectedEnergyType: string = 'Fossil fuels'; // Default for renewable energy
+  selectedEnergyType: string = 'Fossil fuels';
+  selectedIndicatorType: string = 'Climate related disasters frequency, Number of Disasters: Landslide';
   startYear: number = 2000;
   endYear: number = 2025;
 
   energyTypes: string[] = [];
-  yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable energy
-  
+  indicatorTypes: string[] = []; // ✅ Add this line to fix the error
+  yearRange: { min: number, max: number } = { min: 2000, max: 2025 };
+
   @Output() energyTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
-  
+  @Output() indicatorTypeChange = new EventEmitter<string>();
+
   @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
 
   constructor(private http: HttpClient) {}
@@ -51,14 +55,14 @@ export class SidebarComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['apiType']) {
       console.log('Selected API Type:', this.apiType);
-      this.updateEnergyTypes();  // Update energy types when apiType changes
-      this.updateYearRange();    // Update year range when apiType changes
-      this.fetchData();          // Fetch data when API type changes
+      this.updateOptions();  // ✅ Call the correct function name
+      this.updateYearRange();
+      this.fetchData();
     }
   }
 
-  // Dynamically update energy types based on apiType
-  updateEnergyTypes() {
+  // ✅ Correct function name
+  updateOptions() {
     if (this.apiType === 'income-loss') {
       this.energyTypes = [
         'Acute climate damages',
@@ -67,12 +71,14 @@ export class SidebarComponent {
         'Mitigation policy costs',
         'Total GDP risk'
       ];
+      this.selectedEnergyType = this.energyTypes[0] || '';
     } else if (this.apiType === 'renewable-energy') {
       this.energyTypes = [
         'Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
       ];
+      this.selectedEnergyType = this.energyTypes[0] || '';
     } else if (this.apiType === 'climate-disasters') {
-      this.energyTypes = [
+      this.indicatorTypes = [ // ✅ Uses `indicatorTypes` instead of `energyTypes`
         'Climate related disasters frequency, Number of Disasters: Drought',
         'Climate related disasters frequency, Number of Disasters: Earthquake',
         'Climate related disasters frequency, Number of Disasters: Extreme temperature',
@@ -81,9 +87,8 @@ export class SidebarComponent {
         'Climate related disasters frequency, Number of Disasters: Storm',
         'Climate related disasters frequency, Number of Disasters: Wildfire'
       ];
+      this.selectedIndicatorType = this.indicatorTypes[0] || '';
     }
-
-    this.selectedEnergyType = this.energyTypes[0] || '';
   }
 
   // Dynamically update year range based on apiType
@@ -134,12 +139,38 @@ export class SidebarComponent {
   formatLabel(value: number): string {
     return `${value}`;
   }
+
+  onSelectionChange(selectedValue: string) {
+    console.log('Selection Changed:', selectedValue); // Debug log
+    if (this.apiType === 'renewable-energy') {
+      this.selectedEnergyType = selectedValue;
+      this.energyTypeChange.emit(selectedValue);
+    } else if (this.apiType === 'climate-disasters') {
+      this.selectedIndicatorType = selectedValue;
+      this.indicatorTypeChange.emit(selectedValue);
+    }
+    this.fetchData(); // Ensure data updates
+  }
+  
   
 
-  onEnergyTypeChange() {
+  onEnergyTypeChange(energyType: string) {
+    this.selectedEnergyType = energyType; // Update local value
     console.log('Selected Energy Type:', this.selectedEnergyType);
-    this.energyTypeChange.emit(this.selectedEnergyType); // Emits selected energy type
+    this.energyTypeChange.emit(energyType); // Emit to parent if needed
   }
+  
+  onIndicatorTypeChange(indicatorType: string) {
+    this.selectedIndicatorType = indicatorType;
+    console.log('Selected Indicator Type:', this.selectedIndicatorType);
+    this.indicatorTypeChange.emit(indicatorType); // Emits selected indicator type
+  }
+  
+
+  // onEnergyTypeChange() {
+  //   console.log('Selected Energy Type:', this.selectedEnergyType);
+  //   this.energyTypeChange.emit(this.selectedEnergyType); // Emits selected energy type
+  // }
   
   onYearRangeChange() {
     this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear }); // Emits year range object

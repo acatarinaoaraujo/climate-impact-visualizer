@@ -140,8 +140,10 @@ app-disaster-globe {
     <sidebar class="sidebar"
     [apiType]="selectedApiType"
     (energyTypeChange)="onEnergyTypeChange($event)"
+    (indicatorTypeChange)="onIndicatorTypeChange($event)"
     (yearRangeChange)="onYearRangeChange($event)">
   </sidebar>
+  
 
   <div class="content">
     <!-- Conditionally render the globe components based on selectedApiType -->

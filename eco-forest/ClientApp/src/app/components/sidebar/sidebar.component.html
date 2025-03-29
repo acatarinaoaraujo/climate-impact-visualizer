@@ -11,19 +11,19 @@
     <div class="sidenav-content">
       <form>
         <mat-form-field appearance="outline">
-          <mat-label>Energy Type</mat-label>
+          <mat-label>{{ apiType === 'renewable-energy' ? 'Energy Type' : 'Indicator Type' }}</mat-label>
           <mat-select
-            [(ngModel)]="selectedEnergyType"
-            name="energyType"
-            (ngModelChange)="onEnergyTypeChange()"
+            [ngModel]="apiType === 'renewable-energy' ? selectedEnergyType : selectedIndicatorType"
+            (ngModelChange)="onSelectionChange($event)"
+            [ngModelOptions]="{standalone: true}"
           >
-            <mat-option *ngFor="let energy of energyTypes" [value]="energy">
-              {{ energy }}
+            <mat-option *ngFor="let option of apiType === 'renewable-energy' ? energyTypes : indicatorTypes" [value]="option">
+              {{ option }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </form>
-
+      
       <p class="year-range">Year Range</p>
 
       <mat-slider
@@ -43,7 +43,6 @@
         [startYear]="startYear"
         [endYear]="endYear">
       </app-sidebar-list>
-
     </div>
   </mat-drawer>
 
@@ -53,3 +52,4 @@
     </button>
   </div>
 </mat-drawer-container>
+
