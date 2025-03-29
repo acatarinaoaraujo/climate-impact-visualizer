@@ -40,10 +40,10 @@ export class SidebarComponent {
 
   energyTypes: string[] = [];
   yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable energy
-
+  
   @Output() energyTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
-
+  
   @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
 
   constructor(private http: HttpClient) {}
@@ -134,12 +134,13 @@ export class SidebarComponent {
   formatLabel(value: number): string {
     return `${value}`;
   }
+  
 
   onEnergyTypeChange() {
-    this.energyTypeChange.emit(this.selectedEnergyType);
+    this.energyTypeChange.emit(this.selectedEnergyType); // Emits selected energy type
   }
-
+  
   onYearRangeChange() {
-    this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear });
+    this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear }); // Emits year range object
   }
 }
