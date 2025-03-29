@@ -7,10 +7,10 @@ import { interpolateGreens } from 'd3-scale-chromatic';
 
 @Component({
   selector: 'app-disaster-globe',
-  standalone: true,
+  // standalone: true,
   templateUrl: './disaster-globe.component.html',
   styleUrls: ['./disaster-globe.component.css'],
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
 })
 export class DisasterGlobeComponent implements OnChanges {
   @Input() indicatorType: string = 'Climate related disasters frequency, Number of Disasters: Landslide';
@@ -19,18 +19,23 @@ export class DisasterGlobeComponent implements OnChanges {
 
   private globeInstance: any;
   private geoJsonData: any;
+  private aggregatedData: any;
+  private dataLoaded = false;
+  private debounceTimeout: any;
 
   constructor(private http: HttpClient) {}
 
+  ngOnInit(): void {
+    this.loadGlobe();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['indicatorType'] || changes['startYear'] || changes['endYear']) {
-      this.updateGlobeVisualization();
+    if (this.dataLoaded && (changes['indicatorType'] || changes['startYear'] || changes['endYear'])) {
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => this.updateGlobeVisualization(), 300);
     }
   }
 
-  ngAfterViewInit(): void {
-    this.loadGlobe();
-  }
 
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
@@ -53,7 +58,9 @@ export class DisasterGlobeComponent implements OnChanges {
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
       this.http.get('http://localhost:5085/api/climatedisasters/aggregated').subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
-        this.updateGlobeVisualization();
+        this.aggregatedData = aggregatedData;
+        this.dataLoaded = true;
+        this.updateGlobeVisualization(); // Ensure globe is updated after data is fetched
       });
     });
   }
@@ -61,7 +68,6 @@ export class DisasterGlobeComponent implements OnChanges {
   private transformData(geoJsonData: any, aggregatedData: any): any {
     const dataMap = new Map();
     aggregatedData.forEach((item: any) => {
-
       const normalizedIso2 = item.isO2.trim().toLowerCase();
       dataMap.set(normalizedIso2, item);
     });
@@ -76,9 +82,8 @@ export class DisasterGlobeComponent implements OnChanges {
     return geoJsonData;
   }
 
-
-
   private updateGlobeVisualization(): void {
+    console.log('Updating globe visualization with new data...');
     if (this.globeInstance && this.geoJsonData) {
       const values = this.geoJsonData.features.map((feat: any) =>
         this.getDisasterNumbers(feat, this.indicatorType, this.startYear, this.endYear)

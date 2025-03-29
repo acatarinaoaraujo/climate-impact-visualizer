@@ -24,9 +24,11 @@ export interface CountryData {
   templateUrl: './sidebar-list.component.html',
   styleUrls: ['./sidebar-list.component.css']
 })
+
 export class SidebarListComponent implements AfterViewInit, OnChanges {
-  @Input() apiType: string = 'default';  // Added apiType input
+  @Input() apiType: string = 'default';  
   @Input() energyType: string = 'Fossil fuels';
+  @Input() indicatorType: string = 'Climate related disasters frequency, Number of Disasters: Landslide'; // Added indicatorType
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
 
@@ -44,7 +46,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['energyType'] || changes['startYear'] || changes['endYear'] || changes['apiType']) {
+    if (changes['energyType'] || changes['indicatorType'] || changes['startYear'] || changes['endYear'] || changes['apiType']) {
       this.fetchData();
     }
   }
@@ -52,8 +54,6 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   private fetchData(): void {
     let url = '';
 
-    // Set the URL based on the apiType and fetch data
-    console.log('Selected API Type:', this.apiType);
     if (this.apiType === 'income-loss') {
       url = 'http://localhost:5085/api/incomeloss/aggregated';
     } else if (this.apiType === 'renewable-energy') {
@@ -64,9 +64,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
 
     this.http.get<any[]>(url).subscribe({
       next: (data) => {
-        // Update data based on the selected apiType
         this.dataSource.data = this.transformData(data);
-        console.log('Data fetched:', this.dataSource.data);
       },
       error: (err) => console.error(`Error fetching ${this.apiType} data:`, err),
     });
@@ -82,8 +80,6 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   }
 
   private getValue(item: any): number {
-    // For renewable energy, use 'technologies'. For income loss, use 'variables'.
-
     let dataKey = '';
 
     if (this.apiType === 'income-loss') {
@@ -91,17 +87,14 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     } else if (this.apiType === 'renewable-energy') {
       dataKey = 'technologies';
     } else if (this.apiType === 'climate-disasters') {
-      dataKey = 'indicators';
-  
+      dataKey = 'indicators'; // This is for climate disasters
     }
 
-    
     const techOrVarData = item[dataKey].find((techOrVar: any) =>
-      techOrVar.name.trim().toLowerCase() === this.energyType.trim().toLowerCase()
+      (this.apiType === 'climate-disasters' ? techOrVar.name.trim().toLowerCase() === this.indicatorType.trim().toLowerCase() : techOrVar.name.trim().toLowerCase() === this.energyType.trim().toLowerCase())
     );
     if (!techOrVarData) return 0;
 
-    // Calculate the sum for the selected range of years
     const total = Object.keys(techOrVarData.yearlyData)
       .filter(year => +year.replace('F', '') >= this.startYear && +year.replace('F', '') <= this.endYear)
       .reduce((sum, year) => sum + (techOrVarData.yearlyData[year] || 0), 0);
@@ -115,9 +108,9 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
 
-  // Method to update data based on new inputs from the sidebar
   updateData(data: any[], settings: any) {
     this.energyType = settings.energyType;
+    this.indicatorType = settings.indicatorType; // Added indicatorType to update data
     this.startYear = settings.startYear;
     this.endYear = settings.endYear;
     this.dataSource.data = this.transformData(data);

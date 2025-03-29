@@ -110,8 +110,7 @@ export class SidebarComponent {
 
   fetchData() {
     let url = '';
-    let data = { energyType: this.selectedEnergyType, startYear: this.startYear, endYear: this.endYear };
-
+    
     if (this.apiType === 'income-loss') {
       url = 'http://localhost:5085/api/incomeloss/aggregated';
     } else if (this.apiType === 'renewable-energy') {
@@ -119,9 +118,18 @@ export class SidebarComponent {
     } else if (this.apiType === 'climate-disasters') {
       url = 'http://localhost:5085/api/climatedisasters/aggregated';
     }
-
+  
     this.http.get<any[]>(url).subscribe({
       next: (response: any[]) => {
+        // Pass data dynamically based on current state
+        let data = { 
+          energyType: this.selectedEnergyType, 
+          indicatorType: this.selectedIndicatorType, 
+          startYear: this.startYear, 
+          endYear: this.endYear 
+        };
+  
+        // Update the sidebar data with the response
         if (this.sidebarList) {
           this.sidebarList.updateData(response, data);
         }
@@ -131,6 +139,7 @@ export class SidebarComponent {
       }
     });
   }
+  
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
@@ -154,17 +163,17 @@ export class SidebarComponent {
   
   
 
-  onEnergyTypeChange(energyType: string) {
-    this.selectedEnergyType = energyType; // Update local value
-    console.log('Selected Energy Type:', this.selectedEnergyType);
-    this.energyTypeChange.emit(energyType); // Emit to parent if needed
-  }
+  // onEnergyTypeChange(energyType: string) {
+  //   this.selectedEnergyType = energyType; // Update local value
+  //   console.log('Selected Energy Type:', this.selectedEnergyType);
+  //   this.energyTypeChange.emit(energyType); // Emit to parent if needed
+  // }
   
-  onIndicatorTypeChange(indicatorType: string) {
-    this.selectedIndicatorType = indicatorType;
-    console.log('Selected Indicator Type:', this.selectedIndicatorType);
-    this.indicatorTypeChange.emit(indicatorType); // Emits selected indicator type
-  }
+  // onIndicatorTypeChange(indicatorType: string) {
+  //   this.selectedIndicatorType = indicatorType;
+  //   console.log('Selected Indicator Type:', this.selectedIndicatorType);
+  //   this.indicatorTypeChange.emit(indicatorType); // Emits selected indicator type
+  // }
   
 
   // onEnergyTypeChange() {
