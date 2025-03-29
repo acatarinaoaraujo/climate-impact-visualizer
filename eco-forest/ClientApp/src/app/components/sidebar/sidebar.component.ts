@@ -137,6 +137,7 @@ export class SidebarComponent {
   
 
   onEnergyTypeChange() {
+    console.log('Selected Energy Type:', this.selectedEnergyType);
     this.energyTypeChange.emit(this.selectedEnergyType); // Emits selected energy type
   }
   

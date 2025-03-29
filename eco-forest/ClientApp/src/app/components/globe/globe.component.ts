@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
@@ -10,24 +10,28 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   styleUrls: ['./globe.component.css'],
   imports: [CommonModule],
 })
-export class GlobeComponent implements OnChanges {
+export class GlobeComponent implements OnInit, OnChanges {
   @Input() energyType: string = 'Fossil fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
 
   private globeInstance: any;
   private geoJsonData: any;
+  private aggregatedData: any;
+  private dataLoaded = false;
+  private debounceTimeout: any;
 
   constructor(private http: HttpClient) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['energyType'] || changes['startYear'] || changes['endYear']) {
-      this.updateGlobeVisualization();
-    }
+  ngOnInit(): void {
+    this.loadGlobe();
   }
 
-  ngAfterViewInit(): void {
-    this.loadGlobe();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.dataLoaded && (changes['energyType'] || changes['startYear'] || changes['endYear'])) {
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => this.updateGlobeVisualization(), 300);
+    }
   }
 
   private loadGlobe(): void {
@@ -42,7 +46,7 @@ export class GlobeComponent implements OnChanges {
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
 
-        this.fetchData();
+        this.fetchData(); // Ensure data is fetched initially
       });
     }
   }
@@ -51,7 +55,9 @@ export class GlobeComponent implements OnChanges {
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
       this.http.get('http://localhost:5085/api/renewableenergy/aggregated').subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
-        this.updateGlobeVisualization();
+        this.aggregatedData = aggregatedData;
+        this.dataLoaded = true;
+        this.updateGlobeVisualization(); // Ensure globe is updated after data is fetched
       });
     });
   }
@@ -59,7 +65,6 @@ export class GlobeComponent implements OnChanges {
   private transformData(geoJsonData: any, aggregatedData: any): any {
     const dataMap = new Map();
     aggregatedData.forEach((item: any) => {
-
       const normalizedIso2 = item.isO2.trim().toLowerCase();
       dataMap.set(normalizedIso2, item);
     });
@@ -73,8 +78,6 @@ export class GlobeComponent implements OnChanges {
 
     return geoJsonData;
   }
-
-
 
   private updateGlobeVisualization(): void {
     if (this.globeInstance && this.geoJsonData) {
