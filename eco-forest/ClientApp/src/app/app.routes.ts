@@ -11,7 +11,7 @@ export const routes: Routes = [
   { path: 'climate-weather/surface-temperature', redirectTo: 'https://climatedata.imf.org/pages/climate-and-weather#cc1', pathMatch: 'full' },
   { path: 'climate-weather/mean-sea-levels', redirectTo: 'https://climatedata.imf.org/pages/climate-and-weather#cc3', pathMatch: 'full' },
   { path: 'mitigation/forest-carbon', redirectTo: 'https://climatedata.imf.org/pages/mitigation#mi6', pathMatch: 'full' },
-  { path: 'adaptation/climate-disasters', component: DisasterGlobeComponent },
+  { path: 'climate-disasters', component: DisasterGlobeComponent },
 ];
 
 @NgModule({
