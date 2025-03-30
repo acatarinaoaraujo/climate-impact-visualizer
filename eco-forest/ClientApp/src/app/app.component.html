@@ -134,25 +134,25 @@ app-disaster-globe {
 <!-- app.component.html -->
 <main class="main">
   <app-navbar (apiTypeChange)="onApiTypeChange($event)"></app-navbar>
-  <router-outlet></router-outlet>
+  <!-- <router-outlet></router-outlet> -->
   <div class="container">
 
     <sidebar class="sidebar"
     [apiType]="selectedApiType"
-    (energyTypeChange)="onEnergyTypeChange($event)"
+    (energyTypeChange)="onTypeChange($event)"
     (yearRangeChange)="onYearRangeChange($event)">
   </sidebar>
 
   <div class="content">
     <!-- Conditionally render the globe components based on selectedApiType -->
-    <app-globe *ngIf="selectedApiType === 'renewable-energy'"
-      [energyType]="selectedEnergyType"
+    <app-energy-globe *ngIf="selectedApiType === 'renewable-energy'"
+      [energyType]="selectedType"
       [startYear]="startYear"
       [endYear]="endYear">
-    </app-globe>
+    </app-energy-globe>
 
     <app-disaster-globe *ngIf="selectedApiType === 'climate-disasters'"
-      [indicatorType]="selectedIndicatorType"
+      [indicatorType]="selectedType"
       [startYear]="startYear"
       [endYear]="endYear">
     </app-disaster-globe>

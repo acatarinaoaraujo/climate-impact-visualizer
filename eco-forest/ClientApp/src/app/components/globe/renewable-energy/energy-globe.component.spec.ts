@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GlobeComponent } from './globe.component';
+import { EnergyGlobeComponent } from './energy-globe.component';
 
-describe('GlobeComponent', () => {
-  let component: GlobeComponent;
-  let fixture: ComponentFixture<GlobeComponent>;
+describe('EnergyGlobeComponent', () => {
+  let component: EnergyGlobeComponent;
+  let fixture: ComponentFixture<EnergyGlobeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GlobeComponent]
+      imports: [EnergyGlobeComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GlobeComponent);
+    fixture = TestBed.createComponent(EnergyGlobeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

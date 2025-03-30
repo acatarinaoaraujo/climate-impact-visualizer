@@ -5,12 +5,12 @@ import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic';
 
 @Component({
-  selector: 'app-globe',
-  templateUrl: './globe.component.html',
-  styleUrls: ['./globe.component.css'],
+  selector: 'app-energy-globe',
+  templateUrl: './energy-globe.component.html',
+  styleUrls: ['./energy-globe.component.css'],
   imports: [CommonModule],
 })
-export class GlobeComponent implements OnInit, OnChanges {
+export class EnergyGlobeComponent implements OnInit, OnChanges {
   @Input() energyType: string = 'Fossil fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
