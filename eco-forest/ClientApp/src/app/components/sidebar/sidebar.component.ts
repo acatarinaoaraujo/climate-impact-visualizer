@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; // Import HttpClient
+import { HttpClient } from '@angular/common/http';
+import { Router, NavigationEnd } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,12 +33,12 @@ import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
   ],
 })
 export class SidebarComponent {
-  @Input() apiType: string = 'renewable-energy'; // Receive API type from parent
+  @Input() apiType: string = ''; // Receive API type from parent
   isCollapsed = false;
-  selectedEnergyType: string = 'Fossil fuels'; // Default for renewable energy
+  selectedEnergyType: string = ''; // Default for renewable energy
   startYear: number = 2000;
   endYear: number = 2025;
-
+  
   energyTypes: string[] = [];
   yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable energy
   
@@ -46,18 +47,44 @@ export class SidebarComponent {
   
   @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
 
-  constructor(private http: HttpClient) {}
+  private currentApiType: string = ''; // To track the current API type
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['apiType']) {
-      console.log('Selected API Type:', this.apiType);
-      this.updateEnergyTypes();  // Update energy types when apiType changes
-      this.updateYearRange();    // Update year range when apiType changes
-      this.fetchData();          // Fetch data when API type changes
-    }
+  constructor(private http: HttpClient, private router: Router) {}
+
+  ngOnInit(): void {
+    this.setApiTypeFromUrl();
+    // Listen for router navigation end event, only update if URL changes
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.setApiTypeFromUrl();
+      }
+    });
   }
 
-  // Dynamically update energy types based on apiType
+  private setApiTypeFromUrl(): void {
+    const currentUrl = this.router.url;
+    console.log('Current URL:', currentUrl); // Debugging line to check the URL
+    
+    // Check if API type needs to be updated based on the URL
+    if (currentUrl.includes('climate-disasters') && this.currentApiType !== 'climate-disasters') {
+      this.currentApiType = 'climate-disasters';
+      this.apiType = this.currentApiType;  // Update the input API type
+      this.updateSidebarData();
+    } else if (currentUrl.includes('renewable-energy') && this.currentApiType !== 'renewable-energy') {
+      this.currentApiType = 'renewable-energy';
+      this.apiType = this.currentApiType;  // Update the input API type
+      this.updateSidebarData();
+    }
+    console.log('API Type from URL:', this.apiType); // Debugging line to check API type
+  }
+
+  private updateSidebarData(): void {
+    console.log('Updating sidebar with API Type:', this.apiType);
+    this.updateEnergyTypes();
+    this.updateYearRange();
+    this.fetchData();
+  }
+
   updateEnergyTypes() {
     if (this.apiType === 'income-loss') {
       this.energyTypes = [
@@ -86,20 +113,19 @@ export class SidebarComponent {
     this.selectedEnergyType = this.energyTypes[0] || '';
   }
 
-  // Dynamically update year range based on apiType
   updateYearRange() {
     if (this.apiType === 'income-loss') {
-      this.yearRange = { min: 2025, max: 2040 }; // Set the range for income-loss
-      this.startYear = 2025;  // Set start year to 2024 for income-loss
-      this.endYear = 2040;    // Set end year to 2025 for income-loss
+      this.yearRange = { min: 2025, max: 2040 }; 
+      this.startYear = 2025;  
+      this.endYear = 2040;
     }  else if (this.apiType === 'renewable-energy') {
-      this.yearRange = { min: 2000, max: 2025 }; // Set the range for renewable-energy
-      this.startYear = 2000;  // Default for renewable energy
-      this.endYear = 2025;    // Default for renewable energy
+      this.yearRange = { min: 2000, max: 2025 };
+      this.startYear = 2000;  
+      this.endYear = 2025;
     } else if (this.apiType === 'climate-disasters') {
-      this.yearRange = { min: 1980, max: 2024 }; // Set the range for climate-disasters
-      this.startYear = 1980;  // Default for climate disasters
-      this.endYear = 2024;    // Default for climate disasters
+      this.yearRange = { min: 1980, max: 2024 };
+      this.startYear = 1980;  
+      this.endYear = 2024;
     }
   }
 
@@ -134,14 +160,13 @@ export class SidebarComponent {
   formatLabel(value: number): string {
     return `${value}`;
   }
-  
 
   onEnergyTypeChange() {
     console.log('Selected Energy Type:', this.selectedEnergyType);
-    this.energyTypeChange.emit(this.selectedEnergyType); // Emits selected energy type
+    this.energyTypeChange.emit(this.selectedEnergyType);
   }
-  
+
   onYearRangeChange() {
-    this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear }); // Emits year range object
+    this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear });
   }
 }
