@@ -3,7 +3,7 @@
     <div class="navbar-container">
       <ul class="nav">
         <li class="dropdown">
-          <a href="#">GDP Losses and Benefits</a>
+          <a href="#">GDP Losses</a>
           <ul class="dropdown-menu">
             <li><a routerLink="/income-loss" (click)="changeApiType('income-loss')">Income Loss</a></li>
           </ul>
@@ -11,33 +11,25 @@
         <li class="dropdown">
           <a href="#">Greenhouse Emissions</a>
           <ul class="dropdown-menu">
-            <li><a href="https://climatedata.imf.org/pages/greenhouse-gas-emissions#gg4" target="_blank">Carbon Footprints</a></li>
+            <li> <a routerLink="/greenhouse-emissions" (click)="changeApiType('greenhouse-emissions')">Carbon Footprints</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a>Adaptation</a>
           <ul class="dropdown-menu">
             <li>
-              <a [routerLink]="['/climate-disasters']" (click)="changeApiType('climate-disasters')">
+              <a routerLink]="/climate-disasters" (click)="changeApiType('climate-disasters')">
                 Climate-related Disasters
               </a>
             </li>
           </ul>
         </li>
         
-        
-        <li class="dropdown">
-          <a href="#">Climate and Weather</a>
-          <ul class="dropdown-menu">
-            <li><a href="https://climatedata.imf.org/pages/climate-and-weather#cc1" target="_blank">Annual Surface Temperature Change</a></li>
-            <li><a href="https://climatedata.imf.org/pages/climate-and-weather#cc3" target="_blank">Change in Mean Sea Levels</a></li>
-          </ul>
-        </li>
         <li class="dropdown">
           <a href="#">Mitigation</a>
           <ul class="dropdown-menu">
             <li><a routerLink="/renewable-energy" (click)="changeApiType('renewable-energy')">Renewable Energy</a></li>
-            <li><a href="https://climatedata.imf.org/pages/mitigation#mi6" target="_blank">Forest and Carbon</a></li>
+            <li><a routerLink="/forest-carbon" (click)="changeApiType('forest-carbon')">Forest and Carbon</a></li>
           </ul>
         </li>
       </ul>
