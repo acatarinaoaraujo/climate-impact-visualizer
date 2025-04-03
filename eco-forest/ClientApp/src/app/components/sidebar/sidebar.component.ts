@@ -32,7 +32,6 @@ import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
     SidebarListComponent,
   ],
 })
-
 export class SidebarComponent {
   @Input() apiType: string = ''; // Receive API type from parent
   isCollapsed = false;
@@ -67,19 +66,16 @@ export class SidebarComponent {
     console.log('Current URL:', currentUrl); // Debugging line to check the URL
     
     // Check if API type needs to be updated based on the URL
-    if (currentUrl.includes('climate-disasters')) {
-      this.apiType = 'climate-disasters';
-    } else if (currentUrl.includes('renewable-energy')) {
-      this.apiType = 'renewable-energy';
-    } else if (currentUrl.includes('income-loss')) {
-      this.apiType = 'income-loss';
-    } else if (currentUrl.includes('greenhouse-emissions')) {
-      this.apiType = 'greenhouse-emissions';
-    } else if (currentUrl.includes('forest-carbon')) {
-      this.apiType = 'forest-carbon';
+    if (currentUrl.includes('climate-disasters') && this.currentApiType !== 'climate-disasters') {
+      this.currentApiType = 'climate-disasters';
+      this.apiType = this.currentApiType;  // Update the input API type
+      this.updateSidebarData();
+    } else if (currentUrl.includes('renewable-energy') && this.currentApiType !== 'renewable-energy') {
+      this.currentApiType = 'renewable-energy';
+      this.apiType = this.currentApiType;  // Update the input API type
+      this.updateSidebarData();
     }
-    
-    this.updateSidebarData();
+    console.log('API Type from URL:', this.apiType); // Debugging line to check API type
   }
 
   private updateSidebarData(): void {
@@ -112,30 +108,25 @@ export class SidebarComponent {
         'Climate related disasters frequency, Number of Disasters: Storm',
         'Climate related disasters frequency, Number of Disasters: Wildfire'
       ];
-    } else if (this.apiType === 'greenhouse-emissions') {
-      this.energyTypes = [];
-    } else if (this.apiType === 'forest-carbon') {
-      this.energyTypes = [];
     }
-    
+
     this.selectedEnergyType = this.energyTypes[0] || '';
   }
 
   updateYearRange() {
     if (this.apiType === 'income-loss') {
       this.yearRange = { min: 2025, max: 2040 }; 
-    } else if (this.apiType === 'renewable-energy') {
+      this.startYear = 2025;  
+      this.endYear = 2040;
+    }  else if (this.apiType === 'renewable-energy') {
       this.yearRange = { min: 2000, max: 2025 };
+      this.startYear = 2000;  
+      this.endYear = 2025;
     } else if (this.apiType === 'climate-disasters') {
       this.yearRange = { min: 1980, max: 2024 };
-    } else if (this.apiType === 'greenhouse-emissions') {
-      this.yearRange = { min: 1990, max: 2025 };
-    } else if (this.apiType === 'forest-carbon') {
-      this.yearRange = { min: 1990, max: 2025 };
+      this.startYear = 1980;  
+      this.endYear = 2024;
     }
-    
-    this.startYear = this.yearRange.min;
-    this.endYear = this.yearRange.max;
   }
 
   fetchData() {
@@ -148,10 +139,6 @@ export class SidebarComponent {
       url = 'http://localhost:5085/api/renewableenergy/aggregated';
     } else if (this.apiType === 'climate-disasters') {
       url = 'http://localhost:5085/api/climatedisasters/aggregated';
-    } else if (this.apiType === 'greenhouse-emissions') {
-      url = 'http://localhost:5085/api/greenhouseemissions/aggregated';
-    } else if (this.apiType === 'forest-carbon') {
-      url = 'http://localhost:5085/api/forestcarbon/aggregated';
     }
 
     this.http.get<any[]>(url).subscribe({
