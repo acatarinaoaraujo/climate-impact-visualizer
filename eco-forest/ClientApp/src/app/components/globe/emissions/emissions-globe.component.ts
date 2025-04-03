@@ -12,7 +12,7 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   styleUrls: ['./emission-globe.component.css'],
   imports: [CommonModule, HttpClientModule],
 })
-export class EmissionGlobeComponent implements OnChanges {
+export class EmissionsGlobeComponent implements OnChanges {
   @Input() indicatorType: string = 'CO2 Emissions Embodied in Final Demand, balance';
   @Input() startYear: number = 1995;
   @Input() endYear: number = 2021;
