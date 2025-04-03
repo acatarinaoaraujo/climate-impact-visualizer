@@ -10,7 +10,7 @@ import { EnergyGlobeComponent } from './components/globe/renewable-energy/energy
 import { DisasterGlobeComponent } from './components/globe/climate-disasters/disaster-globe.component';
 import { ForestGlobeComponent } from './components/globe/forest-carbon/forest-globe.component';
 import { IncomeGlobeComponent } from './components/globe/income-loss/income-globe.component';
-import { EmissionsGlobeComponent } from './components/globe/emissions/emissions-globe.component';
+import { EmissionsGlobeComponent } from './components/globe/emissions/emission-globe.component';
 
 @Component({
   selector: 'app-root',
