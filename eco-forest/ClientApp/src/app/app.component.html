@@ -156,24 +156,6 @@ app-disaster-globe {
       [startYear]="startYear"
       [endYear]="endYear">
     </app-disaster-globe>
-
-    <app-forest-globe *ngIf="selectedApiType === 'forest-loss'"
-      [indicatorType]="selectedType"
-      [startYear]="startYear"
-      [endYear]="endYear">
-    </app-forest-globe>
-
-    <app-emission-globe *ngIf="selectedApiType === 'emission'"
-      [indicatorType]="selectedType"
-      [startYear]="startYear"
-      [endYear]="endYear">
-    </app-emission-globe>
-
-    <app-income-loss-globe *ngIf="selectedApiType === 'income-loss'"
-      [variableType]="selectedType"
-      [startYear]="startYear"
-      [endYear]="endYear">
-    </app-income-loss-globe>
   </div>
   </div>
 </main>
