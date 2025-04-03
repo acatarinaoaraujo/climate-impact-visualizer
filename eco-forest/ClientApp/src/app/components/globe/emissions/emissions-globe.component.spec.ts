@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EmissionGlobeComponent } from './emission-globe.component';
+import { EmissionGlobeComponent } from './emissions-globe.component';
 
 describe('EmissionGlobeComponent', () => {
   let component: EmissionGlobeComponent;
