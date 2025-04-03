@@ -169,21 +169,13 @@ app-disaster-globe {
       [endYear]="endYear">
     </app-emission-globe>
 
-    <app-income-loss-globe *ngIf="selectedApiType === 'income-loss'"
+    <app-income-globe *ngIf="selectedApiType === 'income-loss'"
       [variableType]="selectedType"
       [startYear]="startYear"
       [endYear]="endYear">
-    </app-income-loss-globe>
+    </app-income-globe>
   </div>
   </div>
 </main>
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
 
 <router-outlet />
