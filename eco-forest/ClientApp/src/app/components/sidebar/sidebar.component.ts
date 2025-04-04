@@ -37,15 +37,15 @@ export class SidebarComponent {
   isCollapsed = false;
 
   @Input() apiType: string = ''; // Receive API type from parent
-  selectedEnergyType: string = ''; // Default for renewable energy
+  selectedIndicator: string = ''; // Default for renewable indicator
 
   startYear: number = 2000;
   endYear: number = 2025;
   
-  energyTypes: string[] = [];
-  yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable energy
+  indicatorTypes: string[] = [];
+  yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable indicator
   
-  @Output() energyTypeChange = new EventEmitter<string>();
+  @Output() indicatorTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
   
   @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
@@ -84,14 +84,14 @@ export class SidebarComponent {
 
   private updateSidebarData(): void {
     console.log('Updating sidebar with API Type:', this.apiType);
-    this.updateEnergyTypes();
+    this.updateIndicatorTypes();
     this.updateYearRange();
     this.fetchData();
   }
 
-  updateEnergyTypes() {
+  updateIndicatorTypes() {
     if (this.apiType === 'income-loss') {
-      this.energyTypes = [
+      this.indicatorTypes = [
         'Acute Climate Damages',
         'Business Confidence Losses',
         'Chronic Climate Damages',
@@ -99,36 +99,37 @@ export class SidebarComponent {
         'Total GDP Risk'
       ];
     } else if (this.apiType === 'renewable-energy') {
-      this.energyTypes = [
+      this.indicatorTypes = [
         'Fossil Fuels', 'Solar Energy', 'Wind Energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
       ];
     } else if (this.apiType === 'climate-disasters') {
-      this.energyTypes = [
+      this.indicatorTypes = [
         'Drought',
         'Earthquake',
-        'Extreme temperature',
         'Flood',
         'Landslide',
         'Storm',
         'Wildfire'
       ];
     } else if (this.apiType === 'greenhouse-emissions') {
-      this.energyTypes = [
+      this.indicatorTypes = [
         'Production',
         'Gross Imports',
         'Gross Exports',
         'Final Domestic Demand'
       ];
     } else if (this.apiType === 'forest-carbon') {
-      this.energyTypes = [
+      this.indicatorTypes = [
         'Forest Area',
         'Index Of Forest Extent',
         'Land Area',
-        'Share Of Forest Area'
+        'Share Of Forest Area',
+        'Carbon Stocks In Forests',
+        'Index Of Carbon Stocks In Forests',
       ];
     }
     
-    this.selectedEnergyType = this.energyTypes[0] || '';
+    this.selectedIndicator = this.indicatorTypes[0] || '';
   }
 
   updateYearRange() {
@@ -150,7 +151,7 @@ export class SidebarComponent {
 
   fetchData() {
     let url = '';
-    let data = { energyType: this.selectedEnergyType, startYear: this.startYear, endYear: this.endYear };
+    let data = { indicatorType: this.selectedIndicator, startYear: this.startYear, endYear: this.endYear };
 
     if (this.apiType === 'income-loss') {
       url = 'http://localhost:5085/api/incomeloss/aggregated';
@@ -184,9 +185,9 @@ export class SidebarComponent {
     return `${value}`;
   }
 
-  onEnergyTypeChange() {
-    console.log('Selected Energy Type:', this.selectedEnergyType);
-    this.energyTypeChange.emit(this.selectedEnergyType);
+  onIndicatorTypeChange() {
+    console.log('Selected Indicator Type:', this.selectedIndicator);
+    this.indicatorTypeChange.emit(this.selectedIndicator);
   }
 
   onYearRangeChange() {

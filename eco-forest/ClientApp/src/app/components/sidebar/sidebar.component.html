@@ -11,14 +11,14 @@
     <div class="sidenav-content">
       <form>
         <mat-form-field appearance="outline">
-          <mat-label>Energy Type</mat-label>
+          <mat-label>Indicator Type</mat-label>
           <mat-select
-            [(ngModel)]="selectedEnergyType"
-            name="energyType"
-            (ngModelChange)="onEnergyTypeChange()"
+            [(ngModel)]="selectedIndicator"
+            name="indicatorType"
+            (ngModelChange)="onIndicatorTypeChange()"
           >
-            <mat-option *ngFor="let energy of energyTypes" [value]="energy">
-              {{ energy }}
+            <mat-option *ngFor="let indicator of indicatorTypes" [value]="indicator">
+              {{ indicator }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -39,7 +39,7 @@
 
       <app-sidebar-list
         [apiType]="apiType"
-        [energyType]="selectedEnergyType"
+        [indicatorType]="selectedIndicator"
         [startYear]="startYear"
         [endYear]="endYear">
       </app-sidebar-list>

@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/cor
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateGreens } from 'd3-scale-chromatic';
+import { interpolateGreens, interpolateInferno, interpolateWarm, interpolateYlOrRd } from 'd3-scale-chromatic';
 
 @Component({
   selector: 'app-energy-globe',
@@ -11,7 +11,7 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   imports: [CommonModule],
 })
 export class EnergyGlobeComponent implements OnInit, OnChanges {
-  @Input() energyType: string = 'Fossil fuels';
+  @Input() energyType: string = 'Fossil Fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
 
@@ -85,9 +85,16 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
         this.getEnergyValue(feat, this.energyType, this.startYear, this.endYear)
       );
       const maxVal = Math.max(...values); // Get max value to scale colors correctly
-
-      const colorScale = scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]); // FIX: Define domain
-
+  
+      let colorScale: any;
+      if (this.energyType === 'Fossil Fuels') {
+        // Use orange to red scale for Fossil Fuels
+        colorScale = scaleSequentialSqrt(interpolateYlOrRd).domain([0, maxVal]); // You can choose interpolateOranges or a custom scale
+      } else {
+        // Use green scale for other energy types
+        colorScale = scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
+      }
+  
       this.globeInstance
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
         .polygonCapColor((feat: any) => colorScale(this.getEnergyValue(feat, this.energyType, this.startYear, this.endYear)))
@@ -100,8 +107,19 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEnergyValue(d, this.energyType, this.startYear, this.endYear)))
         );
+  
+      // Set polygon side color depending on energy type
+      this.globeInstance
+        .polygonSideColor((feat: any) => {
+          if (this.energyType === 'Fossil Fuels') {
+            return 'rgba(255, 69, 0, 0.35)'; // Orange color for Fossil Fuels
+          } else {
+            return 'rgba(0, 100, 0, 0.35)'; // Green color for other energy types
+          }
+        });
     }
   }
+  
 
   private getEnergyValue(feature: any, technology: string, startYear: number, endYear: number): number {
     const data = feature.properties.aggregatedData;
@@ -114,6 +132,7 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
             total += techData.yearlyData[`F${year}`];
           }
         }
+        total = Math.round(total * 100) / 100;
         return total;
       }
     }
