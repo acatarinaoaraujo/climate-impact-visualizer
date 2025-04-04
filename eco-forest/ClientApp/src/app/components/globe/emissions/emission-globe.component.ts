@@ -13,7 +13,7 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   imports: [CommonModule, HttpClientModule],
 })
 export class EmissionsGlobeComponent implements OnChanges {
-  @Input() indicatorType: string = 'CO2 Emissions Embodied in Final Demand, balance';
+  @Input() indicatorType: string = 'Production';
   @Input() startYear: number = 1995;
   @Input() endYear: number = 2021;
 
@@ -36,7 +36,7 @@ export class EmissionsGlobeComponent implements OnChanges {
     if (typeof window !== 'undefined') {
       import('globe.gl').then((module) => {
         const Globe = module.default;
-        this.globeInstance = new Globe(document.getElementById('globeViz') as HTMLElement)
+        this.globeInstance = new Globe(document.getElementById('emissionGlobe') as HTMLElement)
           .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
           .lineHoverPrecision(0)
           .polygonAltitude(0.06)

@@ -13,7 +13,7 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   imports: [CommonModule, HttpClientModule],
 })
 export class IncomeGlobeComponent implements OnChanges {
-  @Input() variableType: string = 'Acute climate damages';
+  @Input() variableType: string = 'Acute Climate Damages';
   @Input() startYear: number = 2023;
   @Input() endYear: number = 2040;
 
@@ -36,7 +36,7 @@ export class IncomeGlobeComponent implements OnChanges {
     if (typeof window !== 'undefined') {
       import('globe.gl').then((module) => {
         const Globe = module.default;
-        this.globeInstance = new Globe(document.getElementById('globeViz') as HTMLElement)
+        this.globeInstance = new Globe(document.getElementById('incomeGlobe') as HTMLElement)
           .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
           .lineHoverPrecision(0)
           .polygonAltitude(0.06)

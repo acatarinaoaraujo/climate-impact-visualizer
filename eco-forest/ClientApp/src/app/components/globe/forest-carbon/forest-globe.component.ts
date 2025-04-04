@@ -36,7 +36,7 @@ export class ForestGlobeComponent implements OnChanges {
     if (typeof window !== 'undefined') {
       import('globe.gl').then((module) => {
         const Globe = module.default;
-        this.globeInstance = new Globe(document.getElementById('globeViz') as HTMLElement)
+        this.globeInstance = new Globe(document.getElementById('forestGlobe') as HTMLElement)
           .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
           .lineHoverPrecision(0)
           .polygonAltitude(0.06)

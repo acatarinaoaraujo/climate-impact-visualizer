@@ -38,11 +38,11 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
     if (typeof window !== 'undefined') {
       import('globe.gl').then((module) => {
         const Globe = module.default;
-        this.globeInstance = new Globe(document.getElementById('globeViz') as HTMLElement)
+        this.globeInstance = new Globe(document.getElementById('energyGlobe') as HTMLElement)
           .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
           .lineHoverPrecision(0)
           .polygonAltitude(0.06)
-          .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
+          .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)') 
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
 

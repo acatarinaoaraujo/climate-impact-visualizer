@@ -13,7 +13,7 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   imports: [CommonModule, HttpClientModule],
 })
 export class DisasterGlobeComponent implements OnChanges {
-  @Input() indicatorType: string = 'Climate related disasters frequency, Number of Disasters: Landslide';
+  @Input() indicatorType: string = 'Drought';
   @Input() startYear: number = 1980;
   @Input() endYear: number = 2024;
 
@@ -36,7 +36,7 @@ export class DisasterGlobeComponent implements OnChanges {
     if (typeof window !== 'undefined') {
       import('globe.gl').then((module) => {
         const Globe = module.default;
-        this.globeInstance = new Globe(document.getElementById('globeViz') as HTMLElement)
+        this.globeInstance = new Globe(document.getElementById('disasterGlobe') as HTMLElement)
           .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
           .lineHoverPrecision(0)
           .polygonAltitude(0.06)
@@ -92,7 +92,7 @@ export class DisasterGlobeComponent implements OnChanges {
         .polygonCapColor((feat: any) => colorScale(this.getDisasterNumbers(feat, this.indicatorType, this.startYear, this.endYear)))
         .polygonLabel(({ properties: d }: any) => `
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-          ${this.indicatorType} (${this.startYear}-${this.endYear}): <i>${this.getDisasterNumbers({ properties: d }, this.indicatorType, this.startYear, this.endYear)}</i> GWh
+          ${this.indicatorType} (${this.startYear}-${this.endYear}): <i>${this.getDisasterNumbers({ properties: d }, this.indicatorType, this.startYear, this.endYear)} </i> 
         `)
         .onPolygonHover((hoverD: any) =>
           this.globeInstance
