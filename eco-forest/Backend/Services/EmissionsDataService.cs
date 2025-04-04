@@ -14,6 +14,14 @@ namespace Backend.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<EmissionsDataService> _logger;
 
+        private readonly Dictionary<string, string> _indicatorMapping = new()
+        {
+            { "CO2 Emissions Embodied in Production", "Production" },
+            { "CO2 Emissions Embodied in Gross Imports", "Gross Imports" },
+            { "CO2 Emissions Embodied in Gross Exports", "Gross Exports" },
+            { "CO2 Emissions Embodied in Final Domestic Demand", "Final Domestic Demand" }
+        };
+
         public EmissionsDataService(HttpClient httpClient, ILogger<EmissionsDataService> logger)
         {
             _httpClient = httpClient;
@@ -49,11 +57,15 @@ namespace Backend.Services
                         if (string.IsNullOrEmpty(iso2))
                             continue;
 
+                        var indicator = attributes.GetProperty("Indicator").GetString() ?? "";
+                        if (!_indicatorMapping.ContainsKey(indicator))
+                            continue; // Skip unmapped indicators
+
                         var data = new EmissionsDataModel
                         {
                             Country = attributes.GetProperty("Country").GetString()!,
                             ISO2 = iso2,
-                            Indicator = attributes.GetProperty("Indicator").GetString()!,
+                            Indicator = _indicatorMapping[indicator],
                             YearlyData = new Dictionary<string, double?>()
                         };
 
@@ -94,6 +106,7 @@ namespace Backend.Services
                     ISO2 = g.First().ISO2,
                     Indicators = g
                         .GroupBy(d => d.Indicator)
+                        .Where(tg => _indicatorMapping.ContainsValue(tg.Key)) // Ensure only mapped indicators are included
                         .Select(tg => new EmissionsIndicatorDataModel
                         {
                             Name = tg.Key,
@@ -112,6 +125,5 @@ namespace Backend.Services
             _logger.LogInformation($"Aggregated {aggregatedData.Count} records.");
             return aggregatedData;
         }
-
     }
 }

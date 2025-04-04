@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Backend.Models;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Globalization;
 
 namespace Backend.Services
 {
@@ -94,7 +95,9 @@ namespace Backend.Services
                         .GroupBy(d => d.Technology)
                         .Select(tg => new RenewableEnergyTechDataModel
                         {
-                            Name = tg.Key,
+
+                            Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(tg.Key.ToLower()),
+
                             YearlyData = tg
                                 .SelectMany(d => d.YearlyData)
                                 .GroupBy(d => d.Key)

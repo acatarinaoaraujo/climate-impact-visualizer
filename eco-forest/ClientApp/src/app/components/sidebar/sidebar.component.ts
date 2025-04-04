@@ -34,9 +34,11 @@ import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
 })
 
 export class SidebarComponent {
-  @Input() apiType: string = ''; // Receive API type from parent
   isCollapsed = false;
+
+  @Input() apiType: string = ''; // Receive API type from parent
   selectedEnergyType: string = ''; // Default for renewable energy
+
   startYear: number = 2000;
   endYear: number = 2025;
   
@@ -47,8 +49,6 @@ export class SidebarComponent {
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
   
   @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
-
-  private currentApiType: string = ''; // To track the current API type
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -92,30 +92,40 @@ export class SidebarComponent {
   updateEnergyTypes() {
     if (this.apiType === 'income-loss') {
       this.energyTypes = [
-        'Acute climate damages',
-        'Business confidence losses',
-        'Chronic climate damages',
-        'Mitigation policy costs',
-        'Total GDP risk'
+        'Acute Climate Damages',
+        'Business Confidence Losses',
+        'Chronic Climate Damages',
+        'Mitigation Policy Costs',
+        'Total GDP Risk'
       ];
     } else if (this.apiType === 'renewable-energy') {
       this.energyTypes = [
-        'Fossil fuels', 'Solar energy', 'Wind energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
+        'Fossil Fuels', 'Solar Energy', 'Wind Energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
       ];
     } else if (this.apiType === 'climate-disasters') {
       this.energyTypes = [
-        'Climate related disasters frequency, Number of Disasters: Drought',
-        'Climate related disasters frequency, Number of Disasters: Earthquake',
-        'Climate related disasters frequency, Number of Disasters: Extreme temperature',
-        'Climate related disasters frequency, Number of Disasters: Flood',
-        'Climate related disasters frequency, Number of Disasters: Landslide',
-        'Climate related disasters frequency, Number of Disasters: Storm',
-        'Climate related disasters frequency, Number of Disasters: Wildfire'
+        'Drought',
+        'Earthquake',
+        'Extreme temperature',
+        'Flood',
+        'Landslide',
+        'Storm',
+        'Wildfire'
       ];
     } else if (this.apiType === 'greenhouse-emissions') {
-      this.energyTypes = [];
+      this.energyTypes = [
+        'Production',
+        'Gross Imports',
+        'Gross Exports',
+        'Final Domestic Demand'
+      ];
     } else if (this.apiType === 'forest-carbon') {
-      this.energyTypes = [];
+      this.energyTypes = [
+        'Forest Area',
+        'Index Of Forest Extent',
+        'Land Area',
+        'Share Of Forest Area'
+      ];
     }
     
     this.selectedEnergyType = this.energyTypes[0] || '';

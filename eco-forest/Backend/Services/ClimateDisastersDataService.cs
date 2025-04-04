@@ -14,6 +14,17 @@ namespace Backend.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<ClimateDisastersDataService> _logger;
 
+        // Define the list of valid indicators to filter
+        private readonly HashSet<string> _validIndicators = new HashSet<string>
+        {
+            "Drought",
+            "Earthquake",
+            "Flood",
+            "Landslide",
+            "Storm",
+            "Wildfire"
+        };
+
         public ClimateDisastersDataService(HttpClient httpClient, ILogger<ClimateDisastersDataService> logger)
         {
             _httpClient = httpClient;
@@ -49,11 +60,18 @@ namespace Backend.Services
                         if (string.IsNullOrEmpty(iso2))
                             continue;
 
+                        var indicator = attributes.GetProperty("Indicator").GetString()!;
+                        var indicatorName = indicator.Split(' ').Last(); // Get the last word of the indicator
+
+                        // Filter out indicators that are not in the valid list
+                        if (!_validIndicators.Contains(indicatorName))
+                            continue;
+
                         var data = new ClimateDisastersDataModel
                         {
                             Country = attributes.GetProperty("Country").GetString()!,
                             ISO2 = iso2,
-                            Indicator = attributes.GetProperty("Indicator").GetString()!,
+                            Indicator = indicator,
                             YearlyData = new Dictionary<string, double?>()
                         };
 
@@ -94,9 +112,10 @@ namespace Backend.Services
                     ISO2 = g.First().ISO2,
                     Indicators = g
                         .GroupBy(d => d.Indicator)
+                        .Where(tg => _validIndicators.Contains(tg.Key.Split(' ').Last())) // Only include valid indicators
                         .Select(tg => new ClimateDisastersIndicatorDataModel
                         {
-                            Name = tg.Key,
+                            Name = tg.Key.Split(' ').Last(),
                             YearlyData = tg
                                 .SelectMany(d => d.YearlyData)
                                 .GroupBy(d => d.Key)
@@ -112,6 +131,5 @@ namespace Backend.Services
             _logger.LogInformation($"Aggregated {aggregatedData.Count} records.");
             return aggregatedData;
         }
-
     }
 }

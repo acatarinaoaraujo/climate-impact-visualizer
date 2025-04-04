@@ -96,7 +96,7 @@ namespace Backend.Services
                         .GroupBy(d => d.Indicator)
                         .Select(tg => new ForestCarbonIndicatorDataModel
                         {
-                            Name = tg.Key,
+                            Name = string.Join(" ", tg.Key.Split(' ').Select(word => char.ToUpper(word[0]) + word.Substring(1))),
                             YearlyData = tg
                                 .SelectMany(d => d.YearlyData)
                                 .GroupBy(d => d.Key)
