@@ -1,14 +1,15 @@
 import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateGreens, interpolateInferno, interpolateWarm, interpolateYlOrRd } from 'd3-scale-chromatic';
+import { interpolateGreens, interpolateYlOrRd } from 'd3-scale-chromatic';
 
 @Component({
   selector: 'app-energy-globe',
+  standalone: true,
   templateUrl: './energy-globe.component.html',
   styleUrls: ['./energy-globe.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule],
 })
 export class EnergyGlobeComponent implements OnInit, OnChanges {
   @Input() energyType: string = 'Fossil Fuels';
@@ -28,39 +29,50 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes detected:', changes);
     if (this.dataLoaded && (changes['energyType'] || changes['startYear'] || changes['endYear'])) {
       clearTimeout(this.debounceTimeout);
-      this.debounceTimeout = setTimeout(() => this.updateGlobeVisualization(), 300);
+      this.debounceTimeout = setTimeout(() => {
+        console.log('Updating globe visualization...');
+        this.updateGlobeVisualization();
+      }, 300);
     }
   }
-
+  
+  
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
+      console.log('Loading globe...');
       import('globe.gl').then((module) => {
         const Globe = module.default;
         this.globeInstance = new Globe(document.getElementById('energyGlobe') as HTMLElement)
           .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
           .lineHoverPrecision(0)
           .polygonAltitude(0.06)
-          .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)') 
+          .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
-
+          
         this.fetchData(); // Ensure data is fetched initially
+      }).catch(err => {
+        console.error('Globe loading failed:', err);
       });
     }
   }
+  
 
   private fetchData(): void {
+    console.log('Fetching data...');
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
       this.http.get('http://localhost:5085/api/renewableenergy/aggregated').subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.aggregatedData = aggregatedData;
         this.dataLoaded = true;
-        this.updateGlobeVisualization(); // Ensure globe is updated after data is fetched
+        this.updateGlobeVisualization();
       });
     });
   }
+  
 
   private transformData(geoJsonData: any, aggregatedData: any): any {
     const dataMap = new Map();
@@ -88,10 +100,8 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   
       let colorScale: any;
       if (this.energyType === 'Fossil Fuels') {
-        // Use orange to red scale for Fossil Fuels
-        colorScale = scaleSequentialSqrt(interpolateYlOrRd).domain([0, maxVal]); // You can choose interpolateOranges or a custom scale
+        colorScale = scaleSequentialSqrt(interpolateYlOrRd).domain([0, maxVal]);
       } else {
-        // Use green scale for other energy types
         colorScale = scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
       }
   
@@ -108,19 +118,14 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEnergyValue(d, this.energyType, this.startYear, this.endYear)))
         );
   
-      // Set polygon side color depending on energy type
       this.globeInstance
-        .polygonSideColor((feat: any) => {
-          if (this.energyType === 'Fossil Fuels') {
-            return 'rgba(255, 69, 0, 0.35)'; // Orange color for Fossil Fuels
-          } else {
-            return 'rgba(0, 100, 0, 0.35)'; // Green color for other energy types
-          }
-        });
+        .polygonSideColor((feat: any) => this.energyType === 'Fossil Fuels' ? 'rgba(255, 69, 0, 0.35)' : 'rgba(0, 100, 0, 0.35)');
+
+      this.globeInstance.redraw();
+  
     }
   }
   
-
   private getEnergyValue(feature: any, technology: string, startYear: number, endYear: number): number {
     const data = feature.properties.aggregatedData;
     if (data) {

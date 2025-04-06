@@ -26,7 +26,7 @@ export interface CountryData {
 })
 export class SidebarListComponent implements AfterViewInit, OnChanges {
   @Input() apiType: string = 'default';  // Added apiType input
-  @Input() indicatorType: string = 'Fossil fuels';
+  @Input() indicatorType: string = 'Fossil Fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
 
@@ -64,14 +64,9 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       url = 'http://localhost:5085/api/emissions/aggregated'; 
     } 
 
-    // Set the URL based on the apiType and fetch data
-    console.log('Selected API Type:', this.apiType);
-    console.log('Fetching data from URL:', url);
-
     this.http.get<any[]>(url).subscribe({
       next: (data) => {
         this.dataSource.data = this.transformData(data);
-        console.log('Data fetched:', this.dataSource.data);
       },
       error: (err) => console.error(`Error fetching ${this.apiType} data:`, err),
     });
@@ -96,8 +91,6 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     } else if ((this.apiType === 'climate-disasters') || (this.apiType === 'greenhouse-emissions') || (this.apiType === 'forest-carbon')) {
       dataKey = 'indicators';
     }
-
-    console.log('Data Key:', dataKey);
 
 
     const techOrVarData = item[dataKey].find((techOrVar: any) =>

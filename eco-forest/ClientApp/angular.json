@@ -19,6 +19,9 @@
             "polyfills": [
               "zone.js"
             ],
+            "allowedCommonJsDependencies": [
+              "frame-ticker"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
   {

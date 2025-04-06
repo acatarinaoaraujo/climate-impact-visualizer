@@ -13,9 +13,9 @@
         <mat-form-field appearance="outline">
           <mat-label>Indicator Type</mat-label>
           <mat-select
-            [(ngModel)]="selectedIndicator"
+            [(ngModel)]="indicatorType"
             name="indicatorType"
-            (ngModelChange)="onIndicatorTypeChange()"
+            (ngModelChange)="onIndicatorChange($event)"
           >
             <mat-option *ngFor="let indicator of indicatorTypes" [value]="indicator">
               {{ indicator }}
@@ -39,7 +39,7 @@
 
       <app-sidebar-list
         [apiType]="apiType"
-        [indicatorType]="selectedIndicator"
+        [indicatorType]="indicatorType"
         [startYear]="startYear"
         [endYear]="endYear">
       </app-sidebar-list>

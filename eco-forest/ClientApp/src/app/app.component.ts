@@ -32,7 +32,7 @@ import { EmissionsGlobeComponent } from './components/globe/emissions/emission-g
 })
 export class AppComponent {
   title = 'client-app';
-  indicatorType: string = '';
+  indicatorType: string = 'Fossil Fuels';
   startYear: number = 2000;
   endYear: number = 2025;
   apiType: string = '';
@@ -50,9 +50,9 @@ export class AppComponent {
       else this.apiType = '';
     });
   }
-  
-  onIndicatorChange(type: string) {
-    this.indicatorType = type;
+  onIndicatorTypeChange(newIndicator: string) {
+    console.log('Indicator Type Changed:', newIndicator);
+    this.indicatorType = newIndicator;
   }
 
   onYearRangeChange(yearRange: { startYear: number; endYear: number }) {

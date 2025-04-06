@@ -1,9 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges, Inject } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic';
-
 
 @Component({
   selector: 'app-income-globe',
@@ -12,28 +11,37 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   styleUrls: ['./income-globe.component.css'],
   imports: [CommonModule, HttpClientModule],
 })
-export class IncomeGlobeComponent implements OnChanges {
+export class IncomeGlobeComponent implements OnChanges, OnInit {
   @Input() variableType: string = 'Acute Climate Damages';
   @Input() startYear: number = 2023;
   @Input() endYear: number = 2040;
 
   private globeInstance: any;
   private geoJsonData: any;
+  private aggregatedData: any;
+  private dataLoaded = false;
+  private debounceTimeout: any;
 
   constructor(private http: HttpClient) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['variableType'] || changes['startYear'] || changes['endYear']) {
-      this.updateGlobeVisualization();
-    }
+  ngOnInit(): void {
+    this.loadGlobe();
   }
 
-  ngAfterViewInit(): void {
-    this.loadGlobe();
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes detected:', changes);
+    if (this.dataLoaded && (changes['variableType'] || changes['startYear'] || changes['endYear'])) {
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => {
+        console.log('Updating globe visualization...');
+        this.updateGlobeVisualization();
+      }, 300);
+    }
   }
 
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
+      console.log('Loading globe...');
       import('globe.gl').then((module) => {
         const Globe = module.default;
         this.globeInstance = new Globe(document.getElementById('incomeGlobe') as HTMLElement)
@@ -43,16 +51,21 @@ export class IncomeGlobeComponent implements OnChanges {
           .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
-
-        this.fetchData();
+          
+        this.fetchData(); // Ensure data is fetched initially
+      }).catch(err => {
+        console.error('Globe loading failed:', err);
       });
     }
   }
 
   private fetchData(): void {
+    console.log('Fetching data...');
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
       this.http.get('http://localhost:5085/api/incomeloss/aggregated').subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
+        this.aggregatedData = aggregatedData;
+        this.dataLoaded = true;
         this.updateGlobeVisualization();
       });
     });
@@ -92,13 +105,15 @@ export class IncomeGlobeComponent implements OnChanges {
         .polygonCapColor((feat: any) => colorScale(this.getIncomeLosses(feat, this.variableType, this.startYear, this.endYear)))
         .polygonLabel(({ properties: d }: any) => `
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-          ${this.variableType} (${this.startYear}-${this.endYear}): <i>${this.getIncomeLosses({ properties: d }, this.variableType, this.startYear, this.endYear)}</i> GWh
+          ${this.variableType} (${this.startYear}-${this.endYear}): <i>${this.getIncomeLosses({ properties: d }, this.variableType, this.startYear, this.endYear)}</i> $USD
         `)
         .onPolygonHover((hoverD: any) =>
           this.globeInstance
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getIncomeLosses(d, this.variableType, this.startYear, this.endYear)))
         );
+
+        this.globeInstance.redraw();
     }
   }
 
@@ -113,6 +128,8 @@ export class IncomeGlobeComponent implements OnChanges {
             total += indicatorData.yearlyData[`F${year}`];
           }
         }
+        
+        total = Math.round(total * 100) / 100;
         return total;
       }
     }

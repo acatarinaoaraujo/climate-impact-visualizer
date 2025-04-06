@@ -117,12 +117,11 @@ app-disaster-globe, app-emission-globe, app-income-globe, app-energy-globe, app-
     <sidebar class="sidebar"
     [apiType]="apiType"
     (apiTypeChange)="onApiTypeChange($event)"
-    (indicatorTypeChange)="onIndicatorChange($event)"
+    [indicatorType]="indicatorType"
+    (indicatorTypeChange)="onIndicatorTypeChange($event)"
     (yearRangeChange)="onYearRangeChange($event)">
   </sidebar>
 
-    <!-- Conditionally render the globe components based on apiType -->
-     <!-- Need to send the indicator to the globes as well. -->
     <app-energy-globe *ngIf="apiType === 'renewable-energy'"
       [energyType]="indicatorType"
       [startYear]="startYear"

@@ -39,16 +39,16 @@ export class SidebarComponent {
   @Input() apiType: string = ''; // Receive API type from parent
   @Output() apiTypeChange = new EventEmitter<string>();
 
-  selectedIndicator: string = ''; // Default for renewable indicator
+  @Input() indicatorType: string = ''; // Receive indicatorType from parent
+  @Output() indicatorTypeChange = new EventEmitter<string>();
 
   startYear: number = 2000;
   endYear: number = 2025;
+
+  @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
   
   indicatorTypes: string[] = [];
   yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable indicator
-  
-  @Output() indicatorTypeChange = new EventEmitter<string>();
-  @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
   
   @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
 
@@ -131,7 +131,7 @@ export class SidebarComponent {
       ];
     }
     
-    this.selectedIndicator = this.indicatorTypes[0] || '';
+    this.indicatorType = this.indicatorTypes[0] || '';
   }
 
   updateYearRange() {
@@ -153,7 +153,7 @@ export class SidebarComponent {
 
   fetchData() {
     let url = '';
-    let data = { indicatorType: this.selectedIndicator, startYear: this.startYear, endYear: this.endYear };
+    let data = { indicatorType: this.indicatorType, startYear: this.startYear, endYear: this.endYear };
 
     if (this.apiType === 'income-loss') {
       url = 'http://localhost:5085/api/incomeloss/aggregated';
@@ -187,11 +187,12 @@ export class SidebarComponent {
     return `${value}`;
   }
 
-  onIndicatorTypeChange() {
-    console.log('Selected Indicator Type:', this.selectedIndicator);
-    this.indicatorTypeChange.emit(this.selectedIndicator);
+  onIndicatorChange(newIndicator: string): void {
+    console.log('Selected Indicator Type:', this.indicatorType);
+    this.indicatorType = newIndicator;
+    this.indicatorTypeChange.emit(newIndicator); // Emit the change to parent
   }
-
+  
   onYearRangeChange() {
     this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear });
   }
