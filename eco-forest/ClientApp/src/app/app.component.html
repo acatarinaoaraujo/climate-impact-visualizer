@@ -59,27 +59,17 @@ html, body {
   overflow: hidden;
 }
 
-.content {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-
-}
-
 .container {
   display: flex;
-  flex: 1;
-  overflow: hidden;
+  height: 100vh;
+  
 }
 
 .sidebar {
   margin-top: 70px;
+  border-right: 2px solid #ccc;
   transition: width 0.3s ease-in-out;
-}
-
-
+} 
 
 .navbar {
   width: 100%;
@@ -97,14 +87,11 @@ html, body {
   box-sizing: border-box;
 }
 
-/* app-disaster-globe, app-emission-globe, app-income-globe, app-energy-globe, app-forest-globe {
+app-disaster-globe, app-emission-globe, app-income-globe, app-energy-globe, app-forest-globe {
   flex-grow: 1;
   height: 100%;
   transition: width 0.3s ease-in-out;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
+}
 
   @media screen and (max-width: 650px) {
     .content {
@@ -128,43 +115,44 @@ html, body {
   <div class="container">
 
     <sidebar class="sidebar"
-    [apiType]="selectedApiType"
-    (indicatorTypeChange)="onTypeChange($event)"
+    [apiType]="apiType"
+    (apiTypeChange)="onApiTypeChange($event)"
+    (indicatorTypeChange)="onIndicatorChange($event)"
     (yearRangeChange)="onYearRangeChange($event)">
   </sidebar>
 
-  <div class="content">
-    <!-- Conditionally render the globe components based on selectedApiType -->
-    <app-energy-globe *ngIf="selectedApiType === 'renewable-energy'"
-      [energyType]="selectedType"
+    <!-- Conditionally render the globe components based on apiType -->
+     <!-- Need to send the indicator to the globes as well. -->
+    <app-energy-globe *ngIf="apiType === 'renewable-energy'"
+      [energyType]="indicatorType"
       [startYear]="startYear"
       [endYear]="endYear">
     </app-energy-globe>
 
-    <app-disaster-globe *ngIf="selectedApiType === 'climate-disasters'"
-      [indicatorType]="selectedType"
+    <app-disaster-globe *ngIf="apiType === 'climate-disasters'"
+      [indicatorType]="indicatorType"
       [startYear]="startYear"
       [endYear]="endYear">
     </app-disaster-globe>
 
-    <app-forest-globe *ngIf="selectedApiType === 'forest-loss'"
-      [indicatorType]="selectedType"
+    <app-forest-globe *ngIf="apiType === 'forest-carbon'"
+      [indicatorType]="indicatorType"
       [startYear]="startYear"
       [endYear]="endYear">
     </app-forest-globe>
 
-    <app-emission-globe *ngIf="selectedApiType === 'emission'"
-      [indicatorType]="selectedType"
+    <app-emission-globe *ngIf="apiType === 'greenhouse-emissions'"
+      [indicatorType]="indicatorType"
       [startYear]="startYear"
       [endYear]="endYear">
     </app-emission-globe>
 
-    <app-income-globe *ngIf="selectedApiType === 'income-loss'"
-      [variableType]="selectedType"
+    <app-income-globe *ngIf="apiType === 'income-loss'"
+      [variableType]="indicatorType"
       [startYear]="startYear"
       [endYear]="endYear">
     </app-income-globe>
-  </div>
+
   </div>
 </main>
 

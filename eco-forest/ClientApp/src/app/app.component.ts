@@ -32,27 +32,27 @@ import { EmissionsGlobeComponent } from './components/globe/emissions/emission-g
 })
 export class AppComponent {
   title = 'client-app';
-  selectedType: string = '';
+  indicatorType: string = '';
   startYear: number = 2000;
   endYear: number = 2025;
-  selectedApiType: string = '';
+  apiType: string = '';
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.url.subscribe(() => {
       const url = this.router.url;
-      if (url.includes('renewable-energy')) this.selectedApiType = 'renewable-energy';
-      else if (url.includes('income-loss')) this.selectedApiType = 'income-loss';
-      else if (url.includes('greenhouse-emissions')) this.selectedApiType = 'greenhouse-emissions';
-      else if (url.includes('forest-carbon')) this.selectedApiType = 'forest-carbon';
-      else if (url.includes('climate-disasters')) this.selectedApiType = 'climate-disasters';
-      else this.selectedApiType = '';
+      if (url.includes('renewable-energy')) this.apiType = 'renewable-energy';
+      else if (url.includes('income-loss')) this.apiType = 'income-loss';
+      else if (url.includes('greenhouse-emissions')) this.apiType = 'greenhouse-emissions';
+      else if (url.includes('forest-carbon')) this.apiType = 'forest-carbon';
+      else if (url.includes('climate-disasters')) this.apiType = 'climate-disasters';
+      else this.apiType = '';
     });
   }
   
-  onTypeChange(type: string) {
-    this.selectedType = type;
+  onIndicatorChange(type: string) {
+    this.indicatorType = type;
   }
 
   onYearRangeChange(yearRange: { startYear: number; endYear: number }) {
@@ -60,7 +60,7 @@ export class AppComponent {
     this.endYear = yearRange.endYear;
   }
 
-  onApiTypeChange(apiType: string) {
-    this.selectedApiType = apiType;
+  onApiTypeChange(type: string) {
+    this.apiType = type;
   }
 }

@@ -127,6 +127,8 @@ export class ForestGlobeComponent implements OnChanges {
             total += indicatorData.yearlyData[`F${year}`];
           }
         }
+
+        total = Math.round(total * 100) / 100;
         return total;
       }
     }

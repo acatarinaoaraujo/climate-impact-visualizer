@@ -37,6 +37,8 @@ export class SidebarComponent {
   isCollapsed = false;
 
   @Input() apiType: string = ''; // Receive API type from parent
+  @Output() apiTypeChange = new EventEmitter<string>();
+
   selectedIndicator: string = ''; // Default for renewable indicator
 
   startYear: number = 2000;
@@ -78,7 +80,7 @@ export class SidebarComponent {
     } else if (currentUrl.includes('forest-carbon')) {
       this.apiType = 'forest-carbon';
     }
-    
+    this.apiTypeChange.emit(this.apiType);
     this.updateSidebarData();
   }
 
