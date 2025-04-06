@@ -1,10 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
-import { HttpClientModule } from '@angular/common/http';
-
-import { interpolateGreens, interpolateInferno, interpolateWarm, interpolateYlOrRd } from 'd3-scale-chromatic';
+import { interpolateGreens, interpolateYlOrRd } from 'd3-scale-chromatic';
 
 @Component({
   selector: 'app-energy-globe',
@@ -123,25 +121,11 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
       this.globeInstance
         .polygonSideColor((feat: any) => this.energyType === 'Fossil Fuels' ? 'rgba(255, 69, 0, 0.35)' : 'rgba(0, 100, 0, 0.35)');
 
-      this.globeInstance
-        .polygonStrokeColor(() => '#111')
-        .polygonStrokeWidth(() => 0.5)
-        .polygonAltitude(() => 0.06)
-        .polygonCapColor(() => 'rgba(0, 100, 0, 0.35)')
-        .polygonLabel(() => '')
-        .onPolygonClick((d: any) => {
-          const countryName = d.properties.ADMIN;
-          const countryCode = d.properties.ISO_A2;
-          const energyValue = this.getEnergyValue(d, this.energyType, this.startYear, this.endYear);
-          alert(`Country: ${countryName} (${countryCode})\n${this.energyType} (${this.startYear}-${this.endYear}): ${energyValue} GWh`);
-        });
-
       this.globeInstance.redraw();
   
     }
   }
   
-
   private getEnergyValue(feature: any, technology: string, startYear: number, endYear: number): number {
     const data = feature.properties.aggregatedData;
     if (data) {

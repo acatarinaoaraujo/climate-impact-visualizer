@@ -26,7 +26,7 @@ export interface CountryData {
 })
 export class SidebarListComponent implements AfterViewInit, OnChanges {
   @Input() apiType: string = 'default';  // Added apiType input
-  @Input() indicatorType: string = 'Fossil fuels';
+  @Input() indicatorType: string = 'Fossil Fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
 
