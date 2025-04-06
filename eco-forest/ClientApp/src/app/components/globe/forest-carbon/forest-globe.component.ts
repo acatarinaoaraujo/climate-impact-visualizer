@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, Inject } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
@@ -12,28 +12,37 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   styleUrls: ['./forest-globe.component.css'],
   imports: [CommonModule, HttpClientModule],
 })
-export class ForestGlobeComponent implements OnChanges {
+export class ForestGlobeComponent implements OnInit, OnChanges {
   @Input() indicatorType: string = 'Forest Area';
   @Input() startYear: number = 1992;
   @Input() endYear: number = 2022;
 
   private globeInstance: any;
   private geoJsonData: any;
+  private aggregatedData: any;
+  private dataLoaded = false;
+  private debounceTimeout: any;
 
   constructor(private http: HttpClient) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['indicatorType'] || changes['startYear'] || changes['endYear']) {
-      this.updateGlobeVisualization();
-    }
-  }
-
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.loadGlobe();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes detected:', changes);
+    if (this.dataLoaded && (changes['indicatorType'] || changes['startYear'] || changes['endYear'])) {
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => {
+        console.log('Updating globe visualization...');
+        this.updateGlobeVisualization();
+      }, 300);
+    }
+  }
+  
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
+      console.log('Loading globe...');
       import('globe.gl').then((module) => {
         const Globe = module.default;
         this.globeInstance = new Globe(document.getElementById('forestGlobe') as HTMLElement)
@@ -43,16 +52,21 @@ export class ForestGlobeComponent implements OnChanges {
           .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
-
-        this.fetchData();
+          
+        this.fetchData(); 
+      }).catch(err => {
+        console.error('Globe loading failed:', err);
       });
     }
   }
 
   private fetchData(): void {
+    console.log('Fetching data...');
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
       this.http.get('http://localhost:5085/api/forestcarbon/aggregated').subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
+        this.aggregatedData = aggregatedData;
+        this.dataLoaded = true;
         this.updateGlobeVisualization();
       });
     });
@@ -100,6 +114,8 @@ export class ForestGlobeComponent implements OnChanges {
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getForestNumbers(d, this.indicatorType, this.startYear, this.endYear)))
         );
+
+      this.globeInstance.redraw();
     }
   }
   

@@ -32,7 +32,7 @@ import { EmissionsGlobeComponent } from './components/globe/emissions/emission-g
 })
 export class AppComponent {
   title = 'client-app';
-  indicatorType: string = 'Fossil Fuels';
+  indicatorType: string = 'Drought';
   startYear: number = 2000;
   endYear: number = 2025;
   apiType: string = '';
