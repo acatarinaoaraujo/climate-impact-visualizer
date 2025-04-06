@@ -28,39 +28,60 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes detected:', changes);
     if (this.dataLoaded && (changes['energyType'] || changes['startYear'] || changes['endYear'])) {
       clearTimeout(this.debounceTimeout);
-      this.debounceTimeout = setTimeout(() => this.updateGlobeVisualization(), 300);
+      this.debounceTimeout = setTimeout(() => {
+        console.log('Updating globe visualization...');
+        this.updateGlobeVisualization();
+      }, 300);
     }
   }
-
+  
+  
+  private resetGlobe() {
+    // Destroy and reinitialize globe instance if necessary
+    if (this.globeInstance) {
+      this.globeInstance = null;
+    }
+    this.loadGlobe();
+  }
+  
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
+      console.log('Loading globe...');
       import('globe.gl').then((module) => {
         const Globe = module.default;
         this.globeInstance = new Globe(document.getElementById('energyGlobe') as HTMLElement)
           .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
           .lineHoverPrecision(0)
           .polygonAltitude(0.06)
-          .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)') 
+          .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
-
+          
         this.fetchData(); // Ensure data is fetched initially
+      }).catch(err => {
+        console.error('Globe loading failed:', err);
       });
     }
   }
+  
 
   private fetchData(): void {
+    console.log('Fetching data...');
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
+      console.log('GeoJson Data:', geoJsonData);
       this.http.get('http://localhost:5085/api/renewableenergy/aggregated').subscribe((aggregatedData: any) => {
+        console.log('Aggregated Data:', aggregatedData);
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.aggregatedData = aggregatedData;
         this.dataLoaded = true;
-        this.updateGlobeVisualization(); // Ensure globe is updated after data is fetched
+        this.updateGlobeVisualization();
       });
     });
   }
+  
 
   private transformData(geoJsonData: any, aggregatedData: any): any {
     const dataMap = new Map();
