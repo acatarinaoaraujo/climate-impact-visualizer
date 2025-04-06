@@ -50,7 +50,6 @@ export class SidebarComponent {
   indicatorTypes: string[] = [];
   yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable indicator
   
-  
   @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
 
   constructor(private http: HttpClient, private router: Router) {}

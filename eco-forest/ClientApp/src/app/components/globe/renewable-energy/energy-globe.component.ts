@@ -2,13 +2,16 @@ import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/cor
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
+import { HttpClientModule } from '@angular/common/http';
+
 import { interpolateGreens, interpolateInferno, interpolateWarm, interpolateYlOrRd } from 'd3-scale-chromatic';
 
 @Component({
   selector: 'app-energy-globe',
+  standalone: true,
   templateUrl: './energy-globe.component.html',
   styleUrls: ['./energy-globe.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule],
 })
 export class EnergyGlobeComponent implements OnInit, OnChanges {
   @Input() energyType: string = 'Fossil Fuels';
@@ -39,14 +42,6 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   }
   
   
-  private resetGlobe() {
-    // Destroy and reinitialize globe instance if necessary
-    if (this.globeInstance) {
-      this.globeInstance = null;
-    }
-    this.loadGlobe();
-  }
-  
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
       console.log('Loading globe...');
@@ -71,9 +66,7 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   private fetchData(): void {
     console.log('Fetching data...');
     this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
-      console.log('GeoJson Data:', geoJsonData);
       this.http.get('http://localhost:5085/api/renewableenergy/aggregated').subscribe((aggregatedData: any) => {
-        console.log('Aggregated Data:', aggregatedData);
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.aggregatedData = aggregatedData;
         this.dataLoaded = true;
@@ -109,10 +102,8 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   
       let colorScale: any;
       if (this.energyType === 'Fossil Fuels') {
-        // Use orange to red scale for Fossil Fuels
-        colorScale = scaleSequentialSqrt(interpolateYlOrRd).domain([0, maxVal]); // You can choose interpolateOranges or a custom scale
+        colorScale = scaleSequentialSqrt(interpolateYlOrRd).domain([0, maxVal]);
       } else {
-        // Use green scale for other energy types
         colorScale = scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
       }
   
@@ -129,15 +120,24 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEnergyValue(d, this.energyType, this.startYear, this.endYear)))
         );
   
-      // Set polygon side color depending on energy type
       this.globeInstance
-        .polygonSideColor((feat: any) => {
-          if (this.energyType === 'Fossil Fuels') {
-            return 'rgba(255, 69, 0, 0.35)'; // Orange color for Fossil Fuels
-          } else {
-            return 'rgba(0, 100, 0, 0.35)'; // Green color for other energy types
-          }
+        .polygonSideColor((feat: any) => this.energyType === 'Fossil Fuels' ? 'rgba(255, 69, 0, 0.35)' : 'rgba(0, 100, 0, 0.35)');
+
+      this.globeInstance
+        .polygonStrokeColor(() => '#111')
+        .polygonStrokeWidth(() => 0.5)
+        .polygonAltitude(() => 0.06)
+        .polygonCapColor(() => 'rgba(0, 100, 0, 0.35)')
+        .polygonLabel(() => '')
+        .onPolygonClick((d: any) => {
+          const countryName = d.properties.ADMIN;
+          const countryCode = d.properties.ISO_A2;
+          const energyValue = this.getEnergyValue(d, this.energyType, this.startYear, this.endYear);
+          alert(`Country: ${countryName} (${countryCode})\n${this.energyType} (${this.startYear}-${this.endYear}): ${energyValue} GWh`);
         });
+
+      this.globeInstance.redraw();
+  
     }
   }
   
