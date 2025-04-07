@@ -122,12 +122,10 @@ export class SidebarComponent {
       ];
     } else if (this.apiType === 'forest-carbon') {
       this.indicatorTypes = [
-        'Forest Area',
-        'Index Of Forest Extent',
-        'Land Area',
         'Share Of Forest Area',
         'Carbon Stocks In Forests',
-        'Index Of Carbon Stocks In Forests',
+        'Index Of Forest Extent',
+    'Index Of Carbon Stocks In Forests',
       ];
     }
     

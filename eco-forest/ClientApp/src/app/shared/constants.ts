@@ -1,6 +1,6 @@
 // constants.ts
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateGreens, interpolateYlOrRd, interpolateBlues, interpolateYlGn, interpolateGreys } from 'd3-scale-chromatic';
+import { interpolateGreens, interpolateYlOrRd, interpolateBlues, interpolateYlGn, interpolateGreys, interpolateGnBu } from 'd3-scale-chromatic';
 
 export const GEOJSON_FILE_PATH = '../../../assets/datasets/ne_110m_admin_0_countries.geojson';
 
@@ -17,16 +17,41 @@ export const API_YEAR_RANGE = {
     'income-loss': { min: 2000, max: 2025 },
     'climate-disasters': { min: 1980, max: 2024 },
     'greenhouse-emissions': { min: 1990, max: 2025 },
-    'forest-carbon': { min: 1990, max: 2025 },
+    'forest-carbon': { min: 1992, max: 2022 },
 };
 
-export const INDICATOR_TYPES = [
+export const ENERGY_TYPES = [
     'Fossil Fuels',
     'Solar Energy',
     'Wind Energy',
     'Hydropower (excl. Pumped Storage)',
     'Bioenergy'
   ]; 
+
+export const DISASTER_TYPES = [
+    'Drought',
+    'Earthquake',
+    'Flood',
+    'Landslide',
+    'Storm',
+    'Wildfire'
+  ];
+
+export const EMISSIONS_TYPES = [
+    'Production',
+    'Gross Imports',
+    'Gross Exports',
+    'Final Domestic Demand'
+  ];
+
+export const FOREST_TYPES = [
+    'Share Of Forest Area',
+    'Carbon Stocks In Forests',
+    'Index Of Forest Extent',
+    'Index Of Carbon Stocks In Forests',
+  ];
+
+
 
 export const ENERGY_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
     'Fossil Fuels': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
@@ -35,4 +60,51 @@ export const ENERGY_TYPE_COLORS: Record<string, (domain: [number, number]) => an
     'Hydropower (excl. Pumped Storage)': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
     'Bioenergy': (domain) => scaleSequentialSqrt(interpolateGreens).domain(domain), // Green
   };
+
+export const DISASTER_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
+    'Drought': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
+    'Earthquake': (domain) => scaleSequentialSqrt(() => interpolateYlGn).domain(domain), // Yellow
+    'Flood': (domain) => scaleSequentialSqrt(() => interpolateGreys).domain(domain), // Grey
+    'Landslide': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
+    'Storm': (domain) => scaleSequentialSqrt(interpolateGreens).domain(domain), // Green
+    'Wildfire': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain), // Red
+  };
+
+export const EMISSIONS_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
+    'Production': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
+    'Gross Imports': (domain) => scaleSequentialSqrt(() => interpolateYlGn).domain(domain), // Yellow
+    'Gross Exports': (domain) => scaleSequentialSqrt(() => interpolateGreys).domain(domain), // Grey
+    'Final Domestic Demand': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
+  };
+
+export const FOREST_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
+    'Share Of Forest Area': (domain) => scaleSequentialSqrt(interpolateGnBu).domain(domain),
+    'Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(() => interpolateYlGn).domain(domain), // Yellow
+    'Index Of Forest Extent': (domain) => scaleSequentialSqrt(() => interpolateGreys).domain(domain), // Grey
+    'Index Of Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
+  };
+
+export const INDICATOR_UNITS: Record<string, string> = {
+    'Fossil Fuels': 'TWh',
+    'Solar Energy': 'TWh',
+    'Wind Energy': 'TWh',
+    'Hydropower (excl. Pumped Storage)': 'TWh',
+    'Bioenergy': 'TWh',
+    'Drought': 'Number of Events',
+    'Earthquake': 'Number of Events',
+    'Flood': 'Number of Events',
+    'Landslide': 'Number of Events',
+    'Storm': 'Number of Events',
+    'Wildfire': 'Number of Events',
+    'Production': '(Million Tonnes)',
+    'Gross Imports': '(Million Tonnes)',
+    'Gross Exports': '(Million Tonnes)',
+    'Final Domestic Demand': '(Million Tonnes)',
+    'Share Of Forest Area': '%',
+    'Carbon Stocks In Forests': '(Million Tonnes)',
+    'Index Of Forest Extent': '(Index)',
+    'Carbon Stocks In Forests Index': '(Index)',
+  };
+
+
   

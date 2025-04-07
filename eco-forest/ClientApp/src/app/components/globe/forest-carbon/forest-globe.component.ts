@@ -2,8 +2,8 @@ import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/cor
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateGreens } from 'd3-scale-chromatic';
-
+import { interpolateGreens } from 'd3-scale-chromatic'; 
+import { FOREST_TYPE_COLORS,  API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } from '../../../shared/constants'; 
 
 @Component({
   selector: 'app-forest-globe',
@@ -13,9 +13,9 @@ import { interpolateGreens } from 'd3-scale-chromatic';
   imports: [CommonModule, HttpClientModule],
 })
 export class ForestGlobeComponent implements OnInit, OnChanges {
-  @Input() indicatorType: string = 'Forest Area';
-  @Input() startYear: number = 1992;
-  @Input() endYear: number = 2022;
+  @Input() indicatorType: string = 'Share Of Forest Area';
+  @Input() startYear: number = API_YEAR_RANGE['forest-carbon'].min;
+  @Input() endYear: number = API_YEAR_RANGE['forest-carbon'].max;
 
   private globeInstance: any;
   private geoJsonData: any;
@@ -62,8 +62,8 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
 
   private fetchData(): void {
     console.log('Fetching data...');
-    this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
-      this.http.get('http://localhost:5085/api/forestcarbon/aggregated').subscribe((aggregatedData: any) => {
+    this.http.get(GEOJSON_FILE_PATH).subscribe((geoJsonData: any) => {
+      this.http.get(API_LINKS['forest-carbon']).subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.aggregatedData = aggregatedData;
         this.dataLoaded = true;
@@ -97,7 +97,9 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
       );
       const maxVal = Math.max(...values); // Get max value to scale colors correctly
   
-      const colorScale = scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]); // FIX: Define domain
+            const colorScaleFn = FOREST_TYPE_COLORS[this.indicatorType];
+            console.log(colorScaleFn);
+            const colorScale = colorScaleFn ? colorScaleFn([0, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
   
       this.globeInstance
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
@@ -123,7 +125,7 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
     const unitMapping: { [key: string]: string } = {
       'Carbon Stocks In Forests': '(Million Tonnes)',
       'Forest Area': '(1000 Hectares)',
-      'Index Of Carbon Stocks in forests': '(Index)',
+      'Index Of Carbon Stocks In Forests': '(Index)',
       'Index Of Forest Extent': '(Index)',
       'Land Area': '1000 Hectares',
       'Share Of Forest Area': '%'
@@ -144,7 +146,7 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
           }
         }
 
-        total = Math.round(total * 100) / 100;
+        total = indicators === 'Share Of Forest Area' ? total : Math.round(total * 100) / 100;
         return total;
       }
     }
