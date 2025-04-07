@@ -10,126 +10,126 @@ using System.Linq;
 namespace Backend.Services
 {
     public class ClimateDisastersDataService
+{
+    private readonly HttpClient _httpClient;
+    private readonly ILogger<ClimateDisastersDataService> _logger;
+
+    // Define the list of valid indicators to filter
+    private readonly HashSet<string> _validIndicators = new HashSet<string>
     {
-        private readonly HttpClient _httpClient;
-        private readonly ILogger<ClimateDisastersDataService> _logger;
+        "Drought",
+        "Flood",
+        "Landslide",
+        "Storm",
+        "Wildfire"
+    };
 
-        // Define the list of valid indicators to filter
-        private readonly HashSet<string> _validIndicators = new HashSet<string>
+    public ClimateDisastersDataService(HttpClient httpClient, ILogger<ClimateDisastersDataService> logger)
+    {
+        _httpClient = httpClient;
+        _logger = logger;
+    }
+
+    public async Task<List<ClimateDisastersDataModel>> GetProcessedDataAsync()
+    {
+        var dataList = new List<ClimateDisastersDataModel>();
+        int offset = 0;
+        int limit = 1000; // Default maxRecordCount
+
+        try
         {
-            "Drought",
-            "Earthquake",
-            "Flood",
-            "Landslide",
-            "Storm",
-            "Wildfire"
-        };
-
-        public ClimateDisastersDataService(HttpClient httpClient, ILogger<ClimateDisastersDataService> logger)
-        {
-            _httpClient = httpClient;
-            _logger = logger;
-        }
-
-        public async Task<List<ClimateDisastersDataModel>> GetProcessedDataAsync()
-        {
-            var dataList = new List<ClimateDisastersDataModel>();
-            int offset = 0;
-            int limit = 1000; // Default maxRecordCount
-
-            try
+            while (true)
             {
-                while (true)
+                var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_11_1_Physical_Risks_Climate_related_disasters_frequency/FeatureServer/0/query?where=1%3D1&outFields=Country,ISO2,Indicator,F1980,F1981,F1982,F1983,F1984,F1985,F1986,F1987,F1988,F1989,F1990,F1991,F1992,F1993,F1994,F1995,F1996,F1997,F1998,F1999,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023,F2024&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+
+                _logger.LogInformation($"Fetching data from: {url}");
+
+                var response = await _httpClient.GetStringAsync(url);
+                if (string.IsNullOrEmpty(response)) break;
+
+                using var jsonDoc = JsonDocument.Parse(response);
+                var root = jsonDoc.RootElement;
+                if (!root.TryGetProperty("features", out var features) || features.GetArrayLength() == 0) break;
+
+                foreach (var feature in features.EnumerateArray())
                 {
-                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_11_1_Physical_Risks_Climate_related_disasters_frequency/FeatureServer/0/query?where=1%3D1&outFields=Country,ISO2,Indicator,F1980,F1981,F1982,F1983,F1984,F1985,F1986,F1987,F1988,F1989,F1990,F1991,F1992,F1993,F1994,F1995,F1996,F1997,F1998,F1999,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023,F2024&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+                    var attributes = feature.GetProperty("attributes");
 
-                    _logger.LogInformation($"Fetching data from: {url}");
+                    var iso2 = attributes.GetProperty("ISO2").GetString();
+                    if (string.IsNullOrEmpty(iso2))
+                        continue;
 
-                    var response = await _httpClient.GetStringAsync(url);
-                    if (string.IsNullOrEmpty(response)) break;
+                    var indicator = attributes.GetProperty("Indicator").GetString()!;
+                    var indicatorName = indicator.Split(' ').Last(); // Get the last word of the indicator
 
-                    using var jsonDoc = JsonDocument.Parse(response);
-                    var root = jsonDoc.RootElement;
-                    if (!root.TryGetProperty("features", out var features) || features.GetArrayLength() == 0) break;
+                    // Only filter out valid disaster indicators
+                    if (!_validIndicators.Contains(indicatorName) || indicator.Contains("Number of People Affected"))
+                        continue;
 
-                    foreach (var feature in features.EnumerateArray())
+                    var data = new ClimateDisastersDataModel
                     {
-                        var attributes = feature.GetProperty("attributes");
+                        Country = attributes.GetProperty("Country").GetString()!,
+                        ISO2 = iso2,
+                        Indicator = indicator,
+                        YearlyData = new Dictionary<string, double?>()
+                    };
 
-                        var iso2 = attributes.GetProperty("ISO2").GetString();
-                        if (string.IsNullOrEmpty(iso2))
-                            continue;
-
-                        var indicator = attributes.GetProperty("Indicator").GetString()!;
-                        var indicatorName = indicator.Split(' ').Last(); // Get the last word of the indicator
-
-                        // Filter out indicators that are not in the valid list
-                        if (!_validIndicators.Contains(indicatorName))
-                            continue;
-
-                        var data = new ClimateDisastersDataModel
-                        {
-                            Country = attributes.GetProperty("Country").GetString()!,
-                            ISO2 = iso2,
-                            Indicator = indicator,
-                            YearlyData = new Dictionary<string, double?>()
-                        };
-
-                        for (int year = 1980; year <= 2024; year++)
-                        {
-                            string key = $"F{year}";
-                            data.YearlyData[key] = attributes.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.Number
-                                ? value.GetDouble()
-                                : null;
-                        }
-
-                        dataList.Add(data);
+                    for (int year = 1980; year <= 2024; year++)
+                    {
+                        string key = $"F{year}";
+                        data.YearlyData[key] = attributes.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.Number
+                            ? value.GetDouble()
+                            : null;
                     }
 
-                    offset += limit;
+                    dataList.Add(data);
                 }
 
-                _logger.LogInformation($"Processed {dataList.Count} records.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error fetching or processing data: {ex.Message}");
+                offset += limit;
             }
 
-            return dataList;
+            _logger.LogInformation($"Processed {dataList.Count} records.");
         }
-
-        public async Task<List<ClimateDisastersAggDataModel>> GetClimateDisastersAggDataAsync()
+        catch (Exception ex)
         {
-            var dataList = await GetProcessedDataAsync();
-
-            // Aggregate data by country
-            var aggregatedData = dataList
-                .GroupBy(d => d.Country)
-                .Select(g => new ClimateDisastersAggDataModel
-                {
-                    Country = g.Key,
-                    ISO2 = g.First().ISO2,
-                    Indicators = g
-                        .GroupBy(d => d.Indicator)
-                        .Where(tg => _validIndicators.Contains(tg.Key.Split(' ').Last())) // Only include valid indicators
-                        .Select(tg => new ClimateDisastersIndicatorDataModel
-                        {
-                            Name = tg.Key.Split(' ').Last(),
-                            YearlyData = tg
-                                .SelectMany(d => d.YearlyData)
-                                .GroupBy(d => d.Key)
-                                .ToDictionary(
-                                    d => d.Key,
-                                    d => d.Sum(v => v.Value ?? 0)
-                                )
-                        })
-                        .ToList()
-                })
-                .ToList();
-
-            _logger.LogInformation($"Aggregated {aggregatedData.Count} records.");
-            return aggregatedData;
+            _logger.LogError($"Error fetching or processing data: {ex.Message}");
         }
+
+        return dataList;
     }
+
+    public async Task<List<ClimateDisastersAggDataModel>> GetClimateDisastersAggDataAsync()
+    {
+        var dataList = await GetProcessedDataAsync();
+
+        // Aggregate data by country
+        var aggregatedData = dataList
+            .GroupBy(d => d.Country)
+            .Select(g => new ClimateDisastersAggDataModel
+            {
+                Country = g.Key,
+                ISO2 = g.First().ISO2,
+                Indicators = g
+                    .GroupBy(d => d.Indicator)
+                    .Where(tg => _validIndicators.Contains(tg.Key.Split(' ').Last())) // Only include valid indicators
+                    .Select(tg => new ClimateDisastersIndicatorDataModel
+                    {
+                        Name = tg.Key.Split(' ').Last(),
+                        YearlyData = tg
+                            .SelectMany(d => d.YearlyData)
+                            .GroupBy(d => d.Key)
+                            .ToDictionary(
+                                d => d.Key,
+                                d => d.Sum(v => v.Value ?? 0)
+                            )
+                    })
+                    .ToList()
+            })
+            .ToList();
+
+        _logger.LogInformation($"Aggregated {aggregatedData.Count} records.");
+        return aggregatedData;
+    }
+}
+
 }

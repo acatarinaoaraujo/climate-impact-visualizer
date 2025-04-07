@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic';
+import { API_LINKS, API_YEAR_RANGE, DISASTER_TYPE_COLORS, GEOJSON_FILE_PATH } from '../../../shared/constants'; // Adjust the import path as needed
 
 
 @Component({
@@ -14,8 +15,8 @@ import { interpolateGreens } from 'd3-scale-chromatic';
 })
 export class DisasterGlobeComponent implements OnInit, OnChanges {
   @Input() indicatorType: string = 'Drought';
-  @Input() startYear: number = 1980;
-  @Input() endYear: number = 2024;
+  @Input() startYear: number = API_YEAR_RANGE['climate-disasters'].min;
+  @Input() endYear: number = API_YEAR_RANGE['climate-disasters'].max;
 
   private globeInstance: any;
   private geoJsonData: any;
@@ -62,8 +63,8 @@ export class DisasterGlobeComponent implements OnInit, OnChanges {
 
   private fetchData(): void {
     console.log('Fetching data...');
-    this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
-      this.http.get('http://localhost:5085/api/climatedisasters/aggregated').subscribe((aggregatedData: any) => {
+    this.http.get(GEOJSON_FILE_PATH).subscribe((geoJsonData: any) => {
+      this.http.get(API_LINKS['climate-disasters']).subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.aggregatedData = aggregatedData;
         this.dataLoaded = true;
@@ -97,7 +98,9 @@ export class DisasterGlobeComponent implements OnInit, OnChanges {
       );
       const maxVal = Math.max(...values); // Get max value to scale colors correctly
 
-      const colorScale = scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]); // FIX: Define domain
+      const colorScaleFn = DISASTER_TYPE_COLORS[this.indicatorType];
+      const colorScale = colorScaleFn ? colorScaleFn([0, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
+
 
       this.globeInstance
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))

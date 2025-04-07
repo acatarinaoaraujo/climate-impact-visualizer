@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic';
-import { ENERGY_TYPE_COLORS, API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } from '../../../shared/constants'; // Adjust the import path as necessary
+import { ENERGY_TYPE_COLORS, API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } from '../../../shared/constants'; 
 
 @Component({
   selector: 'app-energy-globe',
@@ -95,6 +95,7 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
       const values = this.geoJsonData.features.map((feat: any) =>
         this.getEnergyValue(feat, this.energyType, this.startYear, this.endYear)
       );
+
       const maxVal = Math.max(...values);
   
       const colorScaleFn = ENERGY_TYPE_COLORS[this.energyType];

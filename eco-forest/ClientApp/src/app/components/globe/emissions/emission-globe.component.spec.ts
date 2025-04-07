@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EmissionGlobeComponent } from './emission-globe.component';
+import { EmissionsGlobeComponent } from './emission-globe.component';
 
 describe('EmissionGlobeComponent', () => {
-  let component: EmissionGlobeComponent;
-  let fixture: ComponentFixture<EmissionGlobeComponent>;
+  let component: EmissionsGlobeComponent;
+  let fixture: ComponentFixture<EmissionsGlobeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmissionGlobeComponent]
+      imports: [EmissionsGlobeComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EmissionGlobeComponent);
+    fixture = TestBed.createComponent(EmissionsGlobeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

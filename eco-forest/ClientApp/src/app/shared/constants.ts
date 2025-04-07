@@ -8,7 +8,7 @@ export const API_LINKS: Record<string, string> = {
     'renewable-energy': 'http://localhost:5085/api/renewableenergy/aggregated',
     'income-loss': 'http://localhost:5085/api/incomeloss/aggregated',
     'climate-disasters': 'http://localhost:5085/api/climatedisasters/aggregated',
-    'greenhouse-emissions': 'http://localhost:5085/api/greenhouseemissions/aggregated',
+    'greenhouse-emissions': 'http://localhost:5085/api/emissions/aggregated',
     'forest-carbon': 'http://localhost:5085/api/forestcarbon/aggregated',       
   };
   
@@ -16,7 +16,7 @@ export const API_YEAR_RANGE = {
     'renewable-energy': { min: 2000, max: 2023 },
     'income-loss': { min: 2000, max: 2025 },
     'climate-disasters': { min: 1980, max: 2024 },
-    'greenhouse-emissions': { min: 1990, max: 2025 },
+    'greenhouse-emissions': { min: 1995, max: 2021 },
     'forest-carbon': { min: 1992, max: 2022 },
 };
 
@@ -28,9 +28,15 @@ export const ENERGY_TYPES = [
     'Bioenergy'
   ]; 
 
+  export const FOREST_TYPES = [
+    'Share Of Forest Area',
+    'Carbon Stocks In Forests',
+    'Index Of Forest Extent',
+    'Index Of Carbon Stocks In Forests',
+  ];
+
 export const DISASTER_TYPES = [
     'Drought',
-    'Earthquake',
     'Flood',
     'Landslide',
     'Storm',
@@ -44,13 +50,13 @@ export const EMISSIONS_TYPES = [
     'Final Domestic Demand'
   ];
 
-export const FOREST_TYPES = [
-    'Share Of Forest Area',
-    'Carbon Stocks In Forests',
-    'Index Of Forest Extent',
-    'Index Of Carbon Stocks In Forests',
+export const INCOME_TYPES = [
+    'Acute Climate Damages',
+    'Business Confidence Losses',
+    'Chronic Climate Damages',
+    'Mitigation Policy Costs',
+    'Total GDP Risk'
   ];
-
 
 
 export const ENERGY_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
@@ -63,7 +69,6 @@ export const ENERGY_TYPE_COLORS: Record<string, (domain: [number, number]) => an
 
 export const DISASTER_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
     'Drought': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
-    'Earthquake': (domain) => scaleSequentialSqrt(() => interpolateYlGn).domain(domain), // Yellow
     'Flood': (domain) => scaleSequentialSqrt(() => interpolateGreys).domain(domain), // Grey
     'Landslide': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
     'Storm': (domain) => scaleSequentialSqrt(interpolateGreens).domain(domain), // Green
@@ -82,6 +87,14 @@ export const FOREST_TYPE_COLORS: Record<string, (domain: [number, number]) => an
     'Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(() => interpolateYlGn).domain(domain), // Yellow
     'Index Of Forest Extent': (domain) => scaleSequentialSqrt(() => interpolateGreys).domain(domain), // Grey
     'Index Of Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
+  };
+
+export const INCOME_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
+    'Acute Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
+    'Business Confidence Losses': (domain) => scaleSequentialSqrt(() => interpolateGreys).domain(domain), // Grey
+    'Chronic Climate Damages': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
+    'Mitigation Policy Costs': (domain) => scaleSequentialSqrt(interpolateGreens).domain(domain), // Green
+    'Total GDP Risk': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain), // Red
   };
 
 export const INDICATOR_UNITS: Record<string, string> = {

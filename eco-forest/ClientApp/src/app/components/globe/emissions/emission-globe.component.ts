@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic';
+import { API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH, EMISSIONS_TYPE_COLORS } from '../../../shared/constants';
 
 
 @Component({
@@ -14,8 +15,8 @@ import { interpolateGreens } from 'd3-scale-chromatic';
 })
 export class EmissionsGlobeComponent implements OnInit, OnChanges {
   @Input() indicatorType: string = 'Production';
-  @Input() startYear: number = 1995;
-  @Input() endYear: number = 2021;
+  @Input() startYear: number = API_YEAR_RANGE['greenhouse-emissions'].min;
+  @Input() endYear: number = API_YEAR_RANGE['greenhouse-emissions'].max;
 
   private globeInstance: any;
   private geoJsonData: any;
@@ -62,8 +63,8 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
 
   private fetchData(): void {
     console.log('Fetching data...');
-    this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
-      this.http.get('http://localhost:5085/api/emissions/aggregated').subscribe((aggregatedData: any) => {
+    this.http.get(GEOJSON_FILE_PATH).subscribe((geoJsonData: any) => {
+      this.http.get(API_LINKS['greenhouse-emissions']).subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.aggregatedData = aggregatedData;
         this.dataLoaded = true;
@@ -99,7 +100,9 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
       );
       const maxVal = Math.max(...values); // Get max value to scale colors correctly
 
-      const colorScale = scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]); // FIX: Define domain
+      const colorScaleFn = EMISSIONS_TYPE_COLORS[this.indicatorType];
+      const colorScale = colorScaleFn ? colorScaleFn([0, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
+  
 
       this.globeInstance
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
@@ -129,6 +132,7 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
             total += indicatorData.yearlyData[`F${year}`];
           }
         }
+        total = Math.round(total * 100) / 100; 
         return total;
       }
     }

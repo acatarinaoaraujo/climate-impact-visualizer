@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic';
+import { API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH, INCOME_TYPE_COLORS } from '../../../shared/constants';
 
 @Component({
   selector: 'app-income-globe',
@@ -13,8 +14,8 @@ import { interpolateGreens } from 'd3-scale-chromatic';
 })
 export class IncomeGlobeComponent implements OnChanges, OnInit {
   @Input() variableType: string = 'Acute Climate Damages';
-  @Input() startYear: number = 2023;
-  @Input() endYear: number = 2040;
+  @Input() startYear: number = API_YEAR_RANGE['income-loss'].min;
+  @Input() endYear: number = API_YEAR_RANGE['income-loss'].max;
 
   private globeInstance: any;
   private geoJsonData: any;
@@ -61,8 +62,8 @@ export class IncomeGlobeComponent implements OnChanges, OnInit {
 
   private fetchData(): void {
     console.log('Fetching data...');
-    this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
-      this.http.get('http://localhost:5085/api/incomeloss/aggregated').subscribe((aggregatedData: any) => {
+    this.http.get(GEOJSON_FILE_PATH).subscribe((geoJsonData: any) => {
+      this.http.get(API_LINKS['income-loss']).subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.aggregatedData = aggregatedData;
         this.dataLoaded = true;
@@ -96,9 +97,11 @@ export class IncomeGlobeComponent implements OnChanges, OnInit {
       const values = this.geoJsonData.features.map((feat: any) =>
         this.getIncomeLosses(feat, this.variableType, this.startYear, this.endYear)
       );
+      const minVal = Math.min(...values); // Get min value to scale colors correctly
       const maxVal = Math.max(...values); // Get max value to scale colors correctly
 
-      const colorScale = scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]); // FIX: Define domain
+      const colorScaleFn = INCOME_TYPE_COLORS[this.variableType];
+      const colorScale = colorScaleFn ? colorScaleFn([minVal, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([minVal, maxVal]);
 
       this.globeInstance
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))

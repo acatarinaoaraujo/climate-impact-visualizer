@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
+import { DISASTER_TYPES, EMISSIONS_TYPES, ENERGY_TYPES, FOREST_TYPES, INCOME_TYPES } from '../../shared/constants';
 
 @Component({
   selector: 'sidebar',
@@ -93,40 +94,15 @@ export class SidebarComponent {
 
   updateIndicatorTypes() {
     if (this.apiType === 'income-loss') {
-      this.indicatorTypes = [
-        'Acute Climate Damages',
-        'Business Confidence Losses',
-        'Chronic Climate Damages',
-        'Mitigation Policy Costs',
-        'Total GDP Risk'
-      ];
+      this.indicatorTypes = INCOME_TYPES;
     } else if (this.apiType === 'renewable-energy') {
-      this.indicatorTypes = [
-        'Fossil Fuels', 'Solar Energy', 'Wind Energy', 'Hydropower (excl. Pumped Storage)', 'Bioenergy'
-      ];
+      this.indicatorTypes = ENERGY_TYPES
     } else if (this.apiType === 'climate-disasters') {
-      this.indicatorTypes = [
-        'Drought',
-        'Earthquake',
-        'Flood',
-        'Landslide',
-        'Storm',
-        'Wildfire'
-      ];
+      this.indicatorTypes = DISASTER_TYPES
     } else if (this.apiType === 'greenhouse-emissions') {
-      this.indicatorTypes = [
-        'Production',
-        'Gross Imports',
-        'Gross Exports',
-        'Final Domestic Demand'
-      ];
+      this.indicatorTypes = EMISSIONS_TYPES
     } else if (this.apiType === 'forest-carbon') {
-      this.indicatorTypes = [
-        'Share Of Forest Area',
-        'Carbon Stocks In Forests',
-        'Index Of Forest Extent',
-    'Index Of Carbon Stocks In Forests',
-      ];
+      this.indicatorTypes = FOREST_TYPES;
     }
     
     this.indicatorType = this.indicatorTypes[0] || '';
