@@ -61,8 +61,18 @@ html, body {
 
 .container {
   display: flex;
-  height: 100vh;
+  flex: 1;
+  overflow: hidden;
   
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
 }
 
 .sidebar {
@@ -87,10 +97,13 @@ html, body {
   box-sizing: border-box;
 }
 
-app-disaster-globe, app-emission-globe, app-income-globe, app-energy-globe, app-forest-globe {
+.app-energy-globe {
   flex-grow: 1;
   height: 100%;
   transition: width 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
   @media screen and (max-width: 650px) {
@@ -122,6 +135,8 @@ app-disaster-globe, app-emission-globe, app-income-globe, app-energy-globe, app-
     (yearRangeChange)="onYearRangeChange($event)">
   </sidebar>
 
+  <div class="content">
+
     <app-energy-globe *ngIf="apiType === 'renewable-energy'"
       [energyType]="indicatorType"
       [startYear]="startYear"
@@ -151,6 +166,7 @@ app-disaster-globe, app-emission-globe, app-income-globe, app-energy-globe, app-
       [startYear]="startYear"
       [endYear]="endYear">
     </app-income-globe>
+  </div>
 
   </div>
 </main>

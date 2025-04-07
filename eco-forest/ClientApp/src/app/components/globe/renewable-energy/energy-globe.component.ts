@@ -2,8 +2,8 @@ import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/cor
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateGreens, interpolateYlOrRd } from 'd3-scale-chromatic';
-import { ENERGY_TYPE_COLORS, API_LINKS } from '../../../shared/constants'; // Adjust the import path as necessary
+import { interpolateGreens } from 'd3-scale-chromatic';
+import { ENERGY_TYPE_COLORS, API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } from '../../../shared/constants'; // Adjust the import path as necessary
 
 @Component({
   selector: 'app-energy-globe',
@@ -14,8 +14,8 @@ import { ENERGY_TYPE_COLORS, API_LINKS } from '../../../shared/constants'; // Ad
 })
 export class EnergyGlobeComponent implements OnInit, OnChanges {
   @Input() energyType: string = 'Fossil Fuels';
-  @Input() startYear: number = 2000;
-  @Input() endYear: number = 2025;
+  @Input() startYear: number = API_YEAR_RANGE['renewable-energy'].min;
+  @Input() endYear: number = API_YEAR_RANGE['renewable-energy'].max;
 
   private globeInstance: any;
   private geoJsonData: any;
@@ -53,7 +53,7 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
           
-        this.fetchData(); // Ensure data is fetched initially
+        this.fetchData(); 
       }).catch(err => {
         console.error('Globe loading failed:', err);
       });
@@ -62,7 +62,7 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   
   private fetchData(): void {
     console.log('Fetching data...');
-    this.http.get('../../../assets/datasets/ne_110m_admin_0_countries.geojson').subscribe((geoJsonData: any) => {
+    this.http.get(GEOJSON_FILE_PATH).subscribe((geoJsonData: any) => {
       this.http.get(API_LINKS['renewable-energy']).subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
         this.aggregatedData = aggregatedData;
@@ -114,9 +114,9 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEnergyValue(d, this.energyType, this.startYear, this.endYear)))
         );
   
-      // this.globeInstance
-      //   .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
-      //   .redraw();
+      this.globeInstance
+        .polygonSideColor(() => 'rgba(103, 105, 106, 0.35)')
+        .redraw();
       this.globeInstance.redraw();
     }
   }
