@@ -5,6 +5,13 @@ import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic'; 
 import { FOREST_TYPE_COLORS,  API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } from '../../../shared/constants'; 
 
+interface LegendData {
+  title: string;
+  subtitle: string;
+  legendItems: { color: string; label: string }[];
+}
+
+
 @Component({
   selector: 'app-forest-globe',
   standalone: true,
@@ -12,6 +19,8 @@ import { FOREST_TYPE_COLORS,  API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } fro
   styleUrls: ['./forest-globe.component.css'],
   imports: [CommonModule, HttpClientModule],
 })
+
+
 export class ForestGlobeComponent implements OnInit, OnChanges {
   @Input() indicatorType: string = 'Share Of Forest Area';
   @Input() startYear: number = API_YEAR_RANGE['forest-carbon'].min;
@@ -38,6 +47,47 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
         this.updateGlobeVisualization();
       }, 300);
     }
+  }
+
+  // Define the legendData object with specific keys for each indicator
+  legendData: Record<string, LegendData> = {
+    'Share Of Forest Area': {
+      title: 'Forest Area Coverage',
+      subtitle: 'Percentage of land covered by forests',
+      legendItems: [
+        { color: 'linear-gradient(to right, #c6e2ff, #0066cc)', label: 'Low (0%)' },
+        { color: 'linear-gradient(to right, #0066cc, #003366)', label: 'High (100%)' },
+      ],
+    },
+    'Carbon Stocks In Forests': {
+      title: 'Carbon Storage in Forests',
+      subtitle: 'Amount of carbon stored in forest biomass',
+      legendItems: [
+        { color: 'linear-gradient(to right, #ffffb2, #00441b)', label: 'Low (0)' },
+        { color: 'linear-gradient(to right, #00441b, #006400)', label: 'High (High Carbon Stocks)' },
+      ],
+    },
+    'Index Of Forest Extent': {
+      title: 'Forest Extent Index',
+      subtitle: 'Extent of forest area within a region',
+      legendItems: [
+        { color: 'linear-gradient(to right, #f0f0f0, #404040)', label: 'Low (0)' },
+        { color: 'linear-gradient(to right, #404040, #000000)', label: 'High (100%)' },
+      ],
+    },
+    'Index Of Carbon Stocks In Forests': {
+      title: 'Carbon Stock Index in Forests',
+      subtitle: 'Index of carbon storage in forests',
+      legendItems: [
+        { color: 'linear-gradient(to right, #e0f3f8, #023858)', label: 'Low (0)' },
+        { color: 'linear-gradient(to right, #023858, #005b8c)', label: 'High (High Index)' },
+      ],
+    },
+  };
+
+  generateLegend() {
+    // Return the legend data based on the selected indicator type
+    return this.legendData[this.indicatorType] || { title: '', subtitle: '', legendItems: [] };
   }
   
   private loadGlobe(): void {
