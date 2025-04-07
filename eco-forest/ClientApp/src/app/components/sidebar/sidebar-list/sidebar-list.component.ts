@@ -96,14 +96,13 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     const techOrVarData = item[dataKey].find((techOrVar: any) =>
       techOrVar.name.trim().toLowerCase() === this.indicatorType.trim().toLowerCase()
     );
+    
     if (!techOrVarData) return 0;
-
-    // Calculate the sum for the selected range of years
-    const total = Object.keys(techOrVarData.yearlyData)
-      .filter(year => +year.replace('F', '') >= this.startYear && +year.replace('F', '') <= this.endYear)
-      .reduce((sum, year) => sum + (techOrVarData.yearlyData[year] || 0), 0);
-
-    return parseFloat(total.toFixed(1));
+  
+    // Get the value for the selected year only
+    const yearValue = techOrVarData.yearlyData[`F${this.startYear}`];
+    
+    return yearValue !== undefined ? parseFloat(yearValue.toFixed(1)) : 0;
   }
 
   applyFilter(event: Event) {

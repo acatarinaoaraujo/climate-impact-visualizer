@@ -12,7 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
-import { DISASTER_TYPES, EMISSIONS_TYPES, ENERGY_TYPES, FOREST_TYPES, INCOME_TYPES } from '../../shared/constants';
+import { API_YEAR_RANGE, DISASTER_TYPES, EMISSIONS_TYPES, ENERGY_TYPES, FOREST_TYPES, INCOME_TYPES } from '../../shared/constants';
 
 @Component({
   selector: 'sidebar',
@@ -45,6 +45,8 @@ export class SidebarComponent {
 
   startYear: number = 2000;
   endYear: number = 2025;
+
+  selectedYear: number = 2000;
 
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
   
@@ -110,21 +112,20 @@ export class SidebarComponent {
 
   updateYearRange() {
     if (this.apiType === 'income-loss') {
-      this.yearRange = { min: 2025, max: 2040 }; 
+      this.yearRange = { min: API_YEAR_RANGE['income-loss'].min, max: API_YEAR_RANGE['income-loss'].max }; 
     } else if (this.apiType === 'renewable-energy') {
-      this.yearRange = { min: 2000, max: 2025 };
+      this.yearRange = { min: API_YEAR_RANGE['renewable-energy'].min, max: API_YEAR_RANGE['renewable-energy'].max };
     } else if (this.apiType === 'climate-disasters') {
-      this.yearRange = { min: 1980, max: 2024 };
+      this.yearRange = { min: API_YEAR_RANGE['climate-disasters'].min, max: API_YEAR_RANGE['climate-disasters'].max };
     } else if (this.apiType === 'greenhouse-emissions') {
-      this.yearRange = { min: 1990, max: 2025 };
+      this.yearRange = { min: API_YEAR_RANGE['greenhouse-emissions'].min, max: API_YEAR_RANGE['greenhouse-emissions'].max };
     } else if (this.apiType === 'forest-carbon') {
-      this.yearRange = { min: 1990, max: 2025 };
+      this.yearRange = { min: API_YEAR_RANGE['forest-carbon'].min, max: API_YEAR_RANGE['forest-carbon'].max };
     }
-    
-    this.startYear = this.yearRange.min;
-    this.endYear = this.yearRange.max;
+  
+    this.selectedYear = this.yearRange.min;
+    this.onYearChange();
   }
-
   fetchData() {
     let url = '';
     let data = { indicatorType: this.indicatorType, startYear: this.startYear, endYear: this.endYear };
@@ -169,5 +170,9 @@ export class SidebarComponent {
   
   onYearRangeChange() {
     this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear });
+  }
+
+  onYearChange() {
+    this.yearRangeChange.emit({ startYear: this.selectedYear, endYear: this.selectedYear });
   }
 }
