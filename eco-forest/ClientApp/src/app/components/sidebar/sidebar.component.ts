@@ -37,18 +37,16 @@ import { API_YEAR_RANGE, DISASTER_TYPES, EMISSIONS_TYPES, ENERGY_TYPES, FOREST_T
 export class SidebarComponent {
   isCollapsed = false;
 
-  @Input() apiType: string = ''; // Receive API type from parent
+  @Input() apiType: string = ''; 
+  @Input() indicatorType: string = ''; 
+  @Input() startYear: number = 2000; 
+  @Input() endYear: number = 2025; 
+
   @Output() apiTypeChange = new EventEmitter<string>();
-
-  @Input() indicatorType: string = ''; // Receive indicatorType from parent
   @Output() indicatorTypeChange = new EventEmitter<string>();
-
-  startYear: number = 2000;
-  endYear: number = 2025;
+  @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
 
   selectedYear: number = 2000;
-
-  @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
   
   indicatorTypes: string[] = [];
   yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable indicator
@@ -65,6 +63,20 @@ export class SidebarComponent {
         this.setApiTypeFromUrl();
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['apiType']) {
+      // Update the start and end years based on the new apiType if it's changed
+      const yearRange = this.apiType in API_YEAR_RANGE
+  ? API_YEAR_RANGE[this.apiType as keyof typeof API_YEAR_RANGE]
+  : { min: 2000, max: 2025 };
+
+      this.startYear = yearRange.min;
+      this.endYear = yearRange.max;
+
+      this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear });
+    }
   }
 
   private setApiTypeFromUrl(): void {
@@ -168,10 +180,6 @@ export class SidebarComponent {
     this.indicatorTypeChange.emit(newIndicator); // Emit the change to parent
   }
   
-  onYearRangeChange() {
-    this.yearRangeChange.emit({ startYear: this.startYear, endYear: this.endYear });
-  }
-
   onYearChange() {
     this.yearRangeChange.emit({ startYear: this.selectedYear, endYear: this.selectedYear });
   }

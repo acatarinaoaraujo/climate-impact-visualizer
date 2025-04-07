@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { Router, ActivatedRoute } from '@angular/router';
+import { API_YEAR_RANGE } from './shared/constants';
 
 import { EnergyGlobeComponent } from './components/globe/renewable-energy/energy-globe.component';
 import { DisasterGlobeComponent } from './components/globe/climate-disasters/disaster-globe.component';
@@ -48,6 +49,15 @@ export class AppComponent {
       else if (url.includes('forest-carbon')) this.apiType = 'forest-carbon';
       else if (url.includes('climate-disasters')) this.apiType = 'climate-disasters';
       else this.apiType = '';
+
+      // After setting apiType, update the year range based on the selected API type
+      const yearRange = this.apiType in API_YEAR_RANGE
+  ? API_YEAR_RANGE[this.apiType as keyof typeof API_YEAR_RANGE]
+  : { min: 2000, max: 2025 };
+
+
+      this.startYear = yearRange.min;
+      this.endYear = yearRange.max;
     });
   }
   onIndicatorTypeChange(newIndicator: string) {

@@ -12,9 +12,11 @@ export const API_LINKS: Record<string, string> = {
     'forest-carbon': 'http://localhost:5085/api/forestcarbon/aggregated',       
   };
   
-export const API_YEAR_RANGE = {
+type ApiType = 'renewable-energy' | 'income-loss' | 'climate-disasters' | 'greenhouse-emissions' | 'forest-carbon';
+
+  export const API_YEAR_RANGE: Record<ApiType, { min: number; max: number }> = {
     'renewable-energy': { min: 2000, max: 2023 },
-    'income-loss': { min: 2000, max: 2025 },
+    'income-loss': { min: 2023, max: 2040 },
     'climate-disasters': { min: 1980, max: 2024 },
     'greenhouse-emissions': { min: 1995, max: 2021 },
     'forest-carbon': { min: 1992, max: 2022 },
