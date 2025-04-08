@@ -13,6 +13,8 @@ import { ForestGlobeComponent } from './components/globe/forest-carbon/forest-gl
 import { IncomeGlobeComponent } from './components/globe/income-loss/income-globe.component';
 import { EmissionsGlobeComponent } from './components/globe/emissions/emission-globe.component';
 
+import { MatDialogModule } from '@angular/material/dialog';
+
 @Component({
   selector: 'app-root',
   standalone: true, 
@@ -26,7 +28,8 @@ import { EmissionsGlobeComponent } from './components/globe/emissions/emission-g
     SidebarComponent, 
     NavbarComponent, 
     HttpClientModule, 
-    RouterOutlet
+    RouterOutlet,
+    MatDialogModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

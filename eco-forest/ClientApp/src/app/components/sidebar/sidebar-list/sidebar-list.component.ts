@@ -9,6 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { CountryDetailDialogComponent } from './country-detail-dialog.component';
 
 export interface CountryData {
   id: number;
@@ -36,7 +38,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private dialog: MatDialog) {}
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -117,5 +119,11 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     this.startYear = settings.startYear;
     this.endYear = settings.endYear;
     this.dataSource.data = this.transformData(data);
+  }
+
+  openCountryDetailDialog(row: any): void {
+    this.dialog.open(CountryDetailDialogComponent, {
+      data: row,
+    });
   }
 }
