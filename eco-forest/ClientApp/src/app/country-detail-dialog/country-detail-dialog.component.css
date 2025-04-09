@@ -1,11 +1,23 @@
 mat-grid-tile {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 16px;
+    font-size: 1.1rem;
   }
   
   mat-icon {
     margin-right: 8px;
+    font-size: 28px;
+  }
+  
+  .metric-text {
+    font-weight: 500;
+  }
+  
+  .prompt-input {
+    width: 100%;
+    margin-top: 16px;
   }
   
   .loading-container {
@@ -13,5 +25,30 @@ mat-grid-tile {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    padding: 20px;
+  }
+  
+  .chart-container {
+    margin: 24px 0;
+    text-align: center;
+  }
+  
+  canvas {
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .response-section {
+    margin-top: 20px;
+  }
+  
+  mat-list-item a {
+    text-decoration: none;
+    color: #1e88e5;
+    font-weight: 500;
+  }
+  
+  mat-list-item a:hover {
+    text-decoration: underline;
   }
   

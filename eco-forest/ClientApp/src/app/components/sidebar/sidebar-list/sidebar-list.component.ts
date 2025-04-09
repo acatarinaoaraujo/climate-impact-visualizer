@@ -124,9 +124,14 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     this.dataSource.data = this.transformData(data);
   }
 
+  
+
   openCountryDetailDialog(row: any): void {
     this.dialog.open(CountryDetailDialogComponent, {
       data: row,
+      width: '100%',
+      height: '100%',
     });
   }
+  
 }

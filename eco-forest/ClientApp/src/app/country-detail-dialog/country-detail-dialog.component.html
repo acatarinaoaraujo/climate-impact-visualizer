@@ -1,18 +1,27 @@
 <h1 mat-dialog-title>{{ data.name }}</h1>
+
 <div mat-dialog-content>
-  <!-- Display country details here -->
-  <mat-grid-list cols="2" rowHeight="100px">
+  <mat-grid-list cols="2" rowHeight="100px" gutterSize="16px">
     <mat-grid-tile>
-      <mat-icon>bar_chart</mat-icon>
-      <p>Value: {{ data.value }} GWh</p>
+      <mat-icon color="primary">bar_chart</mat-icon>
+      <div class="metric-text">Value: {{ data.value }} GWh</div>
     </mat-grid-tile>
     <mat-grid-tile>
-      <mat-icon>trending_up</mat-icon>
-      <p>Change: {{ data.rateChange }}%</p>
+      <mat-icon color="accent">trending_up</mat-icon>
+      <div class="metric-text">Change: {{ data.rateChange }}%</div>
     </mat-grid-tile>
   </mat-grid-list>
 
-  <mat-form-field appearance="outline" style="width: 100%;">
+  <div class="chart-container" *ngIf="llmResponse">
+    <h3>Renewable Energy Breakdown</h3>
+    <canvas baseChart
+      [data]="renewableBreakdown"
+      [options]="chartOptions"
+      [type]="chartType">
+    </canvas>
+  </div>
+
+  <mat-form-field appearance="outline" class="prompt-input">
     <mat-label>Ask a question about {{ data.name }}</mat-label>
     <input matInput [(ngModel)]="userPrompt" placeholder="Type your question here">
   </mat-form-field>
@@ -23,18 +32,24 @@
   </div>
 
   <div *ngIf="llmResponse">
-    <h3>Response:</h3>
-    <p><strong>Current Year Summary:</strong> {{ llmResponse.currentYearSummary }}</p>
-    <p><strong>Historical Comparison:</strong> {{ llmResponse.historicalComparison }}</p>
-    <mat-list>
-      <h3 mat-subheader>Recent News Headlines</h3>
-      <mat-list-item *ngFor="let headline of llmResponse.newsHeadlines">
-        {{ headline }}
-      </mat-list-item>
-    </mat-list>
+    <div class="response-section">
+      <h3>Response:</h3>
+      <p><strong>Current Year Summary:</strong> {{ llmResponse.currentYearSummary }}</p>
+      <p><strong>Historical Comparison:</strong> {{ llmResponse.historicalComparison }}</p>
+
+      <mat-list>
+        <h3 mat-subheader>Recent News Headlines</h3>
+        <mat-list-item *ngFor="let headline of llmResponse.newsHeadlines">
+          <a href="{{ headline.url }}" target="_blank" rel="noopener noreferrer">
+            {{ headline.title }}
+          </a>
+        </mat-list-item>
+      </mat-list>
+    </div>
   </div>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="closeDialog()">Close</button>
-  <button mat-button (click)="submitPrompt()" [disabled]="isLoading || !userPrompt.trim()">Submit</button>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" (click)="closeDialog()">Close</button>
+  <button mat-raised-button color="primary" (click)="submitPrompt()" [disabled]="isLoading || !userPrompt.trim()">Submit</button>
 </div>
