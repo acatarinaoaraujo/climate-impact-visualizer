@@ -1,54 +1,97 @@
-mat-grid-tile {
+/* Add padding around the modal content */
+::ng-deep .mat-dialog-container {
+    padding: 32px !important;
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: #fdfdfd;
+  }
+  
+  /* Grid tile with better spacing and hierarchy */
+  mat-grid-tile {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding-left: 16px;
     font-size: 1.1rem;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   }
   
+  /* Larger, cleaner icon */
   mat-icon {
-    margin-right: 8px;
-    font-size: 28px;
+    margin-right: 10px;
+    font-size: 32px;
+    color: #424242;
+  }
+
+  .wrap-container {
+    padding: 30px;
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; */
   }
   
+  /* Metric text tweak */
   .metric-text {
-    font-weight: 500;
+    font-weight: 600;
+    color: #333;
   }
   
+  /* Form field margin and clean lines */
   .prompt-input {
     width: 100%;
-    margin-top: 16px;
+    margin-top: 24px;
   }
   
+  /* Spinner box with space and modern text */
   .loading-container {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 20px;
+    padding: 30px 0;
+    font-size: 1.1rem;
+    color: #666;
   }
   
+  /* Chart section */
   .chart-container {
-    margin: 24px 0;
-    text-align: center;
+    margin: 32px 0 24px;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   }
   
+  /* Canvas constraints */
   canvas {
-    max-width: 400px;
-    margin: auto;
+    max-width: 420px;
+    margin: 0 auto;
   }
   
+  /* Response text block */
   .response-section {
-    margin-top: 20px;
+    margin-top: 28px;
   }
   
+  /* List styles */
   mat-list-item a {
     text-decoration: none;
     color: #1e88e5;
     font-weight: 500;
+    transition: all 0.2s ease;
   }
   
   mat-list-item a:hover {
     text-decoration: underline;
+    color: #1565c0;
+  }
+  
+  /* Button spacing */
+  mat-dialog-actions {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
   }
   

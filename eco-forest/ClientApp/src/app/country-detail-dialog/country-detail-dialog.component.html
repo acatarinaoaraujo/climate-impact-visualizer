@@ -1,3 +1,6 @@
+<!-- wrap container -->
+<div class="wrap-container"> 
+
 <h1 mat-dialog-title>{{ data.name }}</h1>
 
 <div mat-dialog-content>
@@ -52,4 +55,6 @@
 <div mat-dialog-actions align="end">
   <button mat-raised-button color="warn" (click)="closeDialog()">Close</button>
   <button mat-raised-button color="primary" (click)="submitPrompt()" [disabled]="isLoading || !userPrompt.trim()">Submit</button>
+</div>
+
 </div>
