@@ -10,7 +10,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { CountryDetailDialogComponent } from './country-detail-dialog.component';
+import { CountryDetailDialogComponent } from '../../../country-detail-dialog/country-detail-dialog.component';
+
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 export interface CountryData {
   id: number;
@@ -22,7 +25,7 @@ export interface CountryData {
 @Component({
   selector: 'app-sidebar-list',
   standalone: true,
-  imports: [MatFormFieldModule, CommonModule, MatInputModule, MatTableModule, MatSortModule, MatPaginator, MatIconModule],
+  imports: [MatFormFieldModule, CommonModule, MatInputModule, MatTableModule, MatSortModule, MatPaginator, MatIconModule, FormsModule],
   templateUrl: './sidebar-list.component.html',
   styleUrls: ['./sidebar-list.component.css']
 })

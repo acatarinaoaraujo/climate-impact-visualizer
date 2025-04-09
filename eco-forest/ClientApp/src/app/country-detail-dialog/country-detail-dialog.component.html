@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>{{ data.name }}</h1>
+<div mat-dialog-content>
+  <!-- Display country details here -->
+  <mat-grid-list cols="2" rowHeight="100px">
+    <mat-grid-tile>
+      <mat-icon>bar_chart</mat-icon>
+      <p>Value: {{ data.value }} GWh</p>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-icon>trending_up</mat-icon>
+      <p>Change: {{ data.rateChange }}%</p>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Ask a question about {{ data.name }}</mat-label>
+    <input matInput [(ngModel)]="userPrompt" placeholder="Type your question here">
+  </mat-form-field>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Fetching information...</p>
+  </div>
+
+  <div *ngIf="llmResponse">
+    <h3>Response:</h3>
+    <p><strong>Current Year Summary:</strong> {{ llmResponse.currentYearSummary }}</p>
+    <p><strong>Historical Comparison:</strong> {{ llmResponse.historicalComparison }}</p>
+    <mat-list>
+      <h3 mat-subheader>Recent News Headlines</h3>
+      <mat-list-item *ngFor="let headline of llmResponse.newsHeadlines">
+        {{ headline }}
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">Close</button>
+  <button mat-button (click)="submitPrompt()" [disabled]="isLoading || !userPrompt.trim()">Submit</button>
+</div>
