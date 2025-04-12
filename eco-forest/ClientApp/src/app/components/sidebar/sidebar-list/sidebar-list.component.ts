@@ -83,6 +83,8 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       name: item.country,
       value: this.getValue(item),
       rateChange: parseFloat((Math.random() * 10 - 5).toFixed(2)),
+      apiType: this.apiType,
+      indicatorType: this.indicatorType,
     }));
   }
 

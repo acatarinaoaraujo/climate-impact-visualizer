@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
+import { chartConfigMap } from '../chart-configs'; // Import the chart config map
 
 @Component({
   selector: 'app-country-detail-dialog',
@@ -35,30 +36,25 @@ export class CountryDetailDialogComponent {
     newsHeadlines: { title: string; url: string }[];
   } | null = null;
 
-  renewableBreakdown = {
-    labels: ['Solar', 'Wind', 'Hydro', 'Biomass', 'Geothermal'],
-    datasets: [{
-      data: [30, 25, 20, 15, 10], // sample % values
-      backgroundColor: ['#fdd835', '#64b5f6', '#81c784', '#a1887f', '#ff8a65']
-    }]
-  };
-
-  chartOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'bottom'
-      }
-    }
-  };
-
-  chartType: 'doughnut' = 'doughnut'; // ✅ explicitly typed
-
+  chartData: any;
+  chartOptions: ChartConfiguration['options'] = {};
+  chartType: ChartType = 'doughnut'; // Default chart type
 
   constructor(
     public dialogRef: MatDialogRef<CountryDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { name: string; value: number; rateChange: number }
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: { name: string; value: number; rateChange: number, apiType: string, indicatorType: string}
+  ) {
+    this.loadChartConfig();
+  }
+
+  loadChartConfig(): void {
+    const config = chartConfigMap[this.data.apiType]?.[this.data.indicatorType];
+    if (config) {
+      this.chartData = config.data;
+      this.chartType = config.type;
+      this.chartOptions = config.options || {};
+    }
+  }
 
   closeDialog(): void {
     this.dialogRef.close();
