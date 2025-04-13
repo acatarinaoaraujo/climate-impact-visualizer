@@ -6,7 +6,7 @@
     <mat-grid-list cols="2" rowHeight="100px" gutterSize="16px">
       <mat-grid-tile>
         <mat-icon color="primary">bar_chart</mat-icon>
-        <div class="metric-text">Value: {{ data.value }} GWh</div>
+        <div class="metric-text">Value: {{ data.value }} {{unit}}</div>
       </mat-grid-tile>
       <mat-grid-tile>
         <mat-icon color="accent">trending_up</mat-icon>
@@ -29,6 +29,17 @@
       <mat-label>Ask a question about {{ data.name }}</mat-label>
       <input matInput [(ngModel)]="userPrompt" placeholder="Type your question here">
     </mat-form-field>
+
+      <!-- Chart section -->
+      <div class="chart-container" *ngIf="chartData">
+        <h3>Chart for {{ data.indicatorType }}</h3>
+        <canvas baseChart
+          [data]="chartData"
+          [options]="chartOptions"
+          [type]="chartType">
+        </canvas>
+      </div>
+
 
     <!-- Loading spinner while fetching data -->
     <div *ngIf="isLoading" class="loading-container">

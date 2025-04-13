@@ -10,6 +10,7 @@ import { MatListModule } from '@angular/material/list';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { chartConfigMap } from '../chart-configs'; // Import the chart config map
+import { INDICATOR_UNITS } from '../shared/constants';
 
 // Define the structure of yearly data
 interface YearlyData {
@@ -39,6 +40,7 @@ interface Indicator {
   styleUrls: ['./country-detail-dialog.component.css']
 })
 export class CountryDetailDialogComponent {
+  unit: string = ''; 
   userPrompt: string = '';
   isLoading: boolean = false;
   llmResponse: {
@@ -50,6 +52,8 @@ export class CountryDetailDialogComponent {
   chartData: any;
   chartOptions: ChartConfiguration['options'] = {};
   chartType: ChartType = 'doughnut'; // Default chart type
+ 
+
 
   constructor(
     public dialogRef: MatDialogRef<CountryDetailDialogComponent>,
@@ -66,13 +70,19 @@ export class CountryDetailDialogComponent {
     }
   ) {
     this.loadChartConfig();
+    this.unit = INDICATOR_UNITS[this.data.indicatorType]; 
+
   }
+
 
   loadChartConfig(): void {
     const config = chartConfigMap[this.data.apiType]?.[this.data.indicatorType];
     if (config) {
       // Prepare data for the chart
       const indicator: Indicator | undefined = this.data.fullData.find((item: any) => item.name === this.data.indicatorType);
+      console.log('Chart Data:', this.chartData);
+console.log('Chart Type:', this.chartType);
+
       if (indicator) {
         const years = Object.keys(indicator.yearlyData); // Years in "F2000", "F2023" format
         const values = years.map(year => indicator.yearlyData[year]);
@@ -98,7 +108,7 @@ export class CountryDetailDialogComponent {
             },
             tooltip: {
               callbacks: {
-                label: (tooltipItem) => `${tooltipItem.label}: ${tooltipItem.raw} GWh`
+                label: (tooltipItem) => `${tooltipItem.label}: ${tooltipItem.raw} ${this.unit}` // Use the unit for the tooltip
               }
             }
           },
