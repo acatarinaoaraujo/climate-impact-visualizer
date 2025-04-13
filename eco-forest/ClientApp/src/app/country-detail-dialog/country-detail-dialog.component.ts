@@ -11,6 +11,17 @@ import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { chartConfigMap } from '../chart-configs'; // Import the chart config map
 
+// Define the structure of yearly data
+interface YearlyData {
+  [key: string]: number; // Key is a year string (e.g., "F2000"), value is a number
+}
+
+// Define the structure of the indicator data
+interface Indicator {
+  name: string;
+  yearlyData: YearlyData;
+}
+
 @Component({
   selector: 'app-country-detail-dialog',
   standalone: true,
@@ -60,9 +71,47 @@ export class CountryDetailDialogComponent {
   loadChartConfig(): void {
     const config = chartConfigMap[this.data.apiType]?.[this.data.indicatorType];
     if (config) {
-      this.chartData = config.data;
-      this.chartType = config.type;
-      this.chartOptions = config.options || {};
+      // Prepare data for the chart
+      const indicator: Indicator | undefined = this.data.fullData.find((item: any) => item.name === this.data.indicatorType);
+      if (indicator) {
+        const years = Object.keys(indicator.yearlyData); // Years in "F2000", "F2023" format
+        const values = years.map(year => indicator.yearlyData[year]);
+
+        this.chartData = {
+          labels: years.map(year => year.substring(1)), // Extract year part (e.g., "2000" from "F2000")
+          datasets: [{
+            data: values,
+            label: this.data.indicatorType,
+            fill: false,
+            borderColor: '#4caf50',  // Adjust the color as needed
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',  // Adjust the background color as needed
+            borderWidth: 2
+          }]
+        };
+
+        this.chartType = 'line'; // Default type for time series
+        this.chartOptions = {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top'
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => `${tooltipItem.label}: ${tooltipItem.raw} GWh`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 5000  // Adjust step size as needed
+              }
+            }
+          }
+        };
+      }
     }
   }
 

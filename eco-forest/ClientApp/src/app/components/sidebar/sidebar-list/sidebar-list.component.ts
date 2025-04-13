@@ -158,7 +158,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     this.dialog.open(CountryDetailDialogComponent, {
       width: '800px',
       data: {
-        countryName: row.name,
+        name: row.name,
         value: row.value,
         rateChange: row.rateChange,
         apiType: row.apiType,
