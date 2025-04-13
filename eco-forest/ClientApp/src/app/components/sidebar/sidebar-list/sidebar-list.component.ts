@@ -135,6 +135,26 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   
 
   openCountryDetailDialog(row: any): void {
+    // Determine the relevant field to send based on apiType
+    let relevantData: any;
+  
+    if (row.fullData) {
+      if (this.apiType === 'income-loss') {
+        relevantData = row.fullData.variables;  // Send 'variables' for income-loss
+      } else if (this.apiType === 'renewable-energy') {
+        relevantData = row.fullData.technologies;  // Send 'technologies' for renewable-energy
+      } else if (this.apiType === 'climate-disasters' || this.apiType === 'greenhouse-emissions' || this.apiType === 'forest-carbon') {
+        relevantData = row.fullData.indicators;  // Send 'indicators' for climate-disasters, greenhouse-emissions, forest-carbon
+      }
+    }
+  
+    // If relevantData is missing or undefined, handle it gracefully
+    if (!relevantData) {
+      console.error('No relevant data found for the selected API type');
+      return;  // Exit if no relevant data is found
+    }
+  
+    // Now open the dialog, sending only the specific field data (relevantData)
     this.dialog.open(CountryDetailDialogComponent, {
       width: '800px',
       data: {
@@ -146,10 +166,11 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
         startYear: row.startYear,
         endYear: row.endYear,
         selectedYear: row.selectedYear,
-        fullData: row.fullData // assuming the full data is here
+        fullData: relevantData  // Send only the relevant field data
       }
     });
   }
+  
   
 
   
