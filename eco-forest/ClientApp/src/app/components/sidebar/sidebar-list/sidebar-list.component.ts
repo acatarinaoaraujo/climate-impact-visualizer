@@ -34,6 +34,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   @Input() indicatorType: string = 'Fossil Fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
+  @Input() selectedYear: number = 2000;
 
   displayedColumns: string[] = ['id', 'name', 'value', 'rateChange'];
   dataSource = new MatTableDataSource<CountryData>();
@@ -49,7 +50,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['indicatorType'] || changes['startYear'] || changes['endYear'] || changes['apiType']) {
+    if (changes['indicatorType'] || changes['selectedYear'] || changes['apiType']) {
       this.fetchData();
     }
   }
@@ -85,6 +86,9 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       rateChange: parseFloat((Math.random() * 10 - 5).toFixed(2)),
       apiType: this.apiType,
       indicatorType: this.indicatorType,
+      startYear: this.startYear,
+      endYear: this.endYear,
+      selectedYear: this.selectedYear,
     }));
   }
 
@@ -107,7 +111,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     if (!techOrVarData) return 0;
   
     // Get the value for the selected year only
-    const yearValue = techOrVarData.yearlyData[`F${this.startYear}`];
+    const yearValue = techOrVarData.yearlyData[`F${this.selectedYear}`];
     
     return yearValue !== undefined ? parseFloat(yearValue.toFixed(1)) : 0;
   }
@@ -121,8 +125,9 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   // Method to update data based on new inputs from the sidebar
   updateData(data: any[], settings: any) {
     this.indicatorType = settings.indicatorType;
-    this.startYear = settings.startYear;
-    this.endYear = settings.endYear;
+    this.selectedYear = settings.selectedYear;
+    // this.startYear = settings.startYear;
+    // this.endYear = settings.endYear;
     this.dataSource.data = this.transformData(data);
   }
 

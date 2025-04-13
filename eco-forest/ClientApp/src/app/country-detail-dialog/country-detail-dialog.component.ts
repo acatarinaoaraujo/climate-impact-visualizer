@@ -42,7 +42,7 @@ export class CountryDetailDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<CountryDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { name: string; value: number; rateChange: number, apiType: string, indicatorType: string}
+    @Inject(MAT_DIALOG_DATA) public data: { name: string; value: number; rateChange: number, apiType: string, indicatorType: string, startYear: number, endYear: number, selectedYear: number }
   ) {
     this.loadChartConfig();
   }
@@ -64,6 +64,8 @@ export class CountryDetailDialogComponent {
     if (this.userPrompt.trim()) {
       this.isLoading = true;
       this.llmResponse = null;
+
+      console.log(this.data);
 
       setTimeout(() => {
         this.llmResponse = {

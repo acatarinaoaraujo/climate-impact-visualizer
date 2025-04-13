@@ -37,8 +37,9 @@
       <app-sidebar-list
         [apiType]="apiType"
         [indicatorType]="indicatorType"
-        [startYear]="selectedYear"
-        [endYear]="selectedYear">
+        [startYear]=" yearRange.min"
+        [endYear]=" yearRange.max"
+        [selectedYear]="selectedYear">
       </app-sidebar-list>
 
     </div>
