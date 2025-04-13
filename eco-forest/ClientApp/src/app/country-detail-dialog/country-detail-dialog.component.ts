@@ -42,7 +42,17 @@ export class CountryDetailDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<CountryDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { name: string; value: number; rateChange: number, apiType: string, indicatorType: string, startYear: number, endYear: number, selectedYear: number }
+    @Inject(MAT_DIALOG_DATA) public data: { 
+      name: string; 
+      value: number; 
+      rateChange: number;
+      apiType: string; 
+      indicatorType: string; 
+      startYear: number; 
+      endYear: number; 
+      selectedYear: number; 
+      fullData: any;
+    }
   ) {
     this.loadChartConfig();
   }

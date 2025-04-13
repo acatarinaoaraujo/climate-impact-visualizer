@@ -89,6 +89,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       startYear: this.startYear,
       endYear: this.endYear,
       selectedYear: this.selectedYear,
+      fullData: item // Store the full data for the dialog
     }));
   }
 
@@ -135,10 +136,21 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
 
   openCountryDetailDialog(row: any): void {
     this.dialog.open(CountryDetailDialogComponent, {
-      data: row,
-      width: '100%',
-      height: '100%',
+      width: '800px',
+      data: {
+        countryName: row.name,
+        value: row.value,
+        rateChange: row.rateChange,
+        apiType: row.apiType,
+        indicatorType: row.indicatorType,
+        startYear: row.startYear,
+        endYear: row.endYear,
+        selectedYear: row.selectedYear,
+        fullData: row.fullData // assuming the full data is here
+      }
     });
   }
+  
+
   
 }

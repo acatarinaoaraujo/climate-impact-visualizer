@@ -1,7 +1,8 @@
-<div class="wrap-container"> 
+<div class="wrap-container">
   <h1 mat-dialog-title>{{ data.name }}</h1>
 
   <div mat-dialog-content>
+    <!-- Grid to display value and rate of change -->
     <mat-grid-list cols="2" rowHeight="100px" gutterSize="16px">
       <mat-grid-tile>
         <mat-icon color="primary">bar_chart</mat-icon>
@@ -13,6 +14,7 @@
       </mat-grid-tile>
     </mat-grid-list>
 
+    <!-- Chart section -->
     <div class="chart-container" *ngIf="chartData">
       <h3>Chart for {{ data.indicatorType }}</h3>
       <canvas baseChart
@@ -22,16 +24,19 @@
       </canvas>
     </div>
 
+    <!-- User prompt input field -->
     <mat-form-field appearance="outline" class="prompt-input">
       <mat-label>Ask a question about {{ data.name }}</mat-label>
       <input matInput [(ngModel)]="userPrompt" placeholder="Type your question here">
     </mat-form-field>
 
+    <!-- Loading spinner while fetching data -->
     <div *ngIf="isLoading" class="loading-container">
       <mat-spinner></mat-spinner>
       <p>Fetching information...</p>
     </div>
 
+    <!-- Display LLM response once it's available -->
     <div *ngIf="llmResponse">
       <div class="response-section">
         <h3>Response:</h3>
@@ -50,6 +55,7 @@
     </div>
   </div>
 
+  <!-- Dialog action buttons -->
   <div mat-dialog-actions align="end">
     <button mat-raised-button color="warn" (click)="closeDialog()">Close</button>
     <button mat-raised-button color="primary" (click)="submitPrompt()" [disabled]="isLoading || !userPrompt.trim()">Submit</button>

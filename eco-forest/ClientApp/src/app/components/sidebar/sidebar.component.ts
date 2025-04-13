@@ -141,6 +141,7 @@ export class SidebarComponent {
   fetchData() {
     let url = '';
     let data = { indicatorType: this.indicatorType, startYear: this.startYear, endYear: this.endYear };
+    console.log("data", data);
 
     if (this.apiType === 'income-loss') {
       url = 'http://localhost:5085/api/incomeloss/aggregated';
@@ -157,6 +158,7 @@ export class SidebarComponent {
     this.http.get<any[]>(url).subscribe({
       next: (response: any[]) => {
         if (this.sidebarList) {
+          console.log("response", response);
           this.sidebarList.updateData(response, data);
         }
       },
