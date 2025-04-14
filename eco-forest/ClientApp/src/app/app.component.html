@@ -132,15 +132,15 @@ html, body {
     (apiTypeChange)="onApiTypeChange($event)"
     [indicatorType]="indicatorType"
     (indicatorTypeChange)="onIndicatorTypeChange($event)"
-    (yearRangeChange)="onYearRangeChange($event)">
+    (yearRangeChange)="onYearRangeChange($event)"
+    (selectedYearChange)="onSelectedYearChange($event)">
   </sidebar>
 
   <div class="content">
 
     <app-energy-globe *ngIf="apiType === 'renewable-energy'"
       [energyType]="indicatorType"
-      [startYear]="startYear"
-      [endYear]="endYear">
+      [selectedYear]="selectedYear">
     </app-energy-globe>
 
     <app-disaster-globe *ngIf="apiType === 'climate-disasters'"

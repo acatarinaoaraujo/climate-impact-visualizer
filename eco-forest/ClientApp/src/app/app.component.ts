@@ -39,6 +39,7 @@ export class AppComponent {
   indicatorType: string = 'Share Of Forest Area';
   startYear: number = 2000;
   endYear: number = 2025;
+  selectedYear: number = 2023;
   apiType: string = '';
 
   constructor(private router: Router, private route: ActivatedRoute) {}
@@ -75,5 +76,9 @@ export class AppComponent {
 
   onApiTypeChange(type: string) {
     this.apiType = type;
+  }
+
+  onSelectedYearChange(year: number) {
+    this.selectedYear = year;
   }
 }

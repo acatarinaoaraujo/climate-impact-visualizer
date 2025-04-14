@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic';
-import { ENERGY_TYPE_COLORS, API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } from '../../../shared/constants'; 
+import { ENERGY_TYPE_COLORS, API_LINKS, GEOJSON_FILE_PATH } from '../../../shared/constants';
 
 @Component({
   selector: 'app-energy-globe',
@@ -14,8 +14,7 @@ import { ENERGY_TYPE_COLORS, API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } from
 })
 export class EnergyGlobeComponent implements OnInit, OnChanges {
   @Input() energyType: string = 'Fossil Fuels';
-  @Input() startYear: number = API_YEAR_RANGE['renewable-energy'].min;
-  @Input() endYear: number = API_YEAR_RANGE['renewable-energy'].max;
+  @Input() selectedYear: number = 2023;
 
   private globeInstance: any;
   private geoJsonData: any;
@@ -30,19 +29,16 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Changes detected:', changes);
-    if (this.dataLoaded && (changes['energyType'] || changes['startYear'] || changes['endYear'])) {
+    if (this.dataLoaded && (changes['energyType'] || changes['selectedYear'])) {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        console.log('Updating globe visualization...');
         this.updateGlobeVisualization();
       }, 300);
     }
   }
-  
+
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
-      console.log('Loading globe...');
       import('globe.gl').then((module) => {
         const Globe = module.default;
         this.globeInstance = new Globe(document.getElementById('energyGlobe') as HTMLElement)
@@ -52,16 +48,15 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
           .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
-          
-        this.fetchData(); 
+
+        this.fetchData();
       }).catch(err => {
         console.error('Globe loading failed:', err);
       });
     }
   }
-  
+
   private fetchData(): void {
-    console.log('Fetching data...');
     this.http.get(GEOJSON_FILE_PATH).subscribe((geoJsonData: any) => {
       this.http.get(API_LINKS['renewable-energy']).subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
@@ -71,7 +66,6 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
       });
     });
   }
-  
 
   private transformData(geoJsonData: any, aggregatedData: any): any {
     const dataMap = new Map();
@@ -93,28 +87,27 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
   private updateGlobeVisualization(): void {
     if (this.globeInstance && this.geoJsonData) {
       const values = this.geoJsonData.features.map((feat: any) =>
-        this.getEnergyValue(feat, this.energyType, this.startYear, this.endYear)
+        this.getEnergyValue(feat, this.energyType, this.selectedYear)
       );
 
       const maxVal = Math.max(...values);
-  
+
       const colorScaleFn = ENERGY_TYPE_COLORS[this.energyType];
-      console.log(colorScaleFn);
       const colorScale = colorScaleFn ? colorScaleFn([0, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
-  
+
       this.globeInstance
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
-        .polygonCapColor((feat: any) => colorScale(this.getEnergyValue(feat, this.energyType, this.startYear, this.endYear)))
+        .polygonCapColor((feat: any) => colorScale(this.getEnergyValue(feat, this.energyType, this.selectedYear)))
         .polygonLabel(({ properties: d }: any) => `
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-          ${this.energyType} (${this.startYear}-${this.endYear}): <i>${this.getEnergyValue({ properties: d }, this.energyType, this.startYear, this.endYear)}</i> GWh
+          ${this.energyType} (${this.selectedYear}): <i>${this.getEnergyValue({ properties: d }, this.energyType, this.selectedYear)}</i> GWh
         `)
         .onPolygonHover((hoverD: any) =>
           this.globeInstance
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
-            .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEnergyValue(d, this.energyType, this.startYear, this.endYear)))
+            .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEnergyValue(d, this.energyType, this.selectedYear)))
         );
-  
+
       this.globeInstance
         .polygonSideColor(() => 'rgba(103, 105, 106, 0.35)')
         .redraw();
@@ -122,19 +115,13 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
     }
   }
 
-  private getEnergyValue(feature: any, technology: string, startYear: number, endYear: number): number {
+  private getEnergyValue(feature: any, technology: string, year: number): number {
     const data = feature.properties.aggregatedData;
     if (data) {
       const techData = data.technologies.find((tech: any) => tech.name.trim().toLowerCase() === technology.trim().toLowerCase());
       if (techData) {
-        let total = 0;
-        for (let year = startYear; year <= endYear; year++) {
-          if (techData.yearlyData[`F${year}`] !== undefined) {
-            total += techData.yearlyData[`F${year}`];
-          }
-        }
-        total = Math.round(total * 100) / 100;
-        return total;
+        const value = techData.yearlyData[`F${year}`];
+        return value !== undefined ? Math.round(value * 100) / 100 : 0;
       }
     }
     return 0;

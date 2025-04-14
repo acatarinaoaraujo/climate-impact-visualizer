@@ -45,6 +45,7 @@ export class SidebarComponent {
   @Output() apiTypeChange = new EventEmitter<string>();
   @Output() indicatorTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
+  @Output() selectedYearChange = new EventEmitter<number>();
 
   selectedYear: number = 2000;
   
@@ -135,7 +136,7 @@ export class SidebarComponent {
       this.yearRange = { min: API_YEAR_RANGE['forest-carbon'].min, max: API_YEAR_RANGE['forest-carbon'].max };
     }
   
-    this.selectedYear = this.yearRange.min;
+    this.selectedYear = this.yearRange.max;
     this.onYearChange();
   }
   fetchData() {
@@ -184,5 +185,10 @@ export class SidebarComponent {
   
   onYearChange() {
     this.yearRangeChange.emit({ startYear: this.selectedYear, endYear: this.selectedYear });
+  }
+
+  onYearSelected(year: number) {
+    this.selectedYear = year;
+    this.selectedYearChange.emit(this.selectedYear);
   }
 }
