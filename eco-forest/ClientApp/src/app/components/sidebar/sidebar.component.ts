@@ -41,13 +41,13 @@ export class SidebarComponent {
   @Input() indicatorType: string = ''; 
   @Input() startYear: number = 2000; 
   @Input() endYear: number = 2025; 
+  @Input() selectedYear: number = 2023;
 
   @Output() apiTypeChange = new EventEmitter<string>();
   @Output() indicatorTypeChange = new EventEmitter<string>();
   @Output() yearRangeChange = new EventEmitter<{ startYear: number; endYear: number }>();
   @Output() selectedYearChange = new EventEmitter<number>();
 
-  selectedYear: number = 2000;
   
   indicatorTypes: string[] = [];
   yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable indicator
@@ -141,7 +141,7 @@ export class SidebarComponent {
   }
   fetchData() {
     let url = '';
-    let data = { indicatorType: this.indicatorType, startYear: this.startYear, endYear: this.endYear };
+    let data = { indicatorType: this.indicatorType, startYear: this.startYear, endYear: this.endYear, selectedYear: this.selectedYear };
     console.log("data", data);
 
     if (this.apiType === 'income-loss') {
@@ -184,11 +184,13 @@ export class SidebarComponent {
   }
   
   onYearChange() {
+    console.log('Selected Year:', this.selectedYear);
     this.yearRangeChange.emit({ startYear: this.selectedYear, endYear: this.selectedYear });
+    this.selectedYearChange.emit(this.selectedYear);
   }
 
   onYearSelected(year: number) {
     this.selectedYear = year;
-    this.selectedYearChange.emit(this.selectedYear);
+
   }
 }

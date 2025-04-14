@@ -108,10 +108,9 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEnergyValue(d, this.energyType, this.selectedYear)))
         );
 
-      this.globeInstance
-        .polygonSideColor(() => 'rgba(103, 105, 106, 0.35)')
-        .redraw();
-      this.globeInstance.redraw();
+      // this.globeInstance
+      //   .polygonSideColor(() => 'rgba(103, 105, 106, 0.35)')
+      //   .redraw();
     }
   }
 

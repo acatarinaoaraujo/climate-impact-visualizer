@@ -79,6 +79,7 @@ export class AppComponent {
   }
 
   onSelectedYearChange(year: number) {
+    console.log('Selected Year Changed:', year);
     this.selectedYear = year;
   }
 }
