@@ -43,8 +43,10 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
         const Globe = module.default;
         this.globeInstance = new Globe(document.getElementById('energyGlobe') as HTMLElement)
           .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+          .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
           .lineHoverPrecision(0)
           .polygonAltitude(0.06)
+  
           .polygonSideColor(() => 'rgba(0, 100, 0, 0.35)')
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
@@ -100,17 +102,13 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
         .polygonCapColor((feat: any) => colorScale(this.getEnergyValue(feat, this.energyType, this.selectedYear)))
         .polygonLabel(({ properties: d }: any) => `
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-          ${this.energyType} (${this.selectedYear}): <i>${this.getEnergyValue({ properties: d }, this.energyType, this.selectedYear)}</i> GWh
+          ${this.energyType} (${this.selectedYear}): <i>${this.getEnergyValue({ properties: d }, this.energyType, this.selectedYear)}</i> Megawatt (MW)
         `)
         .onPolygonHover((hoverD: any) =>
           this.globeInstance
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEnergyValue(d, this.energyType, this.selectedYear)))
         );
-
-      // this.globeInstance
-      //   .polygonSideColor(() => 'rgba(103, 105, 106, 0.35)')
-      //   .redraw();
     }
   }
 
@@ -120,7 +118,7 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
       const techData = data.technologies.find((tech: any) => tech.name.trim().toLowerCase() === technology.trim().toLowerCase());
       if (techData) {
         const value = techData.yearlyData[`F${year}`];
-        return value !== undefined ? Math.round(value * 100) / 100 : 0;
+        return value !== undefined ? Math.round(value) : 0;
       }
     }
     return 0;
