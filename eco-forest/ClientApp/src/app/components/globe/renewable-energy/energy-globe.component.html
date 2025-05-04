@@ -1,12 +1,12 @@
 <div class="globe-container">
-    <div class="legend">
-      <div><span class="color-box" style="background: linear-gradient(to right, orange, red);"></span> Fossil Fuels (NR)</div>
-      <div><span class="color-box" style="background: #FFD700;"></span> Solar Energy (R)</div>
-      <div><span class="color-box" style="background: #A9A9A9;"></span> Wind Energy (R)</div>
-      <div><span class="color-box" style="background: #1E90FF;"></span> Hydropower (R)</div>
-      <div><span class="color-box" style="background: #228B22;"></span> Bioenergy (R)</div>
+  <div class="legend" *ngIf="colorScale && energyRange">
+    <div class="legend-title">{{ energyType }} ({{ selectedYear }})</div>
+    <div class="gradient-bar" [style.background]="legendGradient"></div>
+    <div class="legend-labels">
+      <span>{{ energyRange[0] | number:'1.0-0' }} MW</span>
+      <span>{{ energyRange[1] | number:'1.0-0' }} MW</span>
     </div>
-  
-    <div id="energyGlobe" class="globe"></div>
   </div>
-  
+
+  <div id="energyGlobe" class="globe"></div>
+</div>
