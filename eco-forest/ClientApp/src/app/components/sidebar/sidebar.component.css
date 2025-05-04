@@ -22,6 +22,7 @@
   align-items: center;
   width: 100%;
   gap: 4px;
+  
 }
 
 .toggle-btn-container {
@@ -35,15 +36,14 @@
 }
 
 .toggle-btn {
-  top: 36px;
+  top: 50px;
   width: 40px;
   height: 40px;
   color: #3858b1;
-  border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(107, 104, 104, 0.4);
+
   transition: left 0.3s ease-in-out;
   overflow: hidden;
-  background: linear-gradient(20deg, #000000 0%, #474646 100%); 
+  background: linear-gradient(270deg, #000000 0%, #414141 80%); 
 }
 
 .sidenav.collapsed {
@@ -66,10 +66,6 @@ mat-drawer-container {
   
 }
 
-mat-drawer {
-  border-radius: 0%;
-}
-
 /* Shrink form elements */
 form {
   width: 95%; /* slightly smaller than before */
@@ -79,6 +75,7 @@ form {
 mat-form-field {
   font-size: 14px;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 mat-select, mat-option {
@@ -88,7 +85,7 @@ mat-select, mat-option {
 
 /* Shrink year range section */
 .year-range {
-  margin-top: 10px;
+  margin-top: 40px;
   font-size: 16px;
   margin-bottom: 4px;
   color: var(--gray-400);

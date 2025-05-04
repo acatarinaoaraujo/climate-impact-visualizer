@@ -1,15 +1,16 @@
 .globe-container {
   position: relative;
-  width: 100%;
-  height: 100%;
+  overflow: hidden;
+  top: 20px;
 }
 
 .legend {
   position: absolute;
-  top: 650px; /* Adjusted to be closer to the top */
+  top: 640px; /* Adjusted to be closer to the top */
   left: 50%; /* Centers the legend horizontally */
   transform: translateX(-50%); /* Corrects the center alignment */
-  background-color: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(0deg, #000000 0%, #212125 100%); 
+  color: var(--gray-200);
   padding: 12px;
   border-radius: 8px;
   font-size: 13px;

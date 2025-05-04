@@ -13,6 +13,7 @@
 table {
   table-layout: fixed; 
   width: 90%; /* Ensure table takes full width */
+  background: linear-gradient(360deg, #161616 0%, #262626 40%); 
 }
 
 .mat-column-id {
@@ -22,7 +23,7 @@ table {
 .mat-mdc-form-field {
   font-size: 12px;
   width: 100%;
-
+  color: var(--gray-200);
 }
 
 .mat-mdc-row .mat-mdc-cell {
@@ -40,6 +41,9 @@ td, th {
   overflow: hidden; /* Hide overflowed text */
   text-overflow: ellipsis; 
   white-space: nowrap; /* Prevent text wrapping */
+  color: var(--gray-200);
+  
+  
 }
 
 .country-filter {
@@ -47,9 +51,10 @@ td, th {
   border-radius: 0 !important;
   overflow: auto;
   width: 100%; /* Ensure full width */
+  color: var(--gray-200);
 
 }
-
+  
 .text-blue {
   color: green; /* Blue color for positive change */
 }
@@ -61,10 +66,16 @@ td, th {
 .rate-change-container {
   display: flex;
   align-items: center; /* Align items vertically */
+  
 }
 
 .small-icon {
   font-size: 22px; /* Adjust the icon size */
   margin-right: 5px; /* Optional: Add some space between the icon and the value */
+}
+
+.paginator {
+  color: var(--gray-300);
+  background: linear-gradient(360deg, #242323 0%, #181818 100%); 
 }
 
