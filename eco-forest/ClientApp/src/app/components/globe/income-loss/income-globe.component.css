@@ -1,32 +1,38 @@
 .globe-container {
-    position: relative;
-    overflow: hidden;
-    top: 40px;
-  }
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
-  #incomeGlobe {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .legend {
-    position: absolute;
-    top: 60px; 
-    right: 300px;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    z-index: 10; 
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  .color-box {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin-right: 8px;
-    vertical-align: middle;
-    border: 1px solid #555;
-  }
-  
+.legend {
+  position: absolute;
+  top: 650px; /* Adjusted to be closer to the top */
+  left: 50%; /* Centers the legend horizontally */
+  transform: translateX(-50%); /* Corrects the center alignment */
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  width: 320px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 999; /* Ensure the legend is above other elements */
+}
+
+.legend-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.gradient-bar {
+  height: 14px;
+  width: 100%;
+  border: 1px solid #555;
+  margin: 6px 0;
+}
+
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}

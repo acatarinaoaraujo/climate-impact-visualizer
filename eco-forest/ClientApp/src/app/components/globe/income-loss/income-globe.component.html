@@ -1,13 +1,12 @@
 <div class="globe-container">
-    <div class="legend">
-      <div><span class="color-box" style="background: linear-gradient(to right, orange, red);"></span>Acute Climate Damage</div>
-        <div><span class="color-box" style="background: #FF4500;"></span>Business Confidence Loss</div>
-      <div><span class="color-box" style="background: #FFD700;"></span> Chronic Climate Damage</div>
-        <div><span class="color-box" style="background: #FF8C00;"></span> Mitigation Policy Costs</div>
-        <div><span class="color-box" style="background: #ADFF2F;"></span>Total GDP Risk</div>
+  <div class="legend" *ngIf="colorScale && variableRange">
+    <div class="legend-title">{{ variableType }} ({{ selectedYear }})</div>
+    <div class="gradient-bar" [style.background]="legendGradient"></div>
+    <div class="legend-labels">
+      <span>{{ variableRange[0] | number:'1.0-0' }} MW</span>
+      <span>{{ variableRange[1] | number:'1.0-0' }} MW</span>
     </div>
-
-    <div id="incomeGlobe" class="globe"></div>
-
   </div>
-  
+
+  <div id="incomeGlobe" class="globe"></div>
+</div>
