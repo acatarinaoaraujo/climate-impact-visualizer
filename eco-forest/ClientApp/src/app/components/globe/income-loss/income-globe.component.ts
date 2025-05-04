@@ -93,32 +93,32 @@ export class IncomeGlobeComponent implements OnChanges, OnInit {
   private updateGlobeVisualization(): void {
     if (!this.globeInstance || !this.geoJsonData) return;
 
-      const values = this.geoJsonData.features.map((feat: any) =>
-        this.getIncomeLosses(feat, this.variableType, this.selectedYear)
-    ).filter((val: number) => val > 0);
+    const values = this.geoJsonData.features.map((feat: any) =>
+      this.getIncomeLosses(feat, this.variableType, this.selectedYear)
+    ).filter((val: number) => !isNaN(val));
 
-      const minVal = Math.min(...values); // Get min value to scale colors correctly
-      const maxVal = Math.max(...values); // Get max value to scale colors correctly
 
-      this.variableRange = [minVal, maxVal];
+    const minVal = Math.min(...values); // Allow negative values here
+    const maxVal = Math.max(...values); // Allow negative values here
 
-      const colorScaleFn = INCOME_TYPE_COLORS[this.variableType];
-      const colorScale = colorScaleFn ? colorScaleFn([minVal, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([minVal, maxVal]);
-      this.legendGradient = this.generateGradientPreview(this.colorScale, minVal, maxVal);
+    this.variableRange = [minVal, maxVal];
 
-      this.globeInstance
-        .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
-        .polygonCapColor((feat: any) => colorScale(this.getIncomeLosses(feat, this.variableType, this.selectedYear)))
-        .polygonLabel(({ properties: d }: any) => `
-          <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-          ${this.variableType} (${this.selectedYear}): <i>${this.getIncomeLosses({ properties: d }, this.variableType, this.selectedYear)}</i> $USD
-        `)
-        .onPolygonHover((hoverD: any) =>
-          this.globeInstance
-            .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
-            .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getIncomeLosses(d, this.variableType, this.selectedYear)))
-        );
+    const colorScaleFn = INCOME_TYPE_COLORS[this.variableType];
+    this.colorScale = colorScaleFn ? colorScaleFn([minVal, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([minVal, maxVal]);
+    this.legendGradient = this.generateGradientPreview(this.colorScale, minVal, maxVal);
 
+    this.globeInstance
+      .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
+      .polygonCapColor((feat: any) => this.colorScale(this.getIncomeLosses(feat, this.variableType, this.selectedYear)))
+      .polygonLabel(({ properties: d }: any) => `
+        <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
+        ${this.variableType} (${this.selectedYear}): <i>${this.getIncomeLosses({ properties: d }, this.variableType, this.selectedYear)}</i> % of GDP 
+      `)
+      .onPolygonHover((hoverD: any) =>
+        this.globeInstance
+          .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
+          .polygonCapColor((d: any) => d === hoverD ? 'yellow' : this.colorScale(this.getIncomeLosses(d, this.variableType, this.selectedYear)))
+      );
   }
 
   private generateGradientPreview(scaleFn: (val: number) => string, min: number, max: number): string {
@@ -130,16 +130,13 @@ export class IncomeGlobeComponent implements OnChanges, OnInit {
     return `linear-gradient(to right, ${colors.join(', ')})`;
   }
 
-
   private getIncomeLosses(feature: any, variables: string, year: number): number {
     const data = feature.properties.aggregatedData;
     if (data) {
       const indicatorData = data.variables.find((variable: any) => variable.name.trim().toLowerCase() === variables.trim().toLowerCase());
-      console.log('Indicator Data:', indicatorData);
-
       if (indicatorData) {
         const value = indicatorData.yearlyData[`F${year}`];
-        return value !== undefined ? Math.round(value) : 0;
+        return value !== undefined ? value.toFixed(3) : 0; // Allow negative values here
       }
     }
     return 0;

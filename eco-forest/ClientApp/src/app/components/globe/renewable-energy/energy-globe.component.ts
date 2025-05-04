@@ -103,7 +103,6 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
 
     const colorScaleFn = ENERGY_TYPE_COLORS[this.energyType];
     this.colorScale = colorScaleFn ? colorScaleFn([minVal, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([minVal, maxVal]);
-
     this.legendGradient = this.generateGradientPreview(this.colorScale, minVal, maxVal);
 
     this.globeInstance

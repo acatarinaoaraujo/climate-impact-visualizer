@@ -1,6 +1,6 @@
 // constants.ts
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateGreens, interpolateYlOrRd, interpolateBlues, interpolateYlGn, interpolateGreys, interpolateGnBu, interpolateYlGnBu, interpolateCividis, interpolateMagma, interpolateWarm, interpolateYlOrBr } from 'd3-scale-chromatic';
+import { interpolateGreens, interpolateYlOrRd, interpolateBlues, interpolateYlGn, interpolateGreys, interpolateGnBu, interpolateYlGnBu, interpolateCividis, interpolateMagma, interpolateWarm, interpolateYlOrBr, interpolateInferno, interpolateSpectral, interpolateSinebow, interpolatePlasma } from 'd3-scale-chromatic';
 
 export const GEOJSON_FILE_PATH = '../../../assets/datasets/ne_110m_admin_0_countries.geojson';
 
@@ -91,13 +91,14 @@ export const FOREST_TYPE_COLORS: Record<string, (domain: [number, number]) => an
     'Index Of Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
   };
 
-export const INCOME_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
-    'Acute Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
-    'Business Confidence Losses': (domain) => scaleSequentialSqrt(interpolateGreys).domain(domain), // Grey
-    'Chronic Climate Damages': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
-    'Mitigation Policy Costs': (domain) => scaleSequentialSqrt(interpolateGreens).domain(domain), // Green
-    'Total GDP Risk': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain), // Red
+  export const INCOME_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
+    'Acute Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()), // Reverse the domain
+    'Business Confidence Losses': (domain) => scaleSequentialSqrt(interpolateGreys).domain(domain.reverse()), // Grey
+    'Chronic Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrBr).domain(domain.reverse()), // Blue
+    'Mitigation Policy Costs': (domain) => scaleSequentialSqrt(interpolatePlasma).domain(domain.reverse()), // Green
+    'Total GDP Risk': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()), // Red
   };
+  
 
 export const INDICATOR_UNITS: Record<string, string> = {
     'Fossil Fuels': 'GWh',
