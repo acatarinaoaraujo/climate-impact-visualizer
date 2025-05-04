@@ -2,8 +2,8 @@ import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/cor
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateYlOrRd, interpolateYlOrBr, interpolateGreys, interpolateBlues, interpolateGreens } from 'd3-scale-chromatic';
-import { ENERGY_TYPE_COLORS, API_LINKS, GEOJSON_FILE_PATH } from '../../../shared/constants';
+import { interpolateGreens } from 'd3-scale-chromatic';
+import { ENERGY_TYPE_COLORS, API_LINKS, GEOJSON_FILE_PATH, API_YEAR_RANGE } from '../../../shared/constants';
 
 @Component({
   selector: 'app-energy-globe',
@@ -14,7 +14,7 @@ import { ENERGY_TYPE_COLORS, API_LINKS, GEOJSON_FILE_PATH } from '../../../share
 })
 export class EnergyGlobeComponent implements OnInit, OnChanges {
   @Input() energyType: string = 'Fossil Fuels';
-  @Input() selectedYear: number = 2023;
+  @Input() selectedYear: number = API_YEAR_RANGE['renewable-energy'].max;
 
   energyRange: [number, number] | null = null;
   legendGradient: string = '';

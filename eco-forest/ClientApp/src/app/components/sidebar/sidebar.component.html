@@ -5,10 +5,19 @@
     class="sidenav"
     mode="side"
     [opened]="!isCollapsed"
-    [style.width]="isCollapsed ? '40px' : '470px'"
+    [style.width]="isCollapsed ? '40px' : '400px'"
     [ngClass]="{ 'collapsed': isCollapsed }"
   >
     <div class="sidenav-content">
+      <p class="year-range">Year Range</p>
+
+      <mat-slider discrete
+  [min]="yearRange.min"
+  [max]="yearRange.max"
+  [step]="1">
+  <input matSliderThumb [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()">
+</mat-slider>
+
       <form>
         <mat-form-field appearance="outline">
           <mat-label>Indicator Type</mat-label>
@@ -24,15 +33,7 @@
         </mat-form-field>
       </form>
 
-      <p class="year-range">Year Range</p>
-
-      <mat-slider discrete
-  [min]="yearRange.min"
-  [max]="yearRange.max"
-  [step]="1">
-  <input matSliderThumb [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()">
-</mat-slider>
-
+   
 
       <app-sidebar-list
         [apiType]="apiType"

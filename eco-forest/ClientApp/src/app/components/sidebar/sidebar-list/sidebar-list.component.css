@@ -1,12 +1,18 @@
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
 .table-container {
   height: 400px;
   overflow: auto;
-  width: 100%; /* Ensure full width */
 }
 
 table {
-  table-layout: fixed; /* Prevent table from resizing based on content */
-  width: 100%; /* Ensure table takes full width */
+  table-layout: fixed; 
+  width: 90%; /* Ensure table takes full width */
 }
 
 .mat-column-id {
@@ -14,7 +20,7 @@ table {
 }
 
 .mat-mdc-form-field {
-  font-size: 14px;
+  font-size: 12px;
   width: 100%;
 
 }
@@ -32,16 +38,8 @@ table {
 
 td, th {
   overflow: hidden; /* Hide overflowed text */
-  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+  text-overflow: ellipsis; 
   white-space: nowrap; /* Prevent text wrapping */
-}
-
-.id-column {
-  width: 14%; 
-}
-
-.name-column {
-  width: 30%;
 }
 
 .country-filter {

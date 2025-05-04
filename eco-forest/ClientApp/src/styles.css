@@ -1,14 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: linear-gradient(180deg, #000000 0%, #808080 100%); /* Black to grey gradient */
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: hsl(0, 0%, 99%);
-    margin: 0;
-    padding: 0;
-  }
+  font-family: Arial, sans-serif;
+  background-color: hsl(0, 0%, 99%);
+  margin: 0;
+  padding: 0;
+}
 
-  h1 {
-    color: #923030;
-  }
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+h1 {
+  color: #923030;
+}
