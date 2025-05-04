@@ -11,8 +11,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CountryDetailDialogComponent } from '../../../country-detail-dialog/country-detail-dialog.component';
-
-import { NgModule } from '@angular/core';
+import { INDICATOR_UNITS } from '../../../shared/constants';
 import { FormsModule } from '@angular/forms';
 
 export interface CountryData {
@@ -20,6 +19,7 @@ export interface CountryData {
   name: string;
   value: number;
   rateChange: number;
+  previousValue: number;  // Store the previous value for rate calculation
 }
 
 @Component({
@@ -30,13 +30,14 @@ export interface CountryData {
   styleUrls: ['./sidebar-list.component.css']
 })
 export class SidebarListComponent implements AfterViewInit, OnChanges {
-  @Input() apiType: string = 'default';  // Added apiType input
+  @Input() apiType: string = 'default';  
   @Input() indicatorType: string = 'Fossil Fuels';
   @Input() startYear: number = 2000;
   @Input() endYear: number = 2025;
   @Input() selectedYear: number = 2000;
 
-  displayedColumns: string[] = ['id', 'name', 'value', 'rateChange'];
+  unit: string = '';
+  displayedColumns: string[] = ['name', 'value', 'rateChange'];
   dataSource = new MatTableDataSource<CountryData>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -51,8 +52,13 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['indicatorType'] || changes['selectedYear'] || changes['apiType']) {
+      this.unit = INDICATOR_UNITS[this.indicatorType] || '';
       this.fetchData();
     }
+  }
+
+  getUnit(): string {
+    return INDICATOR_UNITS[this.indicatorType] || '';
   }
 
   private fetchData(): void {
@@ -68,7 +74,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       url = 'http://localhost:5085/api/forestcarbon/aggregated';
     } else {
       url = 'http://localhost:5085/api/emissions/aggregated'; 
-    } 
+    }
 
     this.http.get<any[]>(url).subscribe({
       next: (data) => {
@@ -79,18 +85,33 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
   }
 
   private transformData(aggregatedData: any[]): CountryData[] {
-    return aggregatedData.map((item, index) => ({
-      id: index + 1,
-      name: item.country,
-      value: this.getValue(item),
-      rateChange: parseFloat((Math.random() * 10 - 5).toFixed(2)),
-      apiType: this.apiType,
-      indicatorType: this.indicatorType,
-      startYear: this.startYear,
-      endYear: this.endYear,
-      selectedYear: this.selectedYear,
-      fullData: item // Store the full data for the dialog
-    }));
+    const transformedData = aggregatedData.map((item, index) => {
+      const currentValue = this.getValue(item);
+      const previousValue = this.getPreviousValue(item);
+
+      const rateChange = this.calculateRateChange(currentValue, previousValue);
+
+      return {
+        id: index + 1,
+        name: item.country,
+        value: currentValue,
+        rateChange,
+        previousValue,  // Store previous value for debugging or further use
+        apiType: this.apiType,
+        indicatorType: this.indicatorType,
+        startYear: this.startYear,
+        endYear: this.endYear,
+        selectedYear: this.selectedYear,
+        fullData: item,  // Store the full data for the dialog
+      };
+    });
+    
+    return transformedData;
+  }
+
+  private calculateRateChange(currentValue: number, previousValue: number): number {
+    if (previousValue === 0 || currentValue === 0) return 0;  // Avoid division by zero
+    return ((currentValue - previousValue) / previousValue) * 100;
   }
 
   private getValue(item: any): number {
@@ -104,17 +125,36 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       dataKey = 'indicators';
     }
 
+    const techOrVarData = item[dataKey].find((techOrVar: any) =>
+      techOrVar.name.trim().toLowerCase() === this.indicatorType.trim().toLowerCase()
+    );
+
+    if (!techOrVarData) return 0;
+
+    const yearValue = techOrVarData.yearlyData[`F${this.selectedYear}`];
+    return yearValue !== undefined ? parseFloat(yearValue.toFixed(1)) : 0;
+  }
+
+  private getPreviousValue(item: any): number {
+    const previousYear = this.selectedYear - 1;
+    let dataKey = '';
+
+    if (this.apiType === 'income-loss') {
+      dataKey = 'variables';
+    } else if (this.apiType === 'renewable-energy') {
+      dataKey = 'technologies';
+    } else if ((this.apiType === 'climate-disasters') || (this.apiType === 'greenhouse-emissions') || (this.apiType === 'forest-carbon')) {
+      dataKey = 'indicators';
+    }
 
     const techOrVarData = item[dataKey].find((techOrVar: any) =>
       techOrVar.name.trim().toLowerCase() === this.indicatorType.trim().toLowerCase()
     );
-    
+
     if (!techOrVarData) return 0;
-  
-    // Get the value for the selected year only
-    const yearValue = techOrVarData.yearlyData[`F${this.selectedYear}`];
-    
-    return yearValue !== undefined ? parseFloat(yearValue.toFixed(1)) : 0;
+
+    const previousYearValue = techOrVarData.yearlyData[`F${previousYear}`];
+    return previousYearValue !== undefined ? parseFloat(previousYearValue.toFixed(1)) : 0;
   }
 
   applyFilter(event: Event) {
@@ -123,21 +163,15 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
 
-  // Method to update data based on new inputs from the sidebar
   updateData(data: any[], settings: any) {
     this.indicatorType = settings.indicatorType;
     this.selectedYear = settings.selectedYear;
-    // this.startYear = settings.startYear;
-    // this.endYear = settings.endYear;
     this.dataSource.data = this.transformData(data);
   }
 
-  
-
   openCountryDetailDialog(row: any): void {
-    // Determine the relevant field to send based on apiType
     let relevantData: any;
-  
+
     if (row.fullData) {
       if (this.apiType === 'income-loss') {
         relevantData = row.fullData.variables;  // Send 'variables' for income-loss
@@ -147,14 +181,12 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
         relevantData = row.fullData.indicators;  // Send 'indicators' for climate-disasters, greenhouse-emissions, forest-carbon
       }
     }
-  
-    // If relevantData is missing or undefined, handle it gracefully
+
     if (!relevantData) {
       console.error('No relevant data found for the selected API type');
       return;  // Exit if no relevant data is found
     }
-  
-    // Now open the dialog, sending only the specific field data (relevantData)
+
     this.dialog.open(CountryDetailDialogComponent, {
       width: '800px',
       data: {
@@ -170,8 +202,4 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
       }
     });
   }
-  
-  
-
-  
 }

@@ -119,7 +119,7 @@ export const INDICATOR_UNITS: Record<string, string> = {
     'Share Of Forest Area': '%',
     'Carbon Stocks In Forests': 'Million Tonnes',
     'Index Of Forest Extent': 'Index',
-    'Carbon Stocks In Forests Index': 'Index',
+    'Index of Carbon Stocks In Florests': 'Index',
     'Acute Climate Damages': '%',
     'Business Confidence Losses': '%',
     'Chronic Climate Damages': '%',
