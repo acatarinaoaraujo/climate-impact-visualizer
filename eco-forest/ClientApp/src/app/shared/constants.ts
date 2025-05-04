@@ -1,6 +1,6 @@
 // constants.ts
 import { scaleSequentialSqrt } from 'd3-scale';
-import { interpolateGreens, interpolateYlOrRd, interpolateBlues, interpolateYlGn, interpolateGreys, interpolateGnBu, interpolateYlGnBu, interpolateCividis, interpolateMagma, interpolateWarm, interpolateYlOrBr, interpolateInferno, interpolateSpectral, interpolateSinebow, interpolatePlasma } from 'd3-scale-chromatic';
+import { interpolateGreens, interpolateYlOrRd, interpolateBlues, interpolateYlGn, interpolateGreys, interpolateGnBu, interpolateYlGnBu, interpolateCividis, interpolateMagma, interpolateWarm, interpolateYlOrBr, interpolateInferno, interpolateSpectral, interpolateSinebow, interpolatePlasma, interpolateViridis, interpolateTurbo, interpolateCubehelixDefault, interpolatePuBuGn, interpolateRdYlGn } from 'd3-scale-chromatic';
 
 export const GEOJSON_FILE_PATH = '../../../assets/datasets/ne_110m_admin_0_countries.geojson';
 
@@ -18,8 +18,8 @@ type ApiType = 'renewable-energy' | 'income-loss' | 'climate-disasters' | 'green
     'renewable-energy': { min: 2000, max: 2023 },
     'income-loss': { min: 2023, max: 2040 },
     'climate-disasters': { min: 1980, max: 2024 },
-    'greenhouse-emissions': { min: 1995, max: 2021 },
-    'forest-carbon': { min: 1992, max: 2022 },
+    'greenhouse-emissions': { min: 1995, max: 2018 },
+    'forest-carbon': { min: 1992, max: 2020 },
 };
 
 export const ENERGY_TYPES = [
@@ -71,34 +71,34 @@ export const ENERGY_TYPE_COLORS: Record<string, (domain: [number, number]) => an
 
 export const DISASTER_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
     'Drought': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
-    'Flood': (domain) => scaleSequentialSqrt(interpolateGreys).domain(domain), // Grey
-    'Landslide': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
-    'Storm': (domain) => scaleSequentialSqrt(interpolateGreens).domain(domain), // Green
+    'Flood': (domain) => scaleSequentialSqrt(interpolateViridis).domain(domain), // Grey
+    'Landslide': (domain) => scaleSequentialSqrt(interpolateTurbo).domain(domain), // Blue
+    'Storm': (domain) => scaleSequentialSqrt(interpolateCividis).domain(domain), // Green
     'Wildfire': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain), //  Red
   };
 
 export const EMISSIONS_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
     'Production': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
-    'Gross Imports': (domain) => scaleSequentialSqrt(interpolateYlGn).domain(domain), // Yellow
-    'Gross Exports': (domain) => scaleSequentialSqrt(interpolateGreys).domain(domain), // Grey
-    'Final Domestic Demand': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
+    'Gross Imports': (domain) => scaleSequentialSqrt(interpolateWarm).domain(domain.reverse()),
+    'Gross Exports': (domain) => scaleSequentialSqrt(interpolateSpectral).domain(domain.reverse()),
+    'Final Domestic Demand': (domain) => scaleSequentialSqrt(interpolateMagma).domain(domain.reverse()), 
   };
 
 export const FOREST_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
-    'Share Of Forest Area': (domain) => scaleSequentialSqrt(interpolateGnBu).domain(domain),
-    'Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateYlGn).domain(domain), // Yellow
-    'Index Of Forest Extent': (domain) => scaleSequentialSqrt( interpolateGreys).domain(domain), // Grey
-    'Index Of Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
+    'Share Of Forest Area': (domain) => scaleSequentialSqrt(interpolateViridis).domain(domain),
+    'Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateRdYlGn).domain(domain.reverse()), 
+    'Index Of Forest Extent': (domain) => scaleSequentialSqrt( interpolateViridis).domain(domain), 
+    'Index Of Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateRdYlGn).domain(domain),
   };
 
   export const INCOME_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
-    'Acute Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()), // Reverse the domain
-    'Business Confidence Losses': (domain) => scaleSequentialSqrt(interpolateGreys).domain(domain.reverse()), // Grey
-    'Chronic Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrBr).domain(domain.reverse()), // Blue
-    'Mitigation Policy Costs': (domain) => scaleSequentialSqrt(interpolatePlasma).domain(domain.reverse()), // Green
-    'Total GDP Risk': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()), // Red
+    'Acute Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()), 
+    'Business Confidence Losses': (domain) => scaleSequentialSqrt(interpolateGreys).domain(domain.reverse()), 
+    'Chronic Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrBr).domain(domain.reverse()), 
+    'Mitigation Policy Costs': (domain) => scaleSequentialSqrt(interpolatePlasma).domain(domain.reverse()), 
+    'Total GDP Risk': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()),
   };
-  
+
 
 export const INDICATOR_UNITS: Record<string, string> = {
     'Fossil Fuels': 'GWh',

@@ -146,20 +146,17 @@ html, body {
 
     <app-disaster-globe *ngIf="apiType === 'climate-disasters'"
       [indicatorType]="indicatorType"
-      [startYear]="startYear"
-      [endYear]="endYear">
+      [selectedYear]="selectedYear">
     </app-disaster-globe>
 
     <app-forest-globe *ngIf="apiType === 'forest-carbon'"
       [indicatorType]="indicatorType"
-      [startYear]="startYear"
-      [endYear]="endYear">
+      [selectedYear]="selectedYear">
     </app-forest-globe>
 
     <app-emission-globe *ngIf="apiType === 'greenhouse-emissions'"
       [indicatorType]="indicatorType"
-      [startYear]="startYear"
-      [endYear]="endYear">
+      [selectedYear]="selectedYear">
     </app-emission-globe>
 
     <app-income-globe *ngIf="apiType === 'income-loss'"

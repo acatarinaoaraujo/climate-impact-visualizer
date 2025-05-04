@@ -1,16 +1,12 @@
 <div class="globe-container">
-    <!-- Legend dynamically generated based on indicator type -->
-    <div class="legend">
-      <!-- Display the title and subtitle -->
-      <h4 style="margin-bottom: 0; margin-top: 0;">{{ generateLegend().title }}</h4>
-      <p style="margin-top: 0;">{{ generateLegend().subtitle }}</p>
-  
-      <!-- Display the color boxes for the legend items -->
-      <div *ngFor="let legend of generateLegend().legendItems">
-        <span class="color-box" [style.background]="legend.color"></span> {{ legend.label }}
-      </div>
+  <div class="legend" *ngIf="colorScale && indicatorRange">
+    <div class="legend-title">{{ indicatorType }} ({{ selectedYear }})</div>
+    <div class="gradient-bar" [style.background]="legendGradient"></div>
+    <div class="legend-labels">
+      <span>{{ indicatorRange[0] | number:'1.0-0' }} {{ currentUnit }}</span>
+      <span>{{ indicatorRange[1] | number:'1.0-0' }} {{ currentUnit }}</span>
     </div>
-  
-    <div id="forestGlobe" class="globe"></div>
   </div>
-  
+
+  <div id="forestGlobe" class="globe"></div>
+</div>

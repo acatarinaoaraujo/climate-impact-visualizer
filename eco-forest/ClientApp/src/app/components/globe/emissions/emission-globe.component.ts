@@ -15,8 +15,11 @@ import { API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH, EMISSIONS_TYPE_COLORS } f
 })
 export class EmissionsGlobeComponent implements OnInit, OnChanges {
   @Input() indicatorType: string = 'Production';
-  @Input() startYear: number = API_YEAR_RANGE['greenhouse-emissions'].min;
-  @Input() endYear: number = API_YEAR_RANGE['greenhouse-emissions'].max;
+  @Input() selectedYear: number = API_YEAR_RANGE['greenhouse-emissions'].max;
+
+  indicatorRange: [number, number] | null = null;
+  legendGradient: string = '';
+  colorScale: any = null;
 
   private globeInstance: any;
   private geoJsonData: any;
@@ -31,11 +34,9 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Changes detected:', changes);
-    if (this.dataLoaded && (changes['indicatorType'] || changes['startYear'] || changes['endYear'])) {
+    if (this.dataLoaded && (changes['indicatorType'] || changes['selectedYear'])) {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        console.log('Updating globe visualization...');
         this.updateGlobeVisualization();
       }, 300);
     }
@@ -43,7 +44,6 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
 
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
-      console.log('Loading globe...');
       import('globe.gl').then((module) => {
         const Globe = module.default;
         this.globeInstance = new Globe(document.getElementById('emissionGlobe') as HTMLElement)
@@ -62,7 +62,6 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
   }
 
   private fetchData(): void {
-    console.log('Fetching data...');
     this.http.get(GEOJSON_FILE_PATH).subscribe((geoJsonData: any) => {
       this.http.get(API_LINKS['greenhouse-emissions']).subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
@@ -96,44 +95,51 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
   private updateGlobeVisualization(): void {
     if (this.globeInstance && this.geoJsonData) {
       const values = this.geoJsonData.features.map((feat: any) =>
-        this.getEmissionNumbers(feat, this.indicatorType, this.startYear, this.endYear)
+        this.getEmissionNumbers(feat, this.indicatorType, this.selectedYear)
       );
-      const maxVal = Math.max(...values); // Get max value to scale colors correctly
 
-      const colorScaleFn = EMISSIONS_TYPE_COLORS[this.indicatorType];
-      const colorScale = colorScaleFn ? colorScaleFn([0, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
+      const maxVal = Math.max(...values);
+      const minVal = Math.min(...values);
   
+      this.indicatorRange = [minVal, maxVal];
+  
+      const colorScaleFn =  EMISSIONS_TYPE_COLORS[this.indicatorType];
+      this.colorScale = colorScaleFn ? colorScaleFn([minVal, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([minVal, maxVal]);
+      this.legendGradient = this.generateGradientPreview(this.colorScale, minVal, maxVal);
 
       this.globeInstance
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
-        .polygonCapColor((feat: any) => colorScale(this.getEmissionNumbers(feat, this.indicatorType, this.startYear, this.endYear)))
+        .polygonCapColor((feat: any) => this.colorScale(this.getEmissionNumbers(feat, this.indicatorType, this.selectedYear)))
         .polygonLabel(({ properties: d }: any) => `
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-          ${this.indicatorType} (${this.startYear}-${this.endYear}): <i>${this.getEmissionNumbers({ properties: d }, this.indicatorType, this.startYear, this.endYear)}</i> GWh
+          ${this.indicatorType} (${this.selectedYear}): <i>${this.getEmissionNumbers({ properties: d }, this.indicatorType, this.selectedYear)}</i> Million Tonnes CO2
         `)
         .onPolygonHover((hoverD: any) =>
           this.globeInstance
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
-            .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getEmissionNumbers(d, this.indicatorType, this.startYear, this.endYear)))
+            .polygonCapColor((d: any) => d === hoverD ? 'yellow' : this.colorScale(this.getEmissionNumbers(d, this.indicatorType, this.selectedYear)))
         );
 
       this.globeInstance.redraw();
     }
   }
 
-  private getEmissionNumbers(feature: any, indicators: string, startYear: number, endYear: number): number {
+  private generateGradientPreview(scaleFn: (val: number) => string, min: number, max: number): string {
+    const steps = 10;
+    const colors = Array.from({ length: steps }, (_, i) => {
+      const t = min + (i / (steps - 1)) * (max - min);
+      return scaleFn(t);
+    });
+    return `linear-gradient(to right, ${colors.join(', ')})`;
+  }
+
+  private getEmissionNumbers(feature: any, indicators: string, year: number): number {
     const data = feature.properties.aggregatedData;
     if (data) {
       const indicatorData = data.indicators.find((tech: any) => tech.name.trim().toLowerCase() === indicators.trim().toLowerCase());
       if (indicatorData) {
-        let total = 0;
-        for (let year = startYear; year <= endYear; year++) {
-          if (indicatorData.yearlyData[`F${year}`] !== undefined) {
-            total += indicatorData.yearlyData[`F${year}`];
-          }
-        }
-        total = Math.round(total * 100) / 100; 
-        return total;
+        const value = indicatorData.yearlyData[`F${year}`];
+        return value !== undefined ? Math.round(value) : 0;
       }
     }
     return 0;

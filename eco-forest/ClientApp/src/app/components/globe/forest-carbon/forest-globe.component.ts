@@ -11,7 +11,6 @@ interface LegendData {
   legendItems: { color: string; label: string }[];
 }
 
-
 @Component({
   selector: 'app-forest-globe',
   standalone: true,
@@ -23,9 +22,13 @@ interface LegendData {
 
 export class ForestGlobeComponent implements OnInit, OnChanges {
   @Input() indicatorType: string = 'Share Of Forest Area';
-  @Input() startYear: number = API_YEAR_RANGE['forest-carbon'].min;
-  @Input() endYear: number = API_YEAR_RANGE['forest-carbon'].max;
+  @Input() selectedYear: number = API_YEAR_RANGE['forest-carbon'].max;
 
+  indicatorRange: [number, number] | null = null;
+  legendGradient: string = '';
+  colorScale: any = null;
+
+  public currentUnit: string = '';
   private globeInstance: any;
   private geoJsonData: any;
   private aggregatedData: any;
@@ -39,60 +42,16 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Changes detected:', changes);
-    if (this.dataLoaded && (changes['indicatorType'] || changes['startYear'] || changes['endYear'])) {
+    if (this.dataLoaded && (changes['indicatorType'] || changes['selectedYear'])) {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        console.log('Updating globe visualization...');
         this.updateGlobeVisualization();
       }, 300);
     }
   }
-
-  // Define the legendData object with specific keys for each indicator
-  legendData: Record<string, LegendData> = {
-    'Share Of Forest Area': {
-      title: 'Forest Area Coverage',
-      subtitle: 'Percentage of land covered by forests',
-      legendItems: [
-        { color: 'linear-gradient(to right, #c6e2ff, #0066cc)', label: 'Low (0%)' },
-        { color: 'linear-gradient(to right, #0066cc, #003366)', label: 'High (100%)' },
-      ],
-    },
-    'Carbon Stocks In Forests': {
-      title: 'Carbon Storage in Forests',
-      subtitle: 'Amount of carbon stored in forest biomass',
-      legendItems: [
-        { color: 'linear-gradient(to right, #ffffb2, #00441b)', label: 'Low (0)' },
-        { color: 'linear-gradient(to right, #00441b, #006400)', label: 'High (High Carbon Stocks)' },
-      ],
-    },
-    'Index Of Forest Extent': {
-      title: 'Forest Extent Index',
-      subtitle: 'Extent of forest area within a region',
-      legendItems: [
-        { color: 'linear-gradient(to right, #f0f0f0, #404040)', label: 'Low (0)' },
-        { color: 'linear-gradient(to right, #404040, #000000)', label: 'High (100%)' },
-      ],
-    },
-    'Index Of Carbon Stocks In Forests': {
-      title: 'Carbon Stock Index in Forests',
-      subtitle: 'Index of carbon storage in forests',
-      legendItems: [
-        { color: 'linear-gradient(to right, #e0f3f8, #023858)', label: 'Low (0)' },
-        { color: 'linear-gradient(to right, #023858, #005b8c)', label: 'High (High Index)' },
-      ],
-    },
-  };
-
-  generateLegend() {
-    // Return the legend data based on the selected indicator type
-    return this.legendData[this.indicatorType] || { title: '', subtitle: '', legendItems: [] };
-  }
   
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
-      console.log('Loading globe...');
       import('globe.gl').then((module) => {
         const Globe = module.default;
         this.globeInstance = new Globe(document.getElementById('forestGlobe') as HTMLElement)
@@ -111,7 +70,6 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
   }
 
   private fetchData(): void {
-    console.log('Fetching data...');
     this.http.get(GEOJSON_FILE_PATH).subscribe((geoJsonData: any) => {
       this.http.get(API_LINKS['forest-carbon']).subscribe((aggregatedData: any) => {
         this.geoJsonData = this.transformData(geoJsonData, aggregatedData);
@@ -143,28 +101,35 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
   private updateGlobeVisualization(): void {
     if (this.globeInstance && this.geoJsonData) {
       const values = this.geoJsonData.features.map((feat: any) =>
-        this.getForestNumbers(feat, this.indicatorType, this.startYear, this.endYear)
+        this.getForestNumbers(feat, this.indicatorType, this.selectedYear)
       );
+      const minVal = Math.min(...values); // Get min value to scale colors correctly
       const maxVal = Math.max(...values); // Get max value to scale colors correctly
+
+      this.currentUnit = this.getUnitForIndicator(this.indicatorType);
   
-            const colorScaleFn = FOREST_TYPE_COLORS[this.indicatorType];
-            console.log(colorScaleFn);
-            const colorScale = colorScaleFn ? colorScaleFn([0, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([0, maxVal]);
+      this.indicatorRange = [minVal, maxVal];
+
+      const colorScaleFn = FOREST_TYPE_COLORS[this.indicatorType];
   
+      this.colorScale = colorScaleFn ? colorScaleFn([minVal, maxVal]) : scaleSequentialSqrt(interpolateGreens).domain([minVal, maxVal]);
+      this.legendGradient = this.generateGradientPreview(this.colorScale, minVal, maxVal);
+
+
       this.globeInstance
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
-        .polygonCapColor((feat: any) => colorScale(this.getForestNumbers(feat, this.indicatorType, this.startYear, this.endYear)))
+        .polygonCapColor((feat: any) => this.colorScale(this.getForestNumbers(feat, this.indicatorType, this.selectedYear)))
         .polygonLabel(({ properties: d }: any) => {
           const unit = this.getUnitForIndicator(this.indicatorType); // Get the dynamic unit
           return `
             <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-            ${this.indicatorType} (${this.startYear}-${this.endYear}): <i>${this.getForestNumbers({ properties: d }, this.indicatorType, this.startYear, this.endYear)}</i> ${unit}
+            ${this.indicatorType} (${this.selectedYear}): <i>${this.getForestNumbers({ properties: d }, this.indicatorType, this.selectedYear)}</i> ${unit}
           `;
         })
         .onPolygonHover((hoverD: any) =>
           this.globeInstance
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
-            .polygonCapColor((d: any) => d === hoverD ? 'yellow' : colorScale(this.getForestNumbers(d, this.indicatorType, this.startYear, this.endYear)))
+            .polygonCapColor((d: any) => d === hoverD ? 'yellow' : this.colorScale(this.getForestNumbers(d, this.indicatorType, this.selectedYear)))
         );
 
       this.globeInstance.redraw();
@@ -183,21 +148,24 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
   
     return unitMapping[indicatorType] || ''; // Default to empty string if no match
   }
+
+  private generateGradientPreview(scaleFn: (val: number) => string, min: number, max: number): string {
+    const steps = 10;
+    const colors = Array.from({ length: steps }, (_, i) => {
+      const t = min + (i / (steps - 1)) * (max - min);
+      return scaleFn(t);
+    });
+    return `linear-gradient(to right, ${colors.join(', ')})`;
+  }
+
   
-  private getForestNumbers(feature: any, indicators: string, startYear: number, endYear: number): number {
+  private getForestNumbers(feature: any, indicators: string, year: number): number {
     const data = feature.properties.aggregatedData;
     if (data) {
       const indicatorData = data.indicators.find((tech: any) => tech.name.trim().toLowerCase() === indicators.trim().toLowerCase());
       if (indicatorData) {
-        let total = 0;
-        for (let year = startYear; year <= endYear; year++) {
-          if (indicatorData.yearlyData[`F${year}`] !== undefined) {
-            total += indicatorData.yearlyData[`F${year}`];
-          }
-        }
-
-        total = indicators === 'Share Of Forest Area' ? total : Math.round(total * 100) / 100;
-        return total;
+        const value = indicatorData.yearlyData[`F${year}`];
+        return value !== undefined ? Math.round(value) : 0;
       }
     }
     return 0;
