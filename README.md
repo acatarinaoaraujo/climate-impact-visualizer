@@ -1,4 +1,4 @@
-# 🌍 Climate Data Explorer (WIP)
+## 🌍 Climate Data Explorer (WIP)
 
 A full-stack application built with **ASP.NET** and **Angular** that visualizes key climate indicators from the IMF Climate Change Dashboard. Users can explore trends related to energy transition, forestation, climate disasters, emissions, and projected economic loss due to climate change.
 
@@ -14,7 +14,23 @@ To help users—researchers, policymakers, and the public—understand a country
 
 ---
 
+## 📌 Roadmap
+
+- ✅ Initial Angular frontend with globe view  
+- ✅ ASP.NET backend fetching IMF data  
+- 🔜 LLM integration for text-based insights  
+- 🔜 PostgreSQL or MongoDB support for persistent storage  
+- 🔜 Dockerized setup  
+- 🔜 Additional visualizations and UI polish  
+
+---
+
 ## 📊 Data & Formulas
+
+#### Key Formulas
+
+**Rate of Change**  
+`Rate of Change = ((Value at year N - Value at year N-1) / Value at year N-1) × 100`
 
 ### 🌞 Renewable Energy
 
@@ -23,29 +39,11 @@ To help users—researchers, policymakers, and the public—understand a country
 
 #### Energy Types
 
-- 🔴 **Fossil Fuels (Non-Renewable)** — Orange → Red  
-- ☀️ **Solar** — Yellow  
-- 🌬️ **Wind** — Grey  
-- 🌊 **Hydropower** — Blue  
-- 🌱 **Bioenergy** — Green  
-
-#### Key Formulas
-
-**Rate of Change**  
-\[
-\text{Rate of Change} = \left( \frac{\text{Value}_N - \text{Value}_{N-1}}{\text{Value}_{N-1}} \right) \times 100
-\]
-
-**Renewable Ratio**  
-\[
-\text{Ratio} = \frac{X}{\sum \text{Energy Types}}
-\]
-
-#### Visualizations
-
-- Time series of energy type for selected country  
-- Pie chart of energy mix by year and country  
-
+- 🔴 **Fossil Fuels (Non-Renewable)** 
+- ☀️ **Solar**
+- 🌬️ **Wind**  
+- 🌊 **Hydropower**  
+- 🌱 **Bioenergy**
 ---
 
 ### 🌲 Forest and Carbon
@@ -57,14 +55,6 @@ To help users—researchers, policymakers, and the public—understand a country
 - Share of Forest Area (%)  
 - Carbon Stocks in Forests (Million Tonnes)  
 - Index of Forest Extent  
-
-> 📝 *Example Insight:*  
-> “In 1992, Brazil had 69.55% of its land covered by forest.”
-
-#### Visualizations
-
-- Time series of forest metrics over selected years  
-
 ---
 
 ### 🌪️ Climate Disasters
@@ -78,12 +68,6 @@ To help users—researchers, policymakers, and the public—understand a country
 - Landslide  
 - Storm  
 - Wildfire  
-
-#### Visualizations
-
-- Time series of disasters over years  
-- Bar plot of disaster counts by type for a selected year  
-
 ---
 
 ### 🏭 Emissions
@@ -96,11 +80,6 @@ To help users—researchers, policymakers, and the public—understand a country
 - Gross Imports  
 - Gross Exports  
 - Final Domestic Demand  
-
-#### Visualizations
-
-- Time series of emission metrics for selected countries  
-
 ---
 
 ### 💸 Income Loss
@@ -114,22 +93,7 @@ To help users—researchers, policymakers, and the public—understand a country
 - Chronic Climate Damages  
 - Mitigation Policy Costs  
 - Total GDP Risk  
-
-#### Visualizations
-
-- Forecasted time series of economic losses due to climate change  
-
 ---
-
-## 📌 Roadmap
-
-- ✅ Initial Angular frontend with globe view  
-- ✅ ASP.NET backend fetching IMF data  
-- 🔜 LLM integration for text-based insights  
-- 🔜 PostgreSQL or MongoDB support for persistent storage  
-- 🔜 Dockerized setup  
-- 🔜 Additional visualizations and UI polish  
-
 
 ## How to Use
 
@@ -168,20 +132,14 @@ Fetches and processes IMF Climate data.
 Rate of change calculation and share logic handled server-side.
 Planned feature: integrate PostgreSQL for historical data caching.
 
-### LLM Integration (Planned)
+### LLM Integration
 Integrate an open-source LLM (e.g., LLama.cpp or similar) to provide:
 Summaries for selected country indicators.
 Explainability and contextual information in natural language.
 
-### Docker (Coming Soon)
+### Docker
 Dockerfile for unified backend/frontend containerization.
 Compose setup for local development and deployment.
-
-
-## 🔌 Integrations
-IMF Climate Data Portal
-[Open-source LLM integration planned]
-Docker (future setup)
 
 ## 📄 License
 This project is for educational and demonstration purposes and is not affiliated with the IMF. 
