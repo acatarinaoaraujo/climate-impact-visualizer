@@ -128,7 +128,7 @@ Modal and chart components for detail views.
 
 ### Backend
 ASP.NET Core REST API.
-Fetches and processes IMF Climate data.
+Fetches and processes [IMF Climate](https://climatedata.imf.org/) data.
 Rate of change calculation and share logic handled server-side.
 Planned feature: integrate PostgreSQL for historical data caching.
 
