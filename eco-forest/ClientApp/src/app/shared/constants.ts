@@ -86,7 +86,7 @@ export const EMISSIONS_TYPE_COLORS: Record<string, (domain: [number, number]) =>
 
 export const FOREST_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
     'Share Of Forest Area': (domain) => scaleSequentialSqrt(interpolateViridis).domain(domain),
-    'Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateRdYlGn).domain(domain.reverse()), 
+    'Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateRdYlGn).domain(domain), 
     'Index Of Forest Extent': (domain) => scaleSequentialSqrt( interpolateViridis).domain(domain), 
     'Index Of Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateRdYlGn).domain(domain),
   };

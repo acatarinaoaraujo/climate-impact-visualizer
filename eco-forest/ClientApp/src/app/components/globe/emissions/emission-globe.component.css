@@ -1,8 +1,8 @@
 .globe-container {
   position: relative;
   overflow: hidden;
-  top: 20px;
 }
+
 .legend {
   position: absolute;
   top: 640px; /* Adjusted to be closer to the top */
