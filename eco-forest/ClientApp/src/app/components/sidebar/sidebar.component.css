@@ -2,7 +2,7 @@
   width: 100%;
   height: 100vh;
   display: flex;
-  background: linear-gradient(280deg, #000000 0%, #212125 100%); 
+  background: linear-gradient(280deg, #000000 0%, #1d1d1d 100%); 
 }
 
 .sidenav {
@@ -11,7 +11,7 @@
   align-items: center;
   transition: width 0.3s ease-in-out;
   overflow: hidden;
-  background: linear-gradient(280deg, #000000 0%, #212125 100%); 
+  background: linear-gradient(280deg, #000000 0%, #1d1d1d 100%);  
 
 }
 
@@ -43,7 +43,7 @@
 
   transition: left 0.3s ease-in-out;
   overflow: hidden;
-  background: linear-gradient(270deg, #000000 0%, #414141 80%); 
+  background: linear-gradient(270deg, #000000 0%, #282727 90%); 
 }
 
 .sidenav.collapsed {

@@ -188,7 +188,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     }
 
     this.dialog.open(CountryDetailDialogComponent, {
-      width: '95vw',          // Makes it very wide relative to the screen
+      width: '60vw',          // Makes it very wide relative to the screen
   maxWidth: '100vw',      // Remove Angular Material's default cap
   height: '90vh',         // Optional: also make it taller
 
