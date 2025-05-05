@@ -1165,11 +1165,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/homeofficer/Documents/GitHub/eco-forecast/eco-forest/Backend/Backend.csproj",
+      "projectUniqueName": "/Users/homeofficer/Documents/GitHub/climate-impact-visualizer/climate-impact-visualizer/Backend/Backend.csproj",
       "projectName": "Backend",
-      "projectPath": "/Users/homeofficer/Documents/GitHub/eco-forecast/eco-forest/Backend/Backend.csproj",
+      "projectPath": "/Users/homeofficer/Documents/GitHub/climate-impact-visualizer/climate-impact-visualizer/Backend/Backend.csproj",
       "packagesPath": "/Users/homeofficer/.nuget/packages/",
-      "outputPath": "/Users/homeofficer/Documents/GitHub/eco-forecast/eco-forest/Backend/obj/",
+      "outputPath": "/Users/homeofficer/Documents/GitHub/climate-impact-visualizer/climate-impact-visualizer/Backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/homeofficer/.nuget/NuGet/NuGet.Config"
