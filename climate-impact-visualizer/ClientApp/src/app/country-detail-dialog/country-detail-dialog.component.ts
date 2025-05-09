@@ -130,33 +130,81 @@ console.log('Chart Type:', this.chartType);
   }
 
   submitPrompt(): void {
-    if (this.userPrompt.trim()) {
-      this.isLoading = true;
-      this.llmResponse = null;
-
-      console.log(this.data);
-
-      setTimeout(() => {
-        this.llmResponse = {
-          currentYearSummary: `In 2025, ${this.data.name} has made significant strides in renewable energy adoption, increasing solar and wind capacity by 15%.`,
-          historicalComparison: `Since 2020, ${this.data.name} has improved its renewable energy output by 40%, indicating a positive trend towards sustainable energy.`,
-          newsHeadlines: [
-            {
-              title: `${this.data.name} Launches New Solar Power Initiative`,
-              url: 'https://example.com/solar-initiative'
-            },
-            {
-              title: `Wind Farms in ${this.data.name} Set New Production Records`,
-              url: 'https://example.com/wind-farms'
-            },
-            {
-              title: `${this.data.name} Receives International Praise for Renewable Energy Policies`,
-              url: 'https://example.com/praise-renewables'
-            }
-          ]
-        };
-        this.isLoading = false;
-      }, 2000);
+    const trimmedPrompt = this.userPrompt?.trim();
+  
+    if (!trimmedPrompt || trimmedPrompt.length < 3) {
+      alert('Please enter a more specific question.');
+      return;
     }
+  
+    this.isLoading = true;
+    this.llmResponse = null;
+  
+    // Find the selected indicator's full data for context
+    const indicator: Indicator | undefined = this.data.fullData.find(
+      (item: any) => item.name === this.data.indicatorType
+    );
+  
+    const indicatorContext = indicator ? indicator.yearlyData : {};
+
+    console.log('Data being sent to LLM API:', {
+      country: this.data.name,
+      question: trimmedPrompt,
+      indicatorType: this.data.indicatorType,
+      indicatorData: this.data.fullData,
+      selectedYear: this.data.selectedYear,
+      rateChange: this.data.rateChange
+    });
+  
+    fetch('/api/llm/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        country: this.data.name,
+        indicatorType: this.data.indicatorType,
+        selectedYear: this.data.selectedYear,
+        rateChange: this.data.rateChange,
+        indicatorData: indicatorContext,
+        question: trimmedPrompt
+      })
+    })
+    .then(async (res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const text = await res.text();
+      try {
+        const data = JSON.parse(text);
+        console.log('[LLM Response]', data);
+  
+        this.llmResponse = {
+          currentYearSummary: data.response?.replace(/\* (.+?):/g, '<b>$1:</b>') || '',
+          historicalComparison: '',
+          newsHeadlines: []
+        };
+      } catch (jsonError) {
+        console.error('Failed to parse JSON:', jsonError);
+        this.llmResponse = {
+          currentYearSummary: '⚠️ Invalid response from server.',
+          historicalComparison: '',
+          newsHeadlines: []
+        };
+      }
+  
+      this.isLoading = false;
+    })
+    .catch((err) => {
+      console.error('[LLM Error]', err);
+      this.llmResponse = {
+        currentYearSummary: '⚠️ Something went wrong. Please try again.',
+        historicalComparison: '',
+        newsHeadlines: []
+      };
+      this.isLoading = false;
+    });
   }
+  
+
+  
 }

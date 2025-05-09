@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zWh4risyfpA=",
+  "dgSpecHash": "Q1hgwJ5utkw=",
   "success": true,
-  "projectFilePath": "/Users/homeofficer/Documents/GitHub/climate-impact-visualizer/climate-impact-visualizer/Backend/Backend.csproj",
+  "projectFilePath": "/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/Backend.csproj",
   "expectedPackageFiles": [
     "/Users/homeofficer/.nuget/packages/microsoft.aspnetcore.hosting.abstractions/2.2.0/microsoft.aspnetcore.hosting.abstractions.2.2.0.nupkg.sha512",
     "/Users/homeofficer/.nuget/packages/microsoft.aspnetcore.hosting.server.abstractions/2.2.0/microsoft.aspnetcore.hosting.server.abstractions.2.2.0.nupkg.sha512",

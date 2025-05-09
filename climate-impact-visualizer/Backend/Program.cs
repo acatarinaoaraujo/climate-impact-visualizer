@@ -9,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add controllers
 builder.Services.AddControllers();
 
+builder.Services.AddHttpClient<LlmService>();
+//builder.Services.AddScoped<LlmService>();
+
 // Register services for different APIs
 builder.Services.AddHttpClient<RenewableEnergyDataService>();
 builder.Services.AddScoped<RenewableEnergyDataService>();
