@@ -9,26 +9,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add controllers
 builder.Services.AddControllers();
 
+// Register HttpClient services for different APIs
 builder.Services.AddHttpClient<LlmService>();
-//builder.Services.AddScoped<LlmService>();
+builder.Services.AddScoped<LlmService>();
 
-// Register services for different APIs
 builder.Services.AddHttpClient<RenewableEnergyDataService>();
 builder.Services.AddScoped<RenewableEnergyDataService>();
 
-// Register IncomeLoss service
 builder.Services.AddHttpClient<IncomeLossDataService>();
 builder.Services.AddScoped<IncomeLossDataService>();
 
-// Register ForestCarbonDataService service
 builder.Services.AddHttpClient<ForestCarbonDataService>();
 builder.Services.AddScoped<ForestCarbonDataService>();
 
-// Register EmissionsDataService service
 builder.Services.AddHttpClient<EmissionsDataService>();
 builder.Services.AddScoped<EmissionsDataService>();
 
-// Register ClimateDisastersDataService service
 builder.Services.AddHttpClient<ClimateDisastersDataService>();
 builder.Services.AddScoped<ClimateDisastersDataService>();
 
@@ -36,11 +32,19 @@ builder.Services.AddScoped<ClimateDisastersDataService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configure CORS policy for localhost development
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        builder => builder.WithOrigins("http://localhost:4200") // Replace with your frontend URL for local dev
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
+
 var app = builder.Build();
 
-// Configure CORS policy
-app.UseCors(policy =>
-    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+// Apply CORS policy
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {

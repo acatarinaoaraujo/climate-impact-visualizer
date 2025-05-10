@@ -150,3 +150,10 @@
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Debug/net9.0/Backend.csproj.Up2Date
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Debug/net9.0/Backend.genruntimeconfig.cache
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Debug/net9.0/ref/Backend.dll
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Debug/net9.0/publish/web.config
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Debug/net9.0/publish/appsettings.Development.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Debug/net9.0/publish/appsettings.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Debug/net9.0/publish/Backend.deps.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Debug/net9.0/publish/Backend.runtimeconfig.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Debug/net9.0/publish/Backend.staticwebassets.endpoints.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Debug/net9.0/publish/package-lock.json

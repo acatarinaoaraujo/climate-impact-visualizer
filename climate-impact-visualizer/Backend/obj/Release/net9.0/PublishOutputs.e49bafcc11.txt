@@ -1,0 +1,13 @@
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Backend
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/appsettings.Development.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/appsettings.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/package-lock.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Backend.dll
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Backend.deps.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Backend.runtimeconfig.json
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Backend.pdb
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Microsoft.AspNetCore.OpenApi.dll
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Microsoft.OpenApi.dll
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Swashbuckle.AspNetCore.Swagger.dll
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/publish/Swashbuckle.AspNetCore.SwaggerUI.dll

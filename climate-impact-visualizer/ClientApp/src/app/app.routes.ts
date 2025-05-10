@@ -8,6 +8,7 @@ import { IncomeGlobeComponent } from './components/globe/income-loss/income-glob
 import { EmissionsGlobeComponent } from './components/globe/emissions/emission-globe.component';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/renewable-energy', pathMatch: 'full' },
   { path: 'renewable-energy', component: EnergyGlobeComponent, data: { apiType: 'renewable-energy' } },
   { path: 'income-loss', component: IncomeGlobeComponent, data: { apiType: 'income-loss' } },
   { path: 'greenhouse-emissions', component: EmissionsGlobeComponent, data: { apiType: 'greenhouse-emissions' } },

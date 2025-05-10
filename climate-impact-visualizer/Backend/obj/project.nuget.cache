@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Q1hgwJ5utkw=",
+  "dgSpecHash": "93TWXc4Lhqk=",
   "success": true,
   "projectFilePath": "/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/Backend.csproj",
   "expectedPackageFiles": [
@@ -30,7 +30,10 @@
     "/Users/homeofficer/.nuget/packages/system.componentmodel.annotations/4.5.0/system.componentmodel.annotations.4.5.0.nupkg.sha512",
     "/Users/homeofficer/.nuget/packages/system.memory/4.5.1/system.memory.4.5.1.nupkg.sha512",
     "/Users/homeofficer/.nuget/packages/system.runtime.compilerservices.unsafe/4.5.1/system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512",
-    "/Users/homeofficer/.nuget/packages/system.text.encodings.web/4.5.0/system.text.encodings.web.4.5.0.nupkg.sha512"
+    "/Users/homeofficer/.nuget/packages/system.text.encodings.web/4.5.0/system.text.encodings.web.4.5.0.nupkg.sha512",
+    "/Users/homeofficer/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/9.0.3/microsoft.netcore.app.runtime.linux-x64.9.0.3.nupkg.sha512",
+    "/Users/homeofficer/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/9.0.3/microsoft.aspnetcore.app.runtime.linux-x64.9.0.3.nupkg.sha512",
+    "/Users/homeofficer/.nuget/packages/microsoft.netcore.app.host.linux-x64/9.0.3/microsoft.netcore.app.host.linux-x64.9.0.3.nupkg.sha512"
   ],
   "logs": []
 }

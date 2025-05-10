@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/client-app",
+            "outputPath": "dist/client-app/browser",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -35,11 +35,7 @@
               "src/styles.css"
             ],
             "scripts": ["node_modules/globe.gl/dist/globe.gl.js"],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "server": "src/main.server.ts"
           },
           "configurations": {
             "production": {
