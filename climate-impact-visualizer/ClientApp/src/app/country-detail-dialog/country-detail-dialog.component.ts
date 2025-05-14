@@ -52,7 +52,6 @@ export class CountryDetailDialogComponent {
   chartData: any;
   chartOptions: ChartConfiguration['options'] = {};
   chartType: ChartType = 'doughnut'; // Default chart type
- 
 
 
   constructor(
@@ -80,8 +79,6 @@ export class CountryDetailDialogComponent {
     if (config) {
       // Prepare data for the chart
       const indicator: Indicator | undefined = this.data.fullData.find((item: any) => item.name === this.data.indicatorType);
-      console.log('Chart Data:', this.chartData);
-console.log('Chart Type:', this.chartType);
 
       if (indicator) {
         const years = Object.keys(indicator.yearlyData); // Years in "F2000", "F2023" format
@@ -98,6 +95,8 @@ console.log('Chart Type:', this.chartType);
             borderWidth: 2
           }]
         };
+
+        console.log('Chart Data:', this.chartData);
 
         this.chartType = 'line'; // Default type for time series
         this.chartOptions = {
