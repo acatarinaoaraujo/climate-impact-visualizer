@@ -5,7 +5,6 @@ import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic';
 import { API_LINKS, API_YEAR_RANGE, DISASTER_TYPE_COLORS, GEOJSON_FILE_PATH } from '../../../shared/constants'; // Adjust the import path as needed
 
-
 @Component({
   selector: 'app-disaster-globe',
   standalone: true,
@@ -30,18 +29,18 @@ export class DisasterGlobeComponent implements OnInit, OnChanges {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.loadGlobe();
+    this.loadGlobe(); // Load the globe when the component initializes
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.dataLoaded && (changes['indicatorType'] || changes['selectedYaer'])) {
+    if (this.dataLoaded && (changes['indicatorType'] || changes['selectedYear'])) {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        this.updateGlobeVisualization();
+        this.reinitializeGlobe(); // Reinitialize the globe when inputs change
       }, 300);
     }
   }
-  
+
   private loadGlobe(): void {
     if (typeof window !== 'undefined') {
       import('globe.gl').then((module) => {
@@ -54,7 +53,7 @@ export class DisasterGlobeComponent implements OnInit, OnChanges {
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
           
-        this.fetchData(); 
+        this.fetchData(); // Fetch data once globe is loaded
       }).catch(err => {
         console.error('Globe loading failed:', err);
       });
@@ -72,11 +71,10 @@ export class DisasterGlobeComponent implements OnInit, OnChanges {
       });
     });
   }
-  
+
   private transformData(geoJsonData: any, aggregatedData: any): any {
     const dataMap = new Map();
     aggregatedData.forEach((item: any) => {
-
       const normalizedIso2 = item.isO2.trim().toLowerCase();
       dataMap.set(normalizedIso2, item);
     });
@@ -118,8 +116,6 @@ export class DisasterGlobeComponent implements OnInit, OnChanges {
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : this.colorScale(this.getDisasterNumbers(d, this.indicatorType, this.selectedYear)))
         );
-
-      this.globeInstance.redraw();
     }
   }
 
@@ -142,5 +138,15 @@ export class DisasterGlobeComponent implements OnInit, OnChanges {
       }
     }
     return 0;
+  }
+
+  private reinitializeGlobe(): void {
+    // Destroy the existing globe instance if it exists
+    if (this.globeInstance) {
+      this.globeInstance = null;
+    }
+
+    // Reinitialize the globe and fetch data again
+    this.loadGlobe();
   }
 }

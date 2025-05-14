@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-      <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+      <RuntimeIdentifiers>linux-x64;osx-arm64</RuntimeIdentifiers>
     <SelfContained>true</SelfContained>
     <PublishTrimmed>false</PublishTrimmed>
      <Nullable>enable</Nullable>

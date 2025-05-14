@@ -74,11 +74,19 @@
               "version": "[9.0.3, 9.0.3]"
             },
             {
+              "name": "Microsoft.AspNetCore.App.Runtime.osx-arm64",
+              "version": "[9.0.3, 9.0.3]"
+            },
+            {
               "name": "Microsoft.NETCore.App.Host.linux-x64",
               "version": "[9.0.3, 9.0.3]"
             },
             {
               "name": "Microsoft.NETCore.App.Runtime.linux-x64",
+              "version": "[9.0.3, 9.0.3]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.osx-arm64",
               "version": "[9.0.3, 9.0.3]"
             }
           ],
@@ -95,6 +103,9 @@
       },
       "runtimes": {
         "linux-x64": {
+          "#import": []
+        },
+        "osx-arm64": {
           "#import": []
         }
       }

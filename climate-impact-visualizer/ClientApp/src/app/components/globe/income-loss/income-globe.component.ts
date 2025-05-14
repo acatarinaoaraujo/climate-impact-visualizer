@@ -36,7 +36,7 @@ export class IncomeGlobeComponent implements OnChanges, OnInit {
     if (this.dataLoaded && (changes['variableType'] || changes['selectedYear'])) {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        this.updateGlobeVisualization();
+        this.reinitializeGlobe();
       }, 300);
     }
   }
@@ -54,7 +54,7 @@ export class IncomeGlobeComponent implements OnChanges, OnInit {
           .polygonStrokeColor(() => '#111')
           .polygonsTransitionDuration(300);
           
-        this.fetchData(); // Ensure data is fetched initially
+        this.fetchData();
       }).catch(err => {
         console.error('Globe loading failed:', err);
       });
@@ -98,8 +98,8 @@ export class IncomeGlobeComponent implements OnChanges, OnInit {
     ).filter((val: number) => !isNaN(val));
 
 
-    const minVal = Math.min(...values); // Allow negative values here
-    const maxVal = Math.max(...values); // Allow negative values here
+    const minVal = Math.min(...values); 
+    const maxVal = Math.max(...values); 
 
     this.variableRange = [minVal, maxVal];
 
@@ -136,9 +136,17 @@ export class IncomeGlobeComponent implements OnChanges, OnInit {
       const indicatorData = data.variables.find((variable: any) => variable.name.trim().toLowerCase() === variables.trim().toLowerCase());
       if (indicatorData) {
         const value = indicatorData.yearlyData[`F${year}`];
-        return value !== undefined ? value.toFixed(3) : 0; // Allow negative values here
+        return value !== undefined ? value.toFixed(3) : 0; 
       }
     }
     return 0;
+  }
+
+      private reinitializeGlobe(): void {
+    if (this.globeInstance) {
+      this.globeInstance = null;
+    }
+
+    this.loadGlobe();
   }
 }

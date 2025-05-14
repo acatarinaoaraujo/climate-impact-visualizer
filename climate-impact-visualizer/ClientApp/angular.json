@@ -20,7 +20,9 @@
               "zone.js"
             ],
             "allowedCommonJsDependencies": [
-              "frame-ticker"
+              "frame-ticker",
+              "three-globe",
+              "yaot"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [

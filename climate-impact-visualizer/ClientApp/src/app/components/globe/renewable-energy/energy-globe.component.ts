@@ -36,7 +36,7 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
     if (this.dataLoaded && (changes['energyType'] || changes['selectedYear'])) {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        this.updateGlobeVisualization();
+        this.reinitializeGlobe();
       }, 300);
     }
   }
@@ -138,5 +138,13 @@ export class EnergyGlobeComponent implements OnInit, OnChanges {
       }
     }
     return 0;
+  }
+
+    private reinitializeGlobe(): void {
+    if (this.globeInstance) {
+      this.globeInstance = null;
+    }
+
+    this.loadGlobe();
   }
 }

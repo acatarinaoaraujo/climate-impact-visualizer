@@ -37,7 +37,7 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
     if (this.dataLoaded && (changes['indicatorType'] || changes['selectedYear'])) {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        this.updateGlobeVisualization();
+        this.reinitializeGlobe();
       }, 300);
     }
   }
@@ -119,8 +119,6 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : this.colorScale(this.getEmissionNumbers(d, this.indicatorType, this.selectedYear)))
         );
-
-      this.globeInstance.redraw();
     }
   }
 
@@ -143,5 +141,13 @@ export class EmissionsGlobeComponent implements OnInit, OnChanges {
       }
     }
     return 0;
+  }
+
+  private reinitializeGlobe(): void {
+    if (this.globeInstance) {
+      this.globeInstance = null;
+    }
+
+    this.loadGlobe();
   }
 }

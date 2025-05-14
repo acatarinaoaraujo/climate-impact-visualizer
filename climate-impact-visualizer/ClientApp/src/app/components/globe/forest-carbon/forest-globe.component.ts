@@ -5,12 +5,6 @@ import { scaleSequentialSqrt } from 'd3-scale';
 import { interpolateGreens } from 'd3-scale-chromatic'; 
 import { FOREST_TYPE_COLORS,  API_LINKS, API_YEAR_RANGE, GEOJSON_FILE_PATH } from '../../../shared/constants'; 
 
-interface LegendData {
-  title: string;
-  subtitle: string;
-  legendItems: { color: string; label: string }[];
-}
-
 @Component({
   selector: 'app-forest-globe',
   standalone: true,
@@ -45,7 +39,7 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
     if (this.dataLoaded && (changes['indicatorType'] || changes['selectedYear'])) {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        this.updateGlobeVisualization();
+        this.reinitializeGlobe();
       }, 300);
     }
   }
@@ -103,8 +97,8 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
       const values = this.geoJsonData.features.map((feat: any) =>
         this.getForestNumbers(feat, this.indicatorType, this.selectedYear)
       );
-      const minVal = Math.min(...values); // Get min value to scale colors correctly
-      const maxVal = Math.max(...values); // Get max value to scale colors correctly
+      const minVal = Math.min(...values); 
+      const maxVal = Math.max(...values); 
 
       this.currentUnit = this.getUnitForIndicator(this.indicatorType);
   
@@ -120,7 +114,7 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
         .polygonsData(this.geoJsonData.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
         .polygonCapColor((feat: any) => this.colorScale(this.getForestNumbers(feat, this.indicatorType, this.selectedYear)))
         .polygonLabel(({ properties: d }: any) => {
-          const unit = this.getUnitForIndicator(this.indicatorType); // Get the dynamic unit
+          const unit = this.getUnitForIndicator(this.indicatorType); 
           return `
             <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
             ${this.indicatorType} (${this.selectedYear}): <i>${this.getForestNumbers({ properties: d }, this.indicatorType, this.selectedYear)}</i> ${unit}
@@ -131,8 +125,6 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
             .polygonAltitude((d: any) => (d === hoverD ? 0.12 : 0.06))
             .polygonCapColor((d: any) => d === hoverD ? 'yellow' : this.colorScale(this.getForestNumbers(d, this.indicatorType, this.selectedYear)))
         );
-
-      this.globeInstance.redraw();
     }
   }
   
@@ -146,7 +138,7 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
       'Share Of Forest Area': '%'
     };
   
-    return unitMapping[indicatorType] || ''; // Default to empty string if no match
+    return unitMapping[indicatorType] || ''; 
   }
 
   private generateGradientPreview(scaleFn: (val: number) => string, min: number, max: number): string {
@@ -169,5 +161,13 @@ export class ForestGlobeComponent implements OnInit, OnChanges {
       }
     }
     return 0;
+  }
+
+    private reinitializeGlobe(): void {
+    if (this.globeInstance) {
+      this.globeInstance = null;
+    }
+
+    this.loadGlobe();
   }
 }
