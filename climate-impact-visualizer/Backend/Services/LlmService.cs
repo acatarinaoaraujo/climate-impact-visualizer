@@ -79,6 +79,6 @@ public class LlmService
             .RootElement.GetProperty("choices")[0]
             .GetProperty("message")
             .GetProperty("content")
-            .GetString();
+            .GetString() ?? string.Empty;
     }
 }
