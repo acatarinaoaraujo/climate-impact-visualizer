@@ -1,12 +1,20 @@
 {
   "Version": 1,
-  "Hash": "fvfg190DFq3ZbVvFPNoxkkF/SXOYCm8XPKh+xWLbHj8=",
+  "Hash": "c59YcY9Fr47bblZ3m8viDROy9HbW/fop4yMlI+SGKSk=",
   "Source": "Backend",
   "BasePath": "_content/Backend",
   "Mode": "Default",
   "ManifestType": "Publish",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "Backend/wwwroot",
+      "Source": "Backend",
+      "ContentRoot": "/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/wwwroot/",
+      "BasePath": "_content/Backend",
+      "Pattern": "**"
+    }
+  ],
   "Assets": [],
   "Endpoints": []
 }

@@ -40,3 +40,14 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Ignore local environment files (optional)
+src/environments/environment.ts
+src/environments/environment.prod.ts
+
+# User/system files
+*.user
+*.log
+*.tmp
+*.temp
+*.cache

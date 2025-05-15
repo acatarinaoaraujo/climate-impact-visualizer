@@ -359,3 +359,4 @@
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Release/net9.0/linux-x64/Backend.pdb
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Release/net9.0/linux-x64/Backend.genruntimeconfig.cache
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Release/net9.0/linux-x64/ref/Backend.dll
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Release/net9.0/linux-x64/Backend.staticwebassets.runtime.json

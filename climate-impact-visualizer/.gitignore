@@ -1,0 +1,12 @@
+# Backend build outputs
+Backend/bin/
+Backend/obj/
+Backend/publish/
+
+# Elastic Beanstalk config
+Backend/.elasticbeanstalk/
+
+# User/system files
+*.user
+*.vs/
+*.log

@@ -12,7 +12,7 @@
 
 table {
   table-layout: fixed; 
-  width: 90%; /* Ensure table takes full width */
+  width: 90%; 
   background: linear-gradient(360deg, #161616 0%, #262626 40%); 
 }
 
@@ -38,9 +38,9 @@ table {
 }
 
 td, th {
-  overflow: hidden; /* Hide overflowed text */
+  overflow: hidden; 
   text-overflow: ellipsis; 
-  white-space: nowrap; /* Prevent text wrapping */
+  white-space: nowrap; 
   color: var(--gray-200);
   
   
@@ -50,28 +50,28 @@ td, th {
   margin-bottom: -20px;
   border-radius: 0 !important;
   overflow: auto;
-  width: 100%; /* Ensure full width */
+  width: 100%; 
   color: var(--gray-200);
 
 }
   
 .text-blue {
-  color: green; /* Blue color for positive change */
+  color: green; 
 }
 
 .text-red {
-  color: red; /* Red color for negative change */
+  color: red; 
 }
 
 .rate-change-container {
   display: flex;
-  align-items: center; /* Align items vertically */
+  align-items: center; 
   
 }
 
 .small-icon {
-  font-size: 22px; /* Adjust the icon size */
-  margin-right: 5px; /* Optional: Add some space between the icon and the value */
+  font-size: 22px; 
+  margin-right: 5px; 
 }
 
 .paginator {

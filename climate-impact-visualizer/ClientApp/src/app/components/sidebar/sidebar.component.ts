@@ -12,7 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { SidebarListComponent } from './sidebar-list/sidebar-list.component';
-import { API_YEAR_RANGE, DISASTER_TYPES, EMISSIONS_TYPES, ENERGY_TYPES, FOREST_TYPES, INCOME_TYPES } from '../../shared/constants';
+import { API_YEAR_RANGE, DISASTER_TYPES, EMISSIONS_TYPES, ENERGY_TYPES, FOREST_TYPES, INCOME_TYPES, API_LINKS } from '../../shared/constants';
 
 @Component({
   selector: 'sidebar',
@@ -50,7 +50,7 @@ export class SidebarComponent {
 
   
   indicatorTypes: string[] = [];
-  yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  // Default year range for renewable indicator
+  yearRange: { min: number, max: number } = { min: 2000, max: 2025 };  
   
   @ViewChild(SidebarListComponent) sidebarList!: SidebarListComponent;
 
@@ -58,7 +58,6 @@ export class SidebarComponent {
 
   ngOnInit(): void {
     this.setApiTypeFromUrl();
-    // Listen for router navigation end event, only update if URL changes
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.setApiTypeFromUrl();
@@ -68,7 +67,6 @@ export class SidebarComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['apiType']) {
-      // Update the start and end years based on the new apiType if it's changed
       const yearRange = this.apiType in API_YEAR_RANGE
   ? API_YEAR_RANGE[this.apiType as keyof typeof API_YEAR_RANGE]
   : { min: 2000, max: 2025 };
@@ -82,9 +80,7 @@ export class SidebarComponent {
 
   private setApiTypeFromUrl(): void {
     const currentUrl = this.router.url;
-    console.log('Current URL:', currentUrl); // Debugging line to check the URL
     
-    // Check if API type needs to be updated based on the URL
     if (currentUrl.includes('climate-disasters')) {
       this.apiType = 'climate-disasters';
     } else if (currentUrl.includes('renewable-energy')) {
@@ -101,7 +97,6 @@ export class SidebarComponent {
   }
 
   private updateSidebarData(): void {
-    console.log('Updating sidebar with API Type:', this.apiType);
     this.updateIndicatorTypes();
     this.updateYearRange();
     this.fetchData();
@@ -139,35 +134,37 @@ export class SidebarComponent {
     this.selectedYear = this.yearRange.max;
     this.onYearChange();
   }
+
   fetchData() {
-    let url = '';
-    let data = { indicatorType: this.indicatorType, startYear: this.startYear, endYear: this.endYear, selectedYear: this.selectedYear };
-    console.log("data", data);
+  const data = {
+    indicatorType: this.indicatorType,
+    startYear: this.startYear,
+    endYear: this.endYear,
+    selectedYear: this.selectedYear
+  };
 
-    if (this.apiType === 'income-loss') {
-      url = 'http://localhost:5085/api/incomeloss/aggregated';
-    } else if (this.apiType === 'renewable-energy') {
-      url = 'http://localhost:5085/api/renewableenergy/aggregated';
-    } else if (this.apiType === 'climate-disasters') {
-      url = 'http://localhost:5085/api/climatedisasters/aggregated';
-    } else if (this.apiType === 'greenhouse-emissions') {
-      url = 'http://localhost:5085/api/greenhouseemissions/aggregated';
-    } else if (this.apiType === 'forest-carbon') {
-      url = 'http://localhost:5085/api/forestcarbon/aggregated';
-    }
-
-    this.http.get<any[]>(url).subscribe({
-      next: (response: any[]) => {
-        if (this.sidebarList) {
-          console.log("response", response);
-          this.sidebarList.updateData(response, data);
-        }
-      },
-      error: (err: any) => {
-        console.error(`Error fetching ${this.apiType} data:`, err);
-      }
-    });
+  if (!this.apiType) {
+    return;
   }
+
+  const url = API_LINKS[this.apiType as keyof typeof API_LINKS];
+  if (!url) {
+    console.error(`No URL found for API type: ${this.apiType}`);
+    return;
+  }
+
+  this.http.get<any[]>(url).subscribe({
+    next: (response: any[]) => {
+      if (this.sidebarList) {
+        console.log("response", response);
+        this.sidebarList.updateData(response, data);
+      }
+    },
+    error: (err: any) => {
+      console.error(`Error fetching ${this.apiType} data:`, err);
+    }
+  });
+}
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
@@ -178,13 +175,11 @@ export class SidebarComponent {
   }
 
   onIndicatorChange(newIndicator: string): void {
-    console.log('Selected Indicator Type:', this.indicatorType);
     this.indicatorType = newIndicator;
-    this.indicatorTypeChange.emit(newIndicator); // Emit the change to parent
+    this.indicatorTypeChange.emit(newIndicator); 
   }
   
   onYearChange() {
-    console.log('Selected Year:', this.selectedYear);
     this.yearRangeChange.emit({ startYear: this.selectedYear, endYear: this.selectedYear });
     this.selectedYearChange.emit(this.selectedYear);
   }

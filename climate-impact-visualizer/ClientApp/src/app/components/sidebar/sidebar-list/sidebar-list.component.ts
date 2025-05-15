@@ -20,13 +20,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { CountryDetailDialogComponent } from '../../../country-detail-dialog/country-detail-dialog.component';
 import { INDICATOR_UNITS } from '../../../shared/constants';
 import { FormsModule } from '@angular/forms';
+import { API_LINKS } from '../../../shared/constants';
 
 export interface CountryData {
   id: number;
   name: string;
   value: number;
   rateChange: number;
-  previousValue: number; 
+  previousValue: number;
 }
 
 @Component({
@@ -81,35 +82,23 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     return INDICATOR_UNITS[this.indicatorType] || '';
   }
 
-  private fetchData(): void {
-    let url = '';
+private fetchData(): void {
+  const url = API_LINKS[this.apiType] || API_LINKS['greenhouse-emissions']; // fallback if key missing
 
-    if (this.apiType === 'income-loss') {
-      url = 'http://localhost:5085/api/incomeloss/aggregated';
-    } else if (this.apiType === 'renewable-energy') {
-      url = 'http://localhost:5085/api/renewableenergy/aggregated';
-    } else if (this.apiType === 'climate-disasters') {
-      url = 'http://localhost:5085/api/climatedisasters/aggregated';
-    } else if (this.apiType === 'forest-carbon') {
-      url = 'http://localhost:5085/api/forestcarbon/aggregated';
-    } else {
-      url = 'http://localhost:5085/api/emissions/aggregated';
-    }
-
-    this.http.get<any[]>(url).subscribe({
-      next: (data) => {
-        this.dataSource.data = this.transformData(data);
-      },
-      error: (err) =>
-        console.error(`Error fetching ${this.apiType} data:`, err),
-    });
-  }
+  this.http.get<any[]>(url).subscribe({
+    next: (data) => {
+      this.dataSource.data = this.transformData(data);
+    },
+    error: (err) =>
+      console.error(`Error fetching ${this.apiType} data:`, err),
+  });
+}
 
   private transformData(aggregatedData: any[]): CountryData[] {
     const transformedData = aggregatedData.map((item, index) => {
       const currentValue = this.getValue(item);
       const previousValue = this.getPreviousValue(item);
-      const hasData = currentValue !== null; // distinguish 0 from null
+      const hasData = currentValue !== null; 
 
       const rateChange = hasData
         ? this.calculateRateChange(currentValue, previousValue)
@@ -138,7 +127,7 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     currentValue: number,
     previousValue: number
   ): number {
-    if (previousValue === 0 || currentValue === 0) return 0; // Avoid division by zero
+    if (previousValue === 0 || currentValue === 0) return 0; 
     return ((currentValue - previousValue) / previousValue) * 100;
   }
 

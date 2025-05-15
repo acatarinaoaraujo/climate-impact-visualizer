@@ -32,13 +32,15 @@ builder.Services.AddScoped<ClimateDisastersDataService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configure CORS policy for localhost development
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        builder => builder.WithOrigins("http://localhost:4200")
-                          .AllowAnyMethod()
-                          .AllowAnyHeader());
+        builder => builder.WithOrigins(
+            "http://localhost:4200", 
+            "http://eco-forecast-frontend.s3-website.us-east-2.amazonaws.com"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader());
 });
 
 var app = builder.Build();

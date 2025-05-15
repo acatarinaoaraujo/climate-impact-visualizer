@@ -6,17 +6,23 @@
     mode="side"
     [opened]="!isCollapsed"
     [style.width]="isCollapsed ? '40px' : '400px'"
-    [ngClass]="{ 'collapsed': isCollapsed }"
+    [ngClass]="{ collapsed: isCollapsed }"
   >
     <div class="sidenav-content">
       <p class="year-range">Filter by Year</p>
 
-      <mat-slider discrete
-  [min]="yearRange.min"
-  [max]="yearRange.max"
-  [step]="1">
-  <input matSliderThumb [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()">
-</mat-slider>
+      <mat-slider
+        discrete
+        [min]="yearRange.min"
+        [max]="yearRange.max"
+        [step]="1"
+      >
+        <input
+          matSliderThumb
+          [(ngModel)]="selectedYear"
+          (ngModelChange)="onYearChange()"
+        />
+      </mat-slider>
 
       <form>
         <mat-form-field appearance="outline">
@@ -26,29 +32,30 @@
             name="indicatorType"
             (ngModelChange)="onIndicatorChange($event)"
           >
-            <mat-option *ngFor="let indicator of indicatorTypes" [value]="indicator">
+            <mat-option
+              *ngFor="let indicator of indicatorTypes"
+              [value]="indicator"
+            >
               {{ indicator }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </form>
 
-   
-
       <app-sidebar-list
         [apiType]="apiType"
         [indicatorType]="indicatorType"
-        [startYear]=" yearRange.min"
-        [endYear]=" yearRange.max"
-        [selectedYear]="selectedYear">
+        [startYear]="yearRange.min"
+        [endYear]="yearRange.max"
+        [selectedYear]="selectedYear"
+      >
       </app-sidebar-list>
-
     </div>
   </mat-drawer>
 
   <div class="toggle-btn-container">
     <button mat-icon-button class="toggle-btn" (click)="toggleSidebar()">
-      <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+      <mat-icon>{{ isCollapsed ? "chevron_right" : "chevron_left" }}</mat-icon>
     </button>
   </div>
 </mat-drawer-container>

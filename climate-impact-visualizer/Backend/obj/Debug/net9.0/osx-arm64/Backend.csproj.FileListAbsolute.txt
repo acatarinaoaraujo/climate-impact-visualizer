@@ -365,3 +365,4 @@
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Debug/net9.0/osx-arm64/Backend.pdb
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Debug/net9.0/osx-arm64/Backend.genruntimeconfig.cache
 /Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/obj/Debug/net9.0/osx-arm64/ref/Backend.dll
+/Users/homeofficer/Documents/GitHub/eco-forecast/climate-impact-visualizer/Backend/bin/Debug/net9.0/osx-arm64/Backend.staticwebassets.runtime.json

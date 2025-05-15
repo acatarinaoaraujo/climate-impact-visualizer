@@ -1,17 +1,18 @@
 // constants.ts
 import { scaleSequentialSqrt } from 'd3-scale';
+import { environment } from '../../environments/environment';
 import { interpolateGreens, interpolateYlOrRd, interpolateBlues, interpolateYlGn, interpolateGreys, interpolateGnBu, interpolateYlGnBu, interpolateCividis, interpolateMagma, interpolateWarm, interpolateYlOrBr, interpolateInferno, interpolateSpectral, interpolateSinebow, interpolatePlasma, interpolateViridis, interpolateTurbo, interpolateCubehelixDefault, interpolatePuBuGn, interpolateRdYlGn } from 'd3-scale-chromatic';
 
 export const GEOJSON_FILE_PATH = '../../../assets/datasets/ne_110m_admin_0_countries.geojson';
 
 export const API_LINKS: Record<string, string> = {
-    'renewable-energy': 'http://localhost:5085/api/renewableenergy/aggregated',
-    'income-loss': 'http://localhost:5085/api/incomeloss/aggregated',
-    'climate-disasters': 'http://localhost:5085/api/climatedisasters/aggregated',
-    'greenhouse-emissions': 'http://localhost:5085/api/emissions/aggregated',
-    'forest-carbon': 'http://localhost:5085/api/forestcarbon/aggregated',       
-  };
-  
+  'renewable-energy': `${environment.apiBaseUrl}/renewableenergy/aggregated`,
+  'income-loss': `${environment.apiBaseUrl}/incomeloss/aggregated`,
+  'climate-disasters': `${environment.apiBaseUrl}/climatedisasters/aggregated`,
+  'greenhouse-emissions': `${environment.apiBaseUrl}/emissions/aggregated`,
+  'forest-carbon': `${environment.apiBaseUrl}/forestcarbon/aggregated`
+};
+
 type ApiType = 'renewable-energy' | 'income-loss' | 'climate-disasters' | 'greenhouse-emissions' | 'forest-carbon';
 
   export const API_YEAR_RANGE: Record<ApiType, { min: number; max: number }> = {
