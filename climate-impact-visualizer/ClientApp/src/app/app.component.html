@@ -127,7 +127,9 @@ html, body {
   <!-- <router-outlet></router-outlet> -->
   <div class="container">
 
-    <sidebar class="sidebar"
+    <sidebar
+    *ngIf="showSidebar"
+    class="sidebar"
     [apiType]="apiType"
     (apiTypeChange)="onApiTypeChange($event)"
     [indicatorType]="indicatorType"

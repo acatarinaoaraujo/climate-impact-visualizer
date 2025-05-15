@@ -2,8 +2,11 @@
 <nav class="navbar">
     <div class="navbar-container">
       <ul class="nav">
+        <!-- Dashboard -->
+          <a href="/dashboard">Dashboard</a>
+        <!-- 3D Visualization -->
         <li class="dropdown">
-          <a href="/income-loss">Indicators</a>
+          <a href="/income-loss">3D Globe Visualization</a>
           <ul class="dropdown-menu">
             <li><a routerLink="/income-loss" (click)="changeApiType('income-loss')">Income Loss</a></li>
             <li> <a routerLink="/greenhouse-emissions" (click)="changeApiType('greenhouse-emissions')">Carbon Footprints</a></li>

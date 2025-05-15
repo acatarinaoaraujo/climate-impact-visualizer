@@ -6,9 +6,11 @@ import { DisasterGlobeComponent } from './components/globe/climate-disasters/dis
 import { ForestGlobeComponent } from './components/globe/forest-carbon/forest-globe.component';
 import { IncomeGlobeComponent } from './components/globe/income-loss/income-globe.component';
 import { EmissionsGlobeComponent } from './components/globe/emissions/emission-globe.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/renewable-energy', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  {path: 'dashboard', component: DashboardComponent},
   { path: 'renewable-energy', component: EnergyGlobeComponent, data: { apiType: 'renewable-energy' } },
   { path: 'income-loss', component: IncomeGlobeComponent, data: { apiType: 'income-loss' } },
   { path: 'greenhouse-emissions', component: EmissionsGlobeComponent, data: { apiType: 'greenhouse-emissions' } },

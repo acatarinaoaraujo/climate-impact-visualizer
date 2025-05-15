@@ -49,16 +49,19 @@ export class AppComponent {
   startYear!: number;
   endYear!: number;
   selectedYear!: number;
+  showSidebar = false;
 
   constructor(private router: Router) {
-    // 1) Initialize state before Angular's first CD
+    // Initialize state before Angular's first CD
     this.updateParams(this.router.url);
 
-    // 2) Re-apply on every navigation end
+    // Re-apply on every navigation end
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
         this.updateParams(e.urlAfterRedirects);
+        // Show sidebar only if apiType is set (means we are on a globe page)
+        this.showSidebar = !!this.apiType;
       });
   }
 
@@ -95,7 +98,6 @@ export class AppComponent {
     }
   }
 
-  /** Only navigate if `type` is non-empty AND different */
   onApiTypeChange(type: string) {
     if (type && type !== this.apiType) {
       this.router.navigate([type]);
@@ -109,7 +111,6 @@ export class AppComponent {
   onYearRangeChange(range: { startYear: number; endYear: number }) {
     this.startYear = range.startYear;
     this.endYear   = range.endYear;
-    // clamp selectedYear into the new bounds
     if (this.selectedYear < this.startYear) this.selectedYear = this.startYear;
     if (this.selectedYear > this.endYear)   this.selectedYear = this.endYear;
   }
