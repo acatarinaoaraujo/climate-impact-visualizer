@@ -1,0 +1,10 @@
+<div #chartContainer style="width: 100%; height: 400px;">
+  <div *ngIf="loading">Loading chart...</div>
+  <div echarts [options]="chartOptions" *ngIf="!loading" style="height: 100%;"></div>
+</div>
+<!-- <div class="chart-legend">
+  <div *ngFor="let series of chartOptions.series" class="legend-item">
+    <span [style.backgroundColor]="series.itemStyle.color"></span>
+    {{ series.name }}
+  </div>
+</div> -->

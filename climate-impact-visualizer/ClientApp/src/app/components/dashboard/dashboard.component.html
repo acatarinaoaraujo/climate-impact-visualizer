@@ -1,9 +1,14 @@
 <div class="dashboard-grid">
+    <select (change)="onCountryChange($event)">
+    <option value="US">United States</option>
+    <option value="BR">Brazil</option>
+    <option value="AF">Afghanistan</option>
+  </select>
 
   <!-- Row 1 -->
   <div class="row row-1">
     <div class="card half">
-      <!-- <app-renewable-multiline-chart></app-renewable-multiline-chart> -->
+      <app-renewable-multiline-chart [selectedCountryCode]="selectedCountryCode"></app-renewable-multiline-chart>
     </div>
     <div class="card half">
       <!-- <app-renewable-bar-race></app-renewable-bar-race> -->
