@@ -38,12 +38,28 @@ export class RenewableBarRaceComponent implements OnInit, AfterViewInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.fetchFlags();
-  }
+  this.fetchFlags();
+
+  window.addEventListener('resize', () => {
+    if (this.chartInstance) {
+      this.chartInstance.resize();
+    }
+  });
+}
+
+ngOnDestroy(): void {
+  clearInterval(this.timer);
+  window.removeEventListener('resize', () => {});
+}
+
 
   ngAfterViewInit(): void {
+  setTimeout(() => {
     this.initChart();
-  }
+    this.fetchData();  // Start fetching after chart init
+  }, 0);
+}
+
 
   fetchFlags(): void {
     this.http.get<any[]>('assets/datasets/data.json').subscribe((flagsData) => {
