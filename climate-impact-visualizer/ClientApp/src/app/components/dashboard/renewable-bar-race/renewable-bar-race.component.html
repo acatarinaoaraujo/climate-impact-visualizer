@@ -1,0 +1,16 @@
+<div class="controls">
+  <label for="energyType">Select Energy Type:</label>
+  <select
+    id="energyType"
+    [(ngModel)]="selectedEnergyType"
+    (change)="onEnergyTypeChange()"
+  >
+    <option *ngFor="let type of energyTypes" [value]="type">
+      {{ type }}
+    </option>
+  </select>
+</div>
+
+<div #chartContainer class="chart-container">
+  <div *ngIf="loading" class="loading">Loading chart...</div>
+</div>
