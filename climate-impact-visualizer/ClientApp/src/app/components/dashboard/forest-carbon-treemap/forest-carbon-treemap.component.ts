@@ -42,7 +42,7 @@ export class ForestCarbonTreemapComponent implements AfterViewInit {
 
     this.http.get<any[]>(url).subscribe({
       next: (response: any[]) => {
-        const data = response
+        const children = response
           .map((country) => {
             const indicator = country.indicators.find(
               (ind: any) => ind.name === 'Carbon Stocks In Forests'
@@ -58,51 +58,68 @@ export class ForestCarbonTreemapComponent implements AfterViewInit {
 
             return {
               name: country.country,
-              value: value2018,
-              rateOfChange: rateOfChange,
+              value: parseFloat(value2018.toFixed(2)),
+              rateOfChange: parseFloat(rateOfChange.toFixed(2)),
+              density: value2018, // placeholder for density
             };
           })
           .filter((item) => item !== null)
           .sort((a, b) => b!.value - a!.value)
           .slice(0, 10);
 
-        const maxValue = Math.max(...data.map((d) => d!.value));
-        const minValue = Math.min(...data.map((d) => d!.value));
+        const max = Math.max(...children.map((d) => d!.value));
+        const min = Math.min(...children.map((d) => d!.value));
+
+        const treeData = children.map((item) => ({
+  name: item!.name,
+  value: item!.value,
+  rateOfChange: item!.rateOfChange,
+  density: item!.density,
+  label: {
+    show: true,
+    formatter: `{b}\n${item!.value} Mt`,
+  },
+}));
+
 
         this.chartOptions = {
           tooltip: {
             formatter: (info: any) => {
               const { name, value, data } = info;
-              return `
-                <div>
-                  <strong>${name}</strong><br/>
-                  Carbon Stock: ${value.toFixed(2)} Mt<br/>
-                  10-Year Change: ${data.rateOfChange.toFixed(2)}%
-                </div>
-              `;
+              if (data && data.rateOfChange !== undefined) {
+                return `
+                  <div style="padding: 5px">
+                    <strong>${name}</strong><br/>
+                    Carbon Stock: ${value.toFixed(2)} Mt<br/>
+                    10-Year Change: ${data.rateOfChange.toFixed(2)}%
+                  </div>
+                `;
+              }
+              return `<strong>${name}</strong>`;
             },
           },
           visualMap: {
             type: 'continuous',
-            min: minValue,
-            max: maxValue,
+            min,
+            max,
             inRange: {
-              color: ['#a8e6cf', '#006400'],
+              color: ['#e0f3db', '#a8ddb5', '#43a2ca', '#006d2c'],
             },
             calculable: true,
             orient: 'horizontal',
             left: 'center',
-            bottom: 10,
+            bottom: 20,
             text: ['High', 'Low'],
           },
           series: [
             {
               type: 'treemap',
-              data: data.map((item) => ({
-                name: item!.name,
-                value: item!.value,
-                rateOfChange: item!.rateOfChange,
-              })),
+              name: 'Forest Carbon Stock',
+              roam: false,
+              breadcrumb: {
+                show: true,
+                top: 0,
+              },
               label: {
                 show: true,
                 formatter: '{b}',
@@ -110,11 +127,34 @@ export class ForestCarbonTreemapComponent implements AfterViewInit {
               upperLabel: {
                 show: true,
                 height: 30,
+                color: '#fff',
+                fontWeight: 'bold',
               },
               itemStyle: {
                 borderColor: '#fff',
                 borderWidth: 1,
+                gapWidth: 1,
               },
+              levels: [
+                {
+                  itemStyle: {
+                    borderColor: '#777',
+                    borderWidth: 0,
+                    gapWidth: 1,
+                  },
+                  upperLabel: {
+                    show: false,
+                  },
+                },
+                {
+                  colorSaturation: [0.35, 0.6],
+                  itemStyle: {
+                    gapWidth: 1,
+                    borderColorSaturation: 0.7,
+                  },
+                },
+              ],
+              data: treeData,
             },
           ],
         };
