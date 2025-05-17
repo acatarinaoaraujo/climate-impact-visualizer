@@ -11,9 +11,9 @@
 }
 
 table {
-  table-layout: fixed; 
-  width: 90%; 
-  background: linear-gradient(360deg, #161616 0%, #262626 40%); 
+  table-layout: fixed;
+  width: 90%;
+  background: linear-gradient(360deg, #161616 0%, #262626 40%);
 }
 
 .mat-column-id {
@@ -37,45 +37,45 @@ table {
   font-weight: bold;
 }
 
-td, th {
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
+td,
+th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--gray-200);
-  
-  
+
+
 }
 
 .country-filter {
   margin-bottom: -20px;
   border-radius: 0 !important;
   overflow: auto;
-  width: 100%; 
+  width: 100%;
   color: var(--gray-200);
 
 }
-  
+
 .text-blue {
-  color: green; 
+  color: green;
 }
 
 .text-red {
-  color: red; 
+  color: red;
 }
 
 .rate-change-container {
   display: flex;
-  align-items: center; 
-  
+  align-items: center;
+
 }
 
 .small-icon {
-  font-size: 22px; 
-  margin-right: 5px; 
+  font-size: 22px;
+  margin-right: 5px;
 }
 
 .paginator {
   color: var(--gray-300);
-  background: linear-gradient(360deg, #242323 0%, #181818 100%); 
+  background: linear-gradient(360deg, #242323 0%, #181818 100%);
 }
-

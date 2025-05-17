@@ -70,56 +70,54 @@ export class CountryDetailDialogComponent {
   }
 
   loadChartConfig(): void {
-    // const config = chartConfigMap[this.data.apiType]?.[this.data.indicatorType];
-    // if (config) {
-      const indicator: Indicator | undefined = this.data.fullData.find(
-        (item: any) => item.name === this.data.indicatorType
-      );
+    const indicator: Indicator | undefined = this.data.fullData.find(
+      (item: any) => item.name === this.data.indicatorType
+    );
 
-      if (indicator) {
-        const years = Object.keys(indicator.yearlyData);
-        const values = years.map((year) => indicator.yearlyData[year]);
+    if (indicator) {
+      const years = Object.keys(indicator.yearlyData);
+      const values = years.map((year) => indicator.yearlyData[year]);
 
-        this.chartData = {
-          labels: years.map((year) => year.substring(1)),
-          datasets: [
-            {
-              data: values,
-              label: this.data.indicatorType,
-              fill: false,
-              borderColor: '#4caf50',
-              backgroundColor: 'rgba(76, 175, 80, 0.2)',
-              borderWidth: 2,
-            },
-          ],
-        };
+      this.chartData = {
+        labels: years.map((year) => year.substring(1)),
+        datasets: [
+          {
+            data: values,
+            label: this.data.indicatorType,
+            fill: false,
+            borderColor: '#4caf50',
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            borderWidth: 2,
+          },
+        ],
+      };
 
-        console.log('Chart Data:', this.chartData);
+      console.log('Chart Data:', this.chartData);
 
-        this.chartType = 'line';
-        this.chartOptions = {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            tooltip: {
-              callbacks: {
-                label: (tooltipItem) =>
-                  `${tooltipItem.label}: ${tooltipItem.raw} ${this.unit}`,
-              },
+      this.chartType = 'line';
+      this.chartOptions = {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem) =>
+                `${tooltipItem.label}: ${tooltipItem.raw} ${this.unit}`,
             },
           },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                stepSize: 5000,
-              },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 5000,
             },
           },
-        };
-      }
+        },
+      };
+    }
     // }
   }
 

@@ -2,19 +2,20 @@
   position: relative;
   overflow: hidden;
 }
+
 .legend {
   position: absolute;
   top: 640px;
-  left: 50%; 
-  transform: translateX(-50%); 
-  background: linear-gradient(0deg, #000000 0%, #212125 100%); 
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(0deg, #000000 0%, #212125 100%);
   color: var(--gray-200);
   padding: 12px;
   border-radius: 8px;
   font-size: 13px;
   width: 320px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  z-index: 999; 
+  z-index: 999;
 }
 
 .legend-title {
