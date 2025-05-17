@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { RenewableMultilineChartComponent } from './renewable-multiline-chart/renewable-multiline-chart.component';
 import { RenewableBarRaceComponent } from './renewable-bar-race/renewable-bar-race.component';
 import { EmissionsSankeyComponent } from './emissions-sankey/emissions-sankey.component';
+import { ForestCarbonTreemapComponent } from './forest-carbon-treemap/forest-carbon-treemap.component';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RenewableMultilineChartComponent, RenewableBarRaceComponent, EmissionsSankeyComponent],
+  imports: [RenewableMultilineChartComponent, RenewableBarRaceComponent, EmissionsSankeyComponent, ForestCarbonTreemapComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 

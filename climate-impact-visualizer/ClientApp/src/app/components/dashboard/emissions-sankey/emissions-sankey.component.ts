@@ -70,7 +70,6 @@ export class EmissionsSankeyComponent implements OnChanges, AfterViewInit {
         if (!countryData) {
           this.chartOptions = {};
           this.loading = false;
-          console.log('No data found for country:', this.selectedCountryCode);
           return;
         }
 
@@ -128,12 +127,6 @@ export class EmissionsSankeyComponent implements OnChanges, AfterViewInit {
           ],
         };
 
-        // Debug logs
-        console.log('Indicators:', indicators);
-        console.log('Nodes:', nodes);
-        console.log('Links:', links);
-        console.log('ChartOptions:', this.chartOptions);
-
         this.loading = false;
         this.initOrUpdateChart();
       },
@@ -147,7 +140,6 @@ export class EmissionsSankeyComponent implements OnChanges, AfterViewInit {
   initOrUpdateChart() {
     const container = this.chartContainer.nativeElement;
 
-    // Wait until container has size
     if (container.clientWidth === 0 || container.clientHeight === 0) {
       setTimeout(() => this.initOrUpdateChart(), 100);
       return;
