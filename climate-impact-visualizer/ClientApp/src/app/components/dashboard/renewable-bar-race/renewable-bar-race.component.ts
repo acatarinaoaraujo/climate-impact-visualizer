@@ -135,7 +135,6 @@ ngOnDestroy(): void {
     const year = this.years[this.currentIndex];
     const data = this.data[this.currentIndex];
 
-    console.log('Data for year:', year, data);
 
     const option: EChartsOption = {
       grid: {
