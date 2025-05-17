@@ -3,12 +3,13 @@ import { RenewableMultilineChartComponent } from './renewable-multiline-chart/re
 import { RenewableBarRaceComponent } from './renewable-bar-race/renewable-bar-race.component';
 import { EmissionsSankeyComponent } from './emissions-sankey/emissions-sankey.component';
 import { ForestCarbonTreemapComponent } from './forest-carbon-treemap/forest-carbon-treemap.component';
+import { IncomeLossRadarComponent } from './income-loss-radar/income-loss-radar.component';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RenewableMultilineChartComponent, RenewableBarRaceComponent, EmissionsSankeyComponent, ForestCarbonTreemapComponent],
+  imports: [RenewableMultilineChartComponent, RenewableBarRaceComponent, EmissionsSankeyComponent, ForestCarbonTreemapComponent, IncomeLossRadarComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 
