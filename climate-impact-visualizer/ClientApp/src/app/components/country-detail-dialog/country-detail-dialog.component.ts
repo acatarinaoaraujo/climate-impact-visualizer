@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { chartConfigMap } from './chart-configs';
 import { INDICATOR_UNITS } from '../../shared/constants';
 
 interface YearlyData {
