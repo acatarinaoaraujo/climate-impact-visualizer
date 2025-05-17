@@ -1,30 +1,49 @@
 <!-- navbar.component.html -->
 <nav class="navbar">
-    <div class="navbar-container">
-      <ul class="nav">
-        <!-- Dashboard -->
-          <a href="/dashboard">Dashboard</a>
-        <!-- 3D Visualization -->
-        <li class="dropdown">
-          <a href="/income-loss">3D Globe Visualization</a>
-          <ul class="dropdown-menu">
-            <li><a routerLink="/income-loss" (click)="changeApiType('income-loss')">Income Loss</a></li>
-            <li> <a routerLink="/greenhouse-emissions" (click)="changeApiType('greenhouse-emissions')">Carbon Footprints</a></li>
-            <li>
-              <a routerLink="/climate-disasters" (click)="changeApiType('climate-disasters')">
-                Climate-related Disasters
-              </a>
-            </li>
-            <li><a routerLink="/renewable-energy" (click)="changeApiType('renewable-energy')">Renewable Energy</a></li>
-            <li><a routerLink="/forest-carbon" (click)="changeApiType('forest-carbon')">Forest and Carbon</a></li>
-          </ul>
-        </li>
-        <!-- <li class="dropdown">
-          <a>Adaptation</a>
-          <ul class="dropdown-menu">
-            
-          </ul>
-        </li> -->
-      </ul>
-    </div>
-  </nav>
+  <div class="navbar-container">
+    <ul class="nav">
+      <!-- Dashboard -->
+      <a href="/dashboard">Dashboard</a>
+      <!-- 3D Visualization -->
+      <li class="dropdown">
+        <a href="/income-loss">3D Globe Visualization</a>
+        <ul class="dropdown-menu">
+          <li>
+            <a routerLink="/income-loss" (click)="changeApiType('income-loss')"
+              >Income Loss</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/greenhouse-emissions"
+              (click)="changeApiType('greenhouse-emissions')"
+              >Carbon Footprints</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/climate-disasters"
+              (click)="changeApiType('climate-disasters')"
+            >
+              Climate-related Disasters
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/renewable-energy"
+              (click)="changeApiType('renewable-energy')"
+              >Renewable Energy</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/forest-carbon"
+              (click)="changeApiType('forest-carbon')"
+              >Forest and Carbon</a
+            >
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>

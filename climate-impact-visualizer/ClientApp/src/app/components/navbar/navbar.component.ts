@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-navbar',
   imports: [RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
   @Output() apiTypeChange = new EventEmitter<string>();
@@ -14,7 +14,6 @@ export class NavbarComponent {
     event.preventDefault();
     event.stopPropagation();
   }
-  
 
   changeApiType(apiType: string) {
     this.apiTypeChange.emit(apiType);

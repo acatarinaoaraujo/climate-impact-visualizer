@@ -1,10 +1,10 @@
-/* Global Styles */
+Global Styles
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background: linear-gradient(180deg, #000000 0%, #808080 100%); /* Black to grey gradient */
+  background: linear-gradient(180deg, #000000 0%, #808080 100%);
 }
 
 body {

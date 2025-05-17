@@ -10,16 +10,36 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  {path: 'dashboard', component: DashboardComponent},
-  { path: 'renewable-energy', component: EnergyGlobeComponent, data: { apiType: 'renewable-energy' } },
-  { path: 'income-loss', component: IncomeGlobeComponent, data: { apiType: 'income-loss' } },
-  { path: 'greenhouse-emissions', component: EmissionsGlobeComponent, data: { apiType: 'greenhouse-emissions' } },
-  { path: 'forest-carbon', component: ForestGlobeComponent, data: { apiType: 'forest-carbon' } },
-  { path: 'climate-disasters', component: DisasterGlobeComponent, data: { apiType: 'climate-disasters' } },
+  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: 'renewable-energy',
+    component: EnergyGlobeComponent,
+    data: { apiType: 'renewable-energy' },
+  },
+  {
+    path: 'income-loss',
+    component: IncomeGlobeComponent,
+    data: { apiType: 'income-loss' },
+  },
+  {
+    path: 'greenhouse-emissions',
+    component: EmissionsGlobeComponent,
+    data: { apiType: 'greenhouse-emissions' },
+  },
+  {
+    path: 'forest-carbon',
+    component: ForestGlobeComponent,
+    data: { apiType: 'forest-carbon' },
+  },
+  {
+    path: 'climate-disasters',
+    component: DisasterGlobeComponent,
+    data: { apiType: 'climate-disasters' },
+  },
 ];
 
 @NgModule({
   imports: [BrowserModule, RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

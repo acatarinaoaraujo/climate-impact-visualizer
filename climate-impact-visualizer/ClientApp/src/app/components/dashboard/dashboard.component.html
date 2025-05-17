@@ -1,41 +1,51 @@
-<div class="dashboard-grid">
-    <select (change)="onCountryChange($event)">
-    <option value="US">United States</option>
-    <option value="BR">Brazil</option>
-    <option value="AF">Afghanistan</option>
-  </select>
+<div class="dashboard-controls">
+  <mat-form-field appearance="outline">
+    <mat-label>Country</mat-label>
+    <mat-select [(value)]="selectedCountryCode">
+      <mat-option *ngFor="let country of countries" [value]="country.code">
+        {{ country.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
-  <!-- Row 1 -->
-  <div class="row row-1">
-    <div class="card half">
-      <app-renewable-multiline-chart [selectedCountryCode]="selectedCountryCode"></app-renewable-multiline-chart>
-    </div>
-    <div class="card half">
-      <app-renewable-bar-race></app-renewable-bar-race>
-    </div>
-  </div>
-
-  <!-- Row 2 -->
-  <div class="row row-2">
-    <div class="card third">
-      <app-forest-carbon-treemap></app-forest-carbon-treemap>
-    </div>
-    <div class="card third">
-      <app-emissions-sankey [selectedCountryCode]="selectedCountryCode"></app-emissions-sankey>
-    </div>
-    <div class="card third">
-      <!-- <app-climate-disasters-streamgraph></app-climate-disasters-streamgraph> -->
-    </div>
-  </div>
-
-  <!-- Row 3 -->
-  <div class="row row-3">
-    <div class="card half">
-      <app-income-loss-radar [selectedCountryCode]="selectedCountryCode"></app-income-loss-radar>
-    </div>
-    <div class="card half">
-      <!-- <app-forest-dual-axis-chart [selectedCountryCode]="selectedCountryCode"></app-forest-dual-axis-chart> -->
-    </div>
-  </div>
-
+  <mat-form-field appearance="outline">
+    <mat-label>Year</mat-label>
+    <mat-select [(value)]="selectedYear">
+      <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
+
+<mat-tab-group>
+  <mat-tab label="Energy & Emissions">
+    <div class="dashboard-grid">
+      <div class="row">
+        <div class="card">
+          <app-renewable-multiline-chart [selectedCountryCode]="selectedCountryCode"></app-renewable-multiline-chart>
+        </div>
+        <div class="card">
+          <app-renewable-bar-race></app-renewable-bar-race>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="card">
+          <app-emissions-sankey [selectedCountryCode]="selectedCountryCode"></app-emissions-sankey>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Forests & Economic Risk">
+    <div class="dashboard-grid">
+      <div class="row">
+        <div class="card">
+          <app-forest-carbon-treemap></app-forest-carbon-treemap>
+        </div>
+        <div class="card">
+          <app-income-loss-radar [selectedCountryCode]="selectedCountryCode"></app-income-loss-radar>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

@@ -1,132 +1,177 @@
-// constants.ts
 import { scaleSequentialSqrt } from 'd3-scale';
 import { environment } from '../../environments/environment';
-import { interpolateGreens, interpolateYlOrRd, interpolateBlues, interpolateYlGn, interpolateGreys, interpolateGnBu, interpolateYlGnBu, interpolateCividis, interpolateMagma, interpolateWarm, interpolateYlOrBr, interpolateInferno, interpolateSpectral, interpolateSinebow, interpolatePlasma, interpolateViridis, interpolateTurbo, interpolateCubehelixDefault, interpolatePuBuGn, interpolateRdYlGn } from 'd3-scale-chromatic';
+import {
+  interpolateGreens,
+  interpolateYlOrRd,
+  interpolateBlues,
+  interpolateGreys,
+  interpolateCividis,
+  interpolateMagma,
+  interpolateWarm,
+  interpolateYlOrBr,
+  interpolateSpectral,
+  interpolatePlasma,
+  interpolateViridis,
+  interpolateTurbo,
+  interpolateRdYlGn,
+} from 'd3-scale-chromatic';
 
-export const GEOJSON_FILE_PATH = '../../../assets/datasets/ne_110m_admin_0_countries.geojson';
+export const GEOJSON_FILE_PATH =
+  '../../../assets/datasets/ne_110m_admin_0_countries.geojson';
 
 export const API_LINKS: Record<string, string> = {
   'renewable-energy': `${environment.apiBaseUrl}/renewableenergy/aggregated`,
   'income-loss': `${environment.apiBaseUrl}/incomeloss/aggregated`,
   'climate-disasters': `${environment.apiBaseUrl}/climatedisasters/aggregated`,
   'greenhouse-emissions': `${environment.apiBaseUrl}/emissions/aggregated`,
-  'forest-carbon': `${environment.apiBaseUrl}/forestcarbon/aggregated`
+  'forest-carbon': `${environment.apiBaseUrl}/forestcarbon/aggregated`,
 };
 
-type ApiType = 'renewable-energy' | 'income-loss' | 'climate-disasters' | 'greenhouse-emissions' | 'forest-carbon';
+type ApiType =
+  | 'renewable-energy'
+  | 'income-loss'
+  | 'climate-disasters'
+  | 'greenhouse-emissions'
+  | 'forest-carbon';
 
-  export const API_YEAR_RANGE: Record<ApiType, { min: number; max: number }> = {
-    'renewable-energy': { min: 2000, max: 2023 },
-    'income-loss': { min: 2023, max: 2040 },
-    'climate-disasters': { min: 1980, max: 2024 },
-    'greenhouse-emissions': { min: 1995, max: 2018 },
-    'forest-carbon': { min: 1992, max: 2020 },
+export const API_YEAR_RANGE: Record<ApiType, { min: number; max: number }> = {
+  'renewable-energy': { min: 2000, max: 2023 },
+  'income-loss': { min: 2023, max: 2040 },
+  'climate-disasters': { min: 1980, max: 2024 },
+  'greenhouse-emissions': { min: 1995, max: 2018 },
+  'forest-carbon': { min: 1992, max: 2020 },
 };
 
 export const ENERGY_TYPES = [
-    'Fossil Fuels',
-    'Solar Energy',
-    'Wind Energy',
-    'Hydropower (excl. Pumped Storage)',
-    'Bioenergy'
-  ]; 
+  'Fossil Fuels',
+  'Solar Energy',
+  'Wind Energy',
+  'Hydropower (excl. Pumped Storage)',
+  'Bioenergy',
+];
 
-  export const FOREST_TYPES = [
-    'Share Of Forest Area',
-    'Carbon Stocks In Forests',
-    'Index Of Forest Extent',
-    'Index Of Carbon Stocks In Forests',
-  ];
+export const FOREST_TYPES = [
+  'Share Of Forest Area',
+  'Carbon Stocks In Forests',
+  'Index Of Forest Extent',
+  'Index Of Carbon Stocks In Forests',
+];
 
 export const DISASTER_TYPES = [
-    'Drought',
-    'Flood',
-    'Landslide',
-    'Storm',
-    'Wildfire'
-  ];
+  'Drought',
+  'Flood',
+  'Landslide',
+  'Storm',
+  'Wildfire',
+];
 
 export const EMISSIONS_TYPES = [
-    'Production',
-    'Gross Imports',
-    'Gross Exports',
-    'Final Domestic Demand'
-  ];
+  'Production',
+  'Gross Imports',
+  'Gross Exports',
+  'Final Domestic Demand',
+];
 
 export const INCOME_TYPES = [
-    'Acute Climate Damages',
-    'Business Confidence Losses',
-    'Chronic Climate Damages',
-    'Mitigation Policy Costs',
-    'Total GDP Risk'
-  ];
+  'Acute Climate Damages',
+  'Business Confidence Losses',
+  'Chronic Climate Damages',
+  'Mitigation Policy Costs',
+  'Total GDP Risk',
+];
 
+export const ENERGY_TYPE_COLORS: Record<
+  string,
+  (domain: [number, number]) => any
+> = {
+  'Fossil Fuels': (domain) =>
+    scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
+  'Solar Energy': (domain) =>
+    scaleSequentialSqrt(interpolateYlOrBr).domain(domain), // Yellow
+  'Wind Energy': (domain) =>
+    scaleSequentialSqrt(interpolateGreys).domain(domain), // Grey
+  'Hydropower (excl. Pumped Storage)': (domain) =>
+    scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
+  Bioenergy: (domain) => scaleSequentialSqrt(interpolateGreens).domain(domain), // Green
+};
 
-export const ENERGY_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
-    'Fossil Fuels': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
-    'Solar Energy': (domain) => scaleSequentialSqrt(interpolateYlOrBr).domain(domain), // Yellow
-    'Wind Energy': (domain) => scaleSequentialSqrt(interpolateGreys).domain(domain), // Grey
-    'Hydropower (excl. Pumped Storage)': (domain) => scaleSequentialSqrt(interpolateBlues).domain(domain), // Blue
-    'Bioenergy': (domain) => scaleSequentialSqrt(interpolateGreens).domain(domain), // Green
-  };
+export const DISASTER_TYPE_COLORS: Record<
+  string,
+  (domain: [number, number]) => any
+> = {
+  Drought: (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
+  Flood: (domain) => scaleSequentialSqrt(interpolateViridis).domain(domain), // Grey
+  Landslide: (domain) => scaleSequentialSqrt(interpolateTurbo).domain(domain), // Blue
+  Storm: (domain) => scaleSequentialSqrt(interpolateCividis).domain(domain), // Green
+  Wildfire: (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain), //  Red
+};
 
-export const DISASTER_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
-    'Drought': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
-    'Flood': (domain) => scaleSequentialSqrt(interpolateViridis).domain(domain), // Grey
-    'Landslide': (domain) => scaleSequentialSqrt(interpolateTurbo).domain(domain), // Blue
-    'Storm': (domain) => scaleSequentialSqrt(interpolateCividis).domain(domain), // Green
-    'Wildfire': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain), //  Red
-  };
+export const EMISSIONS_TYPE_COLORS: Record<
+  string,
+  (domain: [number, number]) => any
+> = {
+  Production: (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
+  'Gross Imports': (domain) =>
+    scaleSequentialSqrt(interpolateWarm).domain(domain.reverse()),
+  'Gross Exports': (domain) =>
+    scaleSequentialSqrt(interpolateSpectral).domain(domain.reverse()),
+  'Final Domestic Demand': (domain) =>
+    scaleSequentialSqrt(interpolateMagma).domain(domain.reverse()),
+};
 
-export const EMISSIONS_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
-    'Production': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain),
-    'Gross Imports': (domain) => scaleSequentialSqrt(interpolateWarm).domain(domain.reverse()),
-    'Gross Exports': (domain) => scaleSequentialSqrt(interpolateSpectral).domain(domain.reverse()),
-    'Final Domestic Demand': (domain) => scaleSequentialSqrt(interpolateMagma).domain(domain.reverse()), 
-  };
+export const FOREST_TYPE_COLORS: Record<
+  string,
+  (domain: [number, number]) => any
+> = {
+  'Share Of Forest Area': (domain) =>
+    scaleSequentialSqrt(interpolateViridis).domain(domain),
+  'Carbon Stocks In Forests': (domain) =>
+    scaleSequentialSqrt(interpolateRdYlGn).domain(domain),
+  'Index Of Forest Extent': (domain) =>
+    scaleSequentialSqrt(interpolateViridis).domain(domain),
+  'Index Of Carbon Stocks In Forests': (domain) =>
+    scaleSequentialSqrt(interpolateRdYlGn).domain(domain),
+};
 
-export const FOREST_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
-    'Share Of Forest Area': (domain) => scaleSequentialSqrt(interpolateViridis).domain(domain),
-    'Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateRdYlGn).domain(domain), 
-    'Index Of Forest Extent': (domain) => scaleSequentialSqrt( interpolateViridis).domain(domain), 
-    'Index Of Carbon Stocks In Forests': (domain) => scaleSequentialSqrt(interpolateRdYlGn).domain(domain),
-  };
-
-  export const INCOME_TYPE_COLORS: Record<string, (domain: [number, number]) => any> = {
-    'Acute Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()), 
-    'Business Confidence Losses': (domain) => scaleSequentialSqrt(interpolateGreys).domain(domain.reverse()), 
-    'Chronic Climate Damages': (domain) => scaleSequentialSqrt(interpolateYlOrBr).domain(domain.reverse()), 
-    'Mitigation Policy Costs': (domain) => scaleSequentialSqrt(interpolatePlasma).domain(domain.reverse()), 
-    'Total GDP Risk': (domain) => scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()),
-  };
-
+export const INCOME_TYPE_COLORS: Record<
+  string,
+  (domain: [number, number]) => any
+> = {
+  'Acute Climate Damages': (domain) =>
+    scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()),
+  'Business Confidence Losses': (domain) =>
+    scaleSequentialSqrt(interpolateGreys).domain(domain.reverse()),
+  'Chronic Climate Damages': (domain) =>
+    scaleSequentialSqrt(interpolateYlOrBr).domain(domain.reverse()),
+  'Mitigation Policy Costs': (domain) =>
+    scaleSequentialSqrt(interpolatePlasma).domain(domain.reverse()),
+  'Total GDP Risk': (domain) =>
+    scaleSequentialSqrt(interpolateYlOrRd).domain(domain.reverse()),
+};
 
 export const INDICATOR_UNITS: Record<string, string> = {
-    'Fossil Fuels': 'GWh',
-    'Solar Energy': 'GWh',
-    'Wind Energy': 'GWh',
-    'Hydropower (excl. Pumped Storage)': 'GWh',
-    'Bioenergy': 'GWh',
-    'Drought': '',
-    'Earthquake': '',
-    'Flood': '',
-    'Landslide': '',
-    'Storm': '',
-    'Wildfire': '',
-    'Production': 'Million Tonnes',
-    'Gross Imports': 'Million Tonnes',
-    'Gross Exports': 'Million Tonnes',
-    'Final Domestic Demand': 'Million Tonnes',
-    'Share Of Forest Area': '%',
-    'Carbon Stocks In Forests': 'Million Tonnes',
-    'Index Of Forest Extent': 'Index',
-    'Index of Carbon Stocks In Florests': 'Index',
-    'Acute Climate Damages': '%',
-    'Business Confidence Losses': '%',
-    'Chronic Climate Damages': '%',
-    'Mitigation Policy Costs': '%',
-    'Total GDP Risk': '%',
-  };
-
-
-  
+  'Fossil Fuels': 'GWh',
+  'Solar Energy': 'GWh',
+  'Wind Energy': 'GWh',
+  'Hydropower (excl. Pumped Storage)': 'GWh',
+  Bioenergy: 'GWh',
+  Drought: '',
+  Earthquake: '',
+  Flood: '',
+  Landslide: '',
+  Storm: '',
+  Wildfire: '',
+  Production: 'Million Tonnes',
+  'Gross Imports': 'Million Tonnes',
+  'Gross Exports': 'Million Tonnes',
+  'Final Domestic Demand': 'Million Tonnes',
+  'Share Of Forest Area': '%',
+  'Carbon Stocks In Forests': 'Million Tonnes',
+  'Index Of Forest Extent': 'Index',
+  'Index of Carbon Stocks In Florests': 'Index',
+  'Acute Climate Damages': '%',
+  'Business Confidence Losses': '%',
+  'Chronic Climate Damages': '%',
+  'Mitigation Policy Costs': '%',
+  'Total GDP Risk': '%',
+};

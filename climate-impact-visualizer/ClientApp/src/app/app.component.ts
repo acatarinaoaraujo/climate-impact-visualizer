@@ -1,4 +1,3 @@
-// app.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
@@ -21,7 +20,7 @@ import {
   INCOME_TYPES,
   EMISSIONS_TYPES,
   FOREST_TYPES,
-  DISASTER_TYPES
+  DISASTER_TYPES,
 } from './shared/constants';
 
 @Component({
@@ -38,10 +37,10 @@ import {
     DisasterGlobeComponent,
     ForestGlobeComponent,
     EmissionsGlobeComponent,
-    IncomeGlobeComponent
+    IncomeGlobeComponent,
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   apiType!: string;
@@ -52,48 +51,44 @@ export class AppComponent {
   showSidebar = false;
 
   constructor(private router: Router) {
-    // Initialize state before Angular's first CD
     this.updateParams(this.router.url);
-
-    // Re-apply on every navigation end
     this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
+      .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
         this.updateParams(e.urlAfterRedirects);
-        // Show sidebar only if apiType is set (means we are on a globe page)
         this.showSidebar = !!this.apiType;
       });
   }
 
   private updateParams(url: string) {
     if (url.includes('renewable-energy')) {
-      this.apiType       = 'renewable-energy';
+      this.apiType = 'renewable-energy';
       this.indicatorType = ENERGY_TYPES[0];
     } else if (url.includes('income-loss')) {
-      this.apiType       = 'income-loss';
+      this.apiType = 'income-loss';
       this.indicatorType = INCOME_TYPES[0];
     } else if (url.includes('greenhouse-emissions')) {
-      this.apiType       = 'greenhouse-emissions';
+      this.apiType = 'greenhouse-emissions';
       this.indicatorType = EMISSIONS_TYPES[0];
     } else if (url.includes('forest-carbon')) {
-      this.apiType       = 'forest-carbon';
+      this.apiType = 'forest-carbon';
       this.indicatorType = FOREST_TYPES[0];
     } else if (url.includes('climate-disasters')) {
-      this.apiType       = 'climate-disasters';
+      this.apiType = 'climate-disasters';
       this.indicatorType = DISASTER_TYPES[0];
     } else {
-      this.apiType       = '';
+      this.apiType = '';
       this.indicatorType = '';
     }
 
     if (this.apiType && this.apiType in API_YEAR_RANGE) {
       const r = API_YEAR_RANGE[this.apiType as keyof typeof API_YEAR_RANGE];
-      this.startYear    = r.min;
-      this.endYear      = r.max;
+      this.startYear = r.min;
+      this.endYear = r.max;
       this.selectedYear = r.max;
     } else {
-      this.startYear    = 2000;
-      this.endYear      = 2025;
+      this.startYear = 2000;
+      this.endYear = 2025;
       this.selectedYear = 2025;
     }
   }
@@ -110,9 +105,9 @@ export class AppComponent {
 
   onYearRangeChange(range: { startYear: number; endYear: number }) {
     this.startYear = range.startYear;
-    this.endYear   = range.endYear;
+    this.endYear = range.endYear;
     if (this.selectedYear < this.startYear) this.selectedYear = this.startYear;
-    if (this.selectedYear > this.endYear)   this.selectedYear = this.endYear;
+    if (this.selectedYear > this.endYear) this.selectedYear = this.endYear;
   }
 
   onSelectedYearChange(year: number) {
