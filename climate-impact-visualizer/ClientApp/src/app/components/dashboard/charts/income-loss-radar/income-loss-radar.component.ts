@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import * as echarts from 'echarts';
 import { HttpClient } from '@angular/common/http';
-import { INCOME_TYPES, API_LINKS } from '../../../shared/constants';
+import { INCOME_TYPES, API_LINKS } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-income-loss-radar',

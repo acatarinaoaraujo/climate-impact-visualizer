@@ -1,0 +1,73 @@
+<div class="wrap-container">
+  <!-- Header with name and close button -->
+  <div class="modal-header">
+    <h2 mat-dialog-title>{{ data.name }}</h2>
+    <button mat-icon-button class="close-button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-content">
+    <!-- Grid to display value and rate of change -->
+    <div class="metric-row">
+      <div class="metric-item">
+        <mat-icon color="primary">bar_chart</mat-icon>
+        <div class="metric-text">Value: {{ data.value }} {{ unit }}</div>
+      </div>
+      <div class="metric-item">
+        <mat-icon color="accent">trending_up</mat-icon>
+        <div class="metric-text">Rate of Change: {{ data.rateChange }}%</div>
+      </div>
+    </div>
+
+    <!-- Chart section -->
+    <div class="chart-container" *ngIf="chartData">
+      <canvas
+        baseChart
+        [data]="chartData"
+        [options]="chartOptions"
+        [type]="chartType"
+      >
+      </canvas>
+    </div>
+
+    <!-- User input field + Submit button grouped nicely -->
+    <div class="prompt-container">
+      <mat-form-field appearance="fill">
+        <mat-label>Ask a question about {{ data.name }}</mat-label>
+        <input
+          matInput
+          [(ngModel)]="userPrompt"
+          placeholder="Type your question here"
+        />
+      </mat-form-field>
+
+      <div class="submit-button-container">
+        <button
+          mat-icon-button
+          class="round-button"
+          (click)="submitPrompt()"
+          [disabled]="isLoading || !userPrompt.trim()"
+          aria-label="Submit"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Fetching information...</p>
+    </div>
+
+    <!-- Display LLM response -->
+    <div *ngIf="llmResponse" class="response-section">
+      <h3>Response:</h3>
+      <p>
+        <strong>Current Year Summary:</strong>
+        {{ llmResponse.currentYearSummary }}
+      </p>
+    </div>
+  </div>
+</div>

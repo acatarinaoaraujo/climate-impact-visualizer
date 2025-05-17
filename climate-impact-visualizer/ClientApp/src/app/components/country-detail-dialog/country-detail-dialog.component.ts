@@ -9,15 +9,13 @@ import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { chartConfigMap } from '../chart-configs'; // Import the chart config map
-import { INDICATOR_UNITS } from '../shared/constants';
+import { chartConfigMap } from './chart-configs';
+import { INDICATOR_UNITS } from '../../shared/constants';
 
-// Define the structure of yearly data
 interface YearlyData {
-  [key: string]: number; // Key is a year string (e.g., "F2000"), value is a number
+  [key: string]: number;
 }
 
-// Define the structure of the indicator data
 interface Indicator {
   name: string;
   yearlyData: YearlyData;
@@ -34,13 +32,13 @@ interface Indicator {
     MatInputModule,
     MatProgressSpinnerModule,
     MatListModule,
-    NgChartsModule
+    NgChartsModule,
   ],
   templateUrl: './country-detail-dialog.component.html',
-  styleUrls: ['./country-detail-dialog.component.css']
+  styleUrls: ['./country-detail-dialog.component.css'],
 })
 export class CountryDetailDialogComponent {
-  unit: string = ''; 
+  unit: string = '';
   userPrompt: string = '';
   isLoading: boolean = false;
   llmResponse: {
@@ -53,75 +51,77 @@ export class CountryDetailDialogComponent {
   chartOptions: ChartConfiguration['options'] = {};
   chartType: ChartType = 'doughnut'; // Default chart type
 
-
   constructor(
     public dialogRef: MatDialogRef<CountryDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { 
-      name: string; 
-      value: number; 
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      name: string;
+      value: number;
       rateChange: number;
-      apiType: string; 
-      indicatorType: string; 
-      startYear: number; 
-      endYear: number; 
-      selectedYear: number; 
+      apiType: string;
+      indicatorType: string;
+      startYear: number;
+      endYear: number;
+      selectedYear: number;
       fullData: any;
     }
   ) {
     this.loadChartConfig();
-    this.unit = INDICATOR_UNITS[this.data.indicatorType]; 
-
+    this.unit = INDICATOR_UNITS[this.data.indicatorType];
   }
 
-
   loadChartConfig(): void {
-    const config = chartConfigMap[this.data.apiType]?.[this.data.indicatorType];
-    if (config) {
-      // Prepare data for the chart
-      const indicator: Indicator | undefined = this.data.fullData.find((item: any) => item.name === this.data.indicatorType);
+    // const config = chartConfigMap[this.data.apiType]?.[this.data.indicatorType];
+    // if (config) {
+      const indicator: Indicator | undefined = this.data.fullData.find(
+        (item: any) => item.name === this.data.indicatorType
+      );
 
       if (indicator) {
-        const years = Object.keys(indicator.yearlyData); // Years in "F2000", "F2023" format
-        const values = years.map(year => indicator.yearlyData[year]);
+        const years = Object.keys(indicator.yearlyData);
+        const values = years.map((year) => indicator.yearlyData[year]);
 
         this.chartData = {
-          labels: years.map(year => year.substring(1)), // Extract year part (e.g., "2000" from "F2000")
-          datasets: [{
-            data: values,
-            label: this.data.indicatorType,
-            fill: false,
-            borderColor: '#4caf50',  // Adjust the color as needed
-            backgroundColor: 'rgba(76, 175, 80, 0.2)',  // Adjust the background color as needed
-            borderWidth: 2
-          }]
+          labels: years.map((year) => year.substring(1)),
+          datasets: [
+            {
+              data: values,
+              label: this.data.indicatorType,
+              fill: false,
+              borderColor: '#4caf50',
+              backgroundColor: 'rgba(76, 175, 80, 0.2)',
+              borderWidth: 2,
+            },
+          ],
         };
 
         console.log('Chart Data:', this.chartData);
 
-        this.chartType = 'line'; // Default type for time series
+        this.chartType = 'line';
         this.chartOptions = {
           responsive: true,
           plugins: {
             legend: {
-              position: 'top'
+              position: 'top',
             },
             tooltip: {
               callbacks: {
-                label: (tooltipItem) => `${tooltipItem.label}: ${tooltipItem.raw} ${this.unit}` // Use the unit for the tooltip
-              }
-            }
+                label: (tooltipItem) =>
+                  `${tooltipItem.label}: ${tooltipItem.raw} ${this.unit}`,
+              },
+            },
           },
           scales: {
             y: {
               beginAtZero: true,
               ticks: {
-                stepSize: 5000  // Adjust step size as needed
-              }
-            }
-          }
+                stepSize: 5000,
+              },
+            },
+          },
         };
       }
-    }
+    // }
   }
 
   closeDialog(): void {
@@ -130,20 +130,19 @@ export class CountryDetailDialogComponent {
 
   submitPrompt(): void {
     const trimmedPrompt = this.userPrompt?.trim();
-  
+
     if (!trimmedPrompt || trimmedPrompt.length < 3) {
       alert('Please enter a more specific question.');
       return;
     }
-  
+
     this.isLoading = true;
     this.llmResponse = null;
-  
-    // Find the selected indicator's full data for context
+
     const indicator: Indicator | undefined = this.data.fullData.find(
       (item: any) => item.name === this.data.indicatorType
     );
-  
+
     const indicatorContext = indicator ? indicator.yearlyData : {};
 
     console.log('Data being sent to LLM API:', {
@@ -152,9 +151,9 @@ export class CountryDetailDialogComponent {
       indicatorType: this.data.indicatorType,
       indicatorData: this.data.fullData,
       selectedYear: this.data.selectedYear,
-      rateChange: this.data.rateChange
+      rateChange: this.data.rateChange,
     });
-  
+
     fetch('/api/llm/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -164,46 +163,44 @@ export class CountryDetailDialogComponent {
         selectedYear: this.data.selectedYear,
         rateChange: this.data.rateChange,
         indicatorData: indicatorContext,
-        question: trimmedPrompt
-      })
+        question: trimmedPrompt,
+      }),
     })
-    .then(async (res) => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-  
-      const text = await res.text();
-      try {
-        const data = JSON.parse(text);
-        console.log('[LLM Response]', data);
-  
-        this.llmResponse = {
-          currentYearSummary: data.response?.replace(/\* (.+?):/g, '<b>$1:</b>') || '',
-          historicalComparison: '',
-          newsHeadlines: []
-        };
-      } catch (jsonError) {
-        console.error('Failed to parse JSON:', jsonError);
-        this.llmResponse = {
-          currentYearSummary: '⚠️ Invalid response from server.',
-          historicalComparison: '',
-          newsHeadlines: []
-        };
-      }
-  
-      this.isLoading = false;
-    })
-    .catch((err) => {
-      console.error('[LLM Error]', err);
-      this.llmResponse = {
-        currentYearSummary: '⚠️ Something went wrong. Please try again.',
-        historicalComparison: '',
-        newsHeadlines: []
-      };
-      this.isLoading = false;
-    });
-  }
-  
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
 
-  
+        const text = await res.text();
+        try {
+          const data = JSON.parse(text);
+          console.log('[LLM Response]', data);
+
+          this.llmResponse = {
+            currentYearSummary:
+              data.response?.replace(/\* (.+?):/g, '<b>$1:</b>') || '',
+            historicalComparison: '',
+            newsHeadlines: [],
+          };
+        } catch (jsonError) {
+          console.error('Failed to parse JSON:', jsonError);
+          this.llmResponse = {
+            currentYearSummary: '⚠️ Invalid response from server.',
+            historicalComparison: '',
+            newsHeadlines: [],
+          };
+        }
+
+        this.isLoading = false;
+      })
+      .catch((err) => {
+        console.error('[LLM Error]', err);
+        this.llmResponse = {
+          currentYearSummary: '⚠️ Something went wrong. Please try again.',
+          historicalComparison: '',
+          newsHeadlines: [],
+        };
+        this.isLoading = false;
+      });
+  }
 }

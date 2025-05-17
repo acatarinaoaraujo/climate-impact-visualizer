@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { API_LINKS } from '../../../shared/constants';
+import { API_LINKS } from '../../../../shared/constants';
 import { NgxEchartsModule, NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 import * as echarts from 'echarts';
 import { EChartsOption } from 'echarts';

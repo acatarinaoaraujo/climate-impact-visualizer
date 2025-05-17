@@ -8,7 +8,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import * as echarts from 'echarts';
 import { EChartsOption } from 'echarts';
-import { API_LINKS, ENERGY_TYPES } from '../../../shared/constants';
+import { API_LINKS, ENERGY_TYPES } from '../../../../shared/constants';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 

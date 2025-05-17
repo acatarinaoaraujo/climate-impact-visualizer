@@ -17,7 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { CountryDetailDialogComponent } from '../../../country-detail-dialog/country-detail-dialog.component';
+import { CountryDetailDialogComponent } from '../../country-detail-dialog/country-detail-dialog.component';
 import { INDICATOR_UNITS } from '../../../shared/constants';
 import { FormsModule } from '@angular/forms';
 import { API_LINKS } from '../../../shared/constants';
@@ -82,23 +82,23 @@ export class SidebarListComponent implements AfterViewInit, OnChanges {
     return INDICATOR_UNITS[this.indicatorType] || '';
   }
 
-private fetchData(): void {
-  const url = API_LINKS[this.apiType] || API_LINKS['greenhouse-emissions']; // fallback if key missing
+  private fetchData(): void {
+    const url = API_LINKS[this.apiType] || API_LINKS['greenhouse-emissions']; // fallback if key missing
 
-  this.http.get<any[]>(url).subscribe({
-    next: (data) => {
-      this.dataSource.data = this.transformData(data);
-    },
-    error: (err) =>
-      console.error(`Error fetching ${this.apiType} data:`, err),
-  });
-}
+    this.http.get<any[]>(url).subscribe({
+      next: (data) => {
+        this.dataSource.data = this.transformData(data);
+      },
+      error: (err) =>
+        console.error(`Error fetching ${this.apiType} data:`, err),
+    });
+  }
 
   private transformData(aggregatedData: any[]): CountryData[] {
     const transformedData = aggregatedData.map((item, index) => {
       const currentValue = this.getValue(item);
       const previousValue = this.getPreviousValue(item);
-      const hasData = currentValue !== null; 
+      const hasData = currentValue !== null;
 
       const rateChange = hasData
         ? this.calculateRateChange(currentValue, previousValue)
@@ -127,7 +127,7 @@ private fetchData(): void {
     currentValue: number,
     previousValue: number
   ): number {
-    if (previousValue === 0 || currentValue === 0) return 0; 
+    if (previousValue === 0 || currentValue === 0) return 0;
     return ((currentValue - previousValue) / previousValue) * 100;
   }
 
