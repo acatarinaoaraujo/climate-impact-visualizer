@@ -1,51 +1,68 @@
-<div class="dashboard-controls">
-  <mat-form-field appearance="outline">
-    <mat-label>Country</mat-label>
-    <mat-select [(value)]="selectedCountryCode">
-      <mat-option *ngFor="let country of countries" [value]="country.code">
-        {{ country.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+<div class="container">
+  <div class="dashboard-header">
+    <h1>Climate Impact Dashboard</h1>
+    <p>Understand how climate change affects countries around the world through interactive data.</p>
+  </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Year</mat-label>
-    <mat-select [(value)]="selectedYear">
-      <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="dashboard-intro">
+    <ul>
+      <li><strong>Select</strong> a country and year to explore climate insights.</li>
+      <li><strong>Switch tabs</strong> to navigate between Energy, Emissions, and Economic Risk.</li>
+      <li><strong>Hover</strong> over charts for more context and interactivity.</li>
+    </ul>
+  </div>
+
+  <div class="dashboard-container">
+    <div class="dashboard-controls">
+      <mat-form-field appearance="outline">
+        <mat-label>Country</mat-label>
+        <mat-select [(value)]="selectedCountryCode">
+          <mat-option *ngFor="let country of countries" [value]="country.code">
+            {{ country.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Year</mat-label>
+        <mat-select [(value)]="selectedYear">
+          <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-tab-group>
+      <mat-tab label="Energy & Emissions">
+        <div class="dashboard-grid">
+          <div class="row">
+            <div class="card">
+              <app-renewable-multiline-chart [selectedCountryCode]="selectedCountryCode"></app-renewable-multiline-chart>
+            </div>
+            <div class="card">
+              <app-renewable-bar-race></app-renewable-bar-race>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="card">
+              <app-emissions-sankey [selectedCountryCode]="selectedCountryCode"></app-emissions-sankey>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Forests & Economic Risk">
+        <div class="dashboard-grid">
+          <div class="row">
+            <div class="card">
+              <app-forest-carbon-treemap></app-forest-carbon-treemap>
+            </div>
+            <div class="card">
+              <app-income-loss-radar [selectedCountryCode]="selectedCountryCode"></app-income-loss-radar>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>
-
-<mat-tab-group>
-  <mat-tab label="Energy & Emissions">
-    <div class="dashboard-grid">
-      <div class="row">
-        <div class="card">
-          <app-renewable-multiline-chart [selectedCountryCode]="selectedCountryCode"></app-renewable-multiline-chart>
-        </div>
-        <div class="card">
-          <app-renewable-bar-race></app-renewable-bar-race>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="card">
-          <app-emissions-sankey [selectedCountryCode]="selectedCountryCode"></app-emissions-sankey>
-        </div>
-      </div>
-    </div>
-  </mat-tab>
-
-  <mat-tab label="Forests & Economic Risk">
-    <div class="dashboard-grid">
-      <div class="row">
-        <div class="card">
-          <app-forest-carbon-treemap></app-forest-carbon-treemap>
-        </div>
-        <div class="card">
-          <app-income-loss-radar [selectedCountryCode]="selectedCountryCode"></app-income-loss-radar>
-        </div>
-      </div>
-    </div>
-  </mat-tab>
-</mat-tab-group>

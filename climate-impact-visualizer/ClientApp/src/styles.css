@@ -4,16 +4,20 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background: linear-gradient(180deg, #000000 0%, #808080 100%);
+  background: linear-gradient(180deg, #000000 0%, #201f1f 100%);
 }
 
 body {
   font-family: Arial, sans-serif;
-  background-color: hsl(0, 0%, 99%);
+  background-color: hsl(0, 0%, 8%);
   margin: 0;
   padding: 0;
 }
 
 h1 {
-  color: #923030;
+  color: var(--gray-400) important;
+}
+
+p1 {
+  color: var(--gray-400) important;
 }
