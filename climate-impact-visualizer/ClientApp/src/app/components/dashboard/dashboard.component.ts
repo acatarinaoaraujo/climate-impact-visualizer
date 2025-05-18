@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 import { RenewableMultilineChartComponent } from './charts/renewable-multiline-chart/renewable-multiline-chart.component';
 import { RenewableBarRaceComponent } from './charts/renewable-bar-race/renewable-bar-race.component';
@@ -26,23 +27,28 @@ import { IncomeLossRadarComponent } from './charts/income-loss-radar/income-loss
     RenewableBarRaceComponent,
     EmissionsSankeyComponent,
     ForestCarbonTreemapComponent,
-    IncomeLossRadarComponent
+    IncomeLossRadarComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
   selectedCountryCode = 'US';
-  selectedYear = 2020;
+  selectedYear = 2017;
 
-  countries = [
-    { code: 'US', name: 'United States' },
-    { code: 'BR', name: 'Brazil' },
-    { code: 'AF', name: 'Afghanistan' },
-    // add more if needed
-  ];
+  countries: { code: string; name: string }[] = [];
+  years = Array.from({ length: 27 }, (_, i) => 1995 + i);
 
-  years = Array.from({ length: 24 }, (_, i) => 2000 + i); // 2000–2023
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.http
+      .get<{ code: string; name: string }[]>('assets/datasets/data.json')
+      .subscribe({
+        next: (data) => (this.countries = data),
+        error: (err) => console.error('Failed to load countries', err),
+      });
+  }
 
   onCountryChange(code: string): void {
     this.selectedCountryCode = code;

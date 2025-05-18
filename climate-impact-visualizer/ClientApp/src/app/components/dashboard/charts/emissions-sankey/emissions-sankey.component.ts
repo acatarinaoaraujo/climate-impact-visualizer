@@ -29,6 +29,7 @@ import { ECharts, EChartsOption } from 'echarts';
 })
 export class EmissionsSankeyComponent implements OnChanges, AfterViewInit {
   @Input() selectedCountryCode: string = '';
+  @Input() selectedYear: number = 2017;
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
 
   chartOptions: EChartsOption = {};
@@ -49,7 +50,7 @@ export class EmissionsSankeyComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (
-      changes['selectedCountryCode'] &&
+      (changes['selectedCountryCode'] || changes['selectedYear']) &&
       this.selectedCountryCode &&
       this.initialized
     ) {
@@ -73,11 +74,11 @@ export class EmissionsSankeyComponent implements OnChanges, AfterViewInit {
           return;
         }
 
+        const yearKey = 'F' + this.selectedYear;
+
         const indicators = countryData.indicators.reduce((acc: any, curr: any) => {
-          acc[curr.name] = Object.values(curr.yearlyData || {}).reduce(
-            (sum: number, val: any) => sum + (parseFloat(val) || 0),
-            0
-          );
+          const yearValue = parseFloat(curr.yearlyData?.[yearKey]) || 0;
+          acc[curr.name] = yearValue;
           return acc;
         }, {});
 
@@ -120,7 +121,6 @@ export class EmissionsSankeyComponent implements OnChanges, AfterViewInit {
               shadowOffsetX: 0,
               shadowOffsetY: 0
             },
-
           },
           tooltip: {
             trigger: 'item',
