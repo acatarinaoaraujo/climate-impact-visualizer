@@ -31,7 +31,7 @@ namespace Backend.Services
             {
                 while (true)
                 {
-                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_4/FeatureServer/0/query?where=1%3D1&outFields=Country,Technology,ISO2,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022,F2023&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
+                    var url = $"https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Indicator_4/FeatureServer/0/query?where=1%3D1&outFields=Country,Technology,ISO2,F2000,F2001,F2002,F2003,F2004,F2005,F2006,F2007,F2008,F2009,F2010,F2011,F2012,F2013,F2014,F2015,F2016,F2017,F2018,F2019,F2020,F2021,F2022&outSR=4326&f=json&resultRecordCount={limit}&resultOffset={offset}";
                     _logger.LogInformation($"Fetching data from: {url}");
 
                     var response = await _httpClient.GetStringAsync(url);
@@ -57,7 +57,7 @@ namespace Backend.Services
                             YearlyData = new Dictionary<string, double?>()
                         };
 
-                        for (int year = 2000; year <= 2023; year++)
+                        for (int year = 2000; year <= 2022; year++)
                         {
                             string key = $"F{year}";
                             data.YearlyData[key] = attributes.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.Number ? value.GetDouble() : null;
