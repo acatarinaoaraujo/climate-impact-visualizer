@@ -38,28 +38,26 @@ export class RenewableBarRaceComponent implements OnInit, AfterViewInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-  this.fetchFlags();
+    this.fetchFlags();
 
-  window.addEventListener('resize', () => {
-    if (this.chartInstance) {
-      this.chartInstance.resize();
-    }
-  });
-}
+    window.addEventListener('resize', () => {
+      if (this.chartInstance) {
+        this.chartInstance.resize();
+      }
+    });
+  }
 
-ngOnDestroy(): void {
-  clearInterval(this.timer);
-  window.removeEventListener('resize', () => {});
-}
-
+  ngOnDestroy(): void {
+    clearInterval(this.timer);
+    window.removeEventListener('resize', () => {});
+  }
 
   ngAfterViewInit(): void {
-  setTimeout(() => {
-    this.initChart();
-    this.fetchData();  // Start fetching after chart init
-  }, 0);
-}
-
+    setTimeout(() => {
+      this.initChart();
+      this.fetchData(); // Start fetching after chart init
+    }, 0);
+  }
 
   fetchFlags(): void {
     this.http.get<any[]>('assets/datasets/data.json').subscribe((flagsData) => {
@@ -70,56 +68,55 @@ ngOnDestroy(): void {
     });
   }
 
- fetchData(): void {
-  const url = API_LINKS['renewable-energy'];
-  this.loading = true;
+  fetchData(): void {
+    const url = API_LINKS['renewable-energy'];
+    this.loading = true;
 
-  this.http.get<any[]>(url).subscribe({
-    next: (response: any[]) => {
-      const energyType = this.selectedEnergyType;
-      const countryDataMap: Record<string, Record<string, number>> = {};
+    this.http.get<any[]>(url).subscribe({
+      next: (response: any[]) => {
+        const energyType = this.selectedEnergyType;
+        const countryDataMap: Record<string, Record<string, number>> = {};
 
-      response.forEach((country) => {
-        const countryName = country?.country || country?.name; // Use correct field
-        if (!countryName) return; // Skip invalid country
+        response.forEach((country) => {
+          const countryName = country?.country || country?.name; // Use correct field
+          if (!countryName) return; // Skip invalid country
 
-        const tech = country.technologies.find(
-          (t: any) => t.name === energyType
-        );
+          const tech = country.technologies.find(
+            (t: any) => t.name === energyType
+          );
 
-        if (tech) {
-          Object.entries(tech.yearlyData).forEach(([year, value]) => {
-            const cleanYear = year.startsWith('F') ? year.slice(1) : year;
-            if (!countryDataMap[cleanYear]) {
-              countryDataMap[cleanYear] = {};
-            }
-            countryDataMap[cleanYear][countryName] = value as number;
-          });
-        }
-      });
+          if (tech) {
+            Object.entries(tech.yearlyData).forEach(([year, value]) => {
+              const cleanYear = year.startsWith('F') ? year.slice(1) : year;
+              if (!countryDataMap[cleanYear]) {
+                countryDataMap[cleanYear] = {};
+              }
+              countryDataMap[cleanYear][countryName] = value as number;
+            });
+          }
+        });
 
-      this.years = Object.keys(countryDataMap).sort();
-      this.data = this.years.map((year) => {
-        const entries = Object.entries(countryDataMap[year] || {});
-        const top10 = entries
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 10)
-          .map(([country, value]) => [value, year, country]);
-        return top10;
-      });
+        this.years = Object.keys(countryDataMap).sort();
+        this.data = this.years.map((year) => {
+          const entries = Object.entries(countryDataMap[year] || {});
+          const top10 = entries
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10)
+            .map(([country, value]) => [value, year, country]);
+          return top10;
+        });
 
-      this.currentIndex = 0;
-      this.updateChart();
-      this.startAnimation();
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error('Failed to fetch renewable energy data', err);
-      this.loading = false;
-    },
-  });
-}
-
+        this.currentIndex = 0;
+        this.updateChart();
+        this.startAnimation();
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Failed to fetch renewable energy data', err);
+        this.loading = false;
+      },
+    });
+  }
 
   initChart(): void {
     const container = this.chartContainer.nativeElement;
@@ -134,7 +131,6 @@ ngOnDestroy(): void {
 
     const year = this.years[this.currentIndex];
     const data = this.data[this.currentIndex];
-
 
     const option: EChartsOption = {
       grid: {
@@ -171,6 +167,18 @@ ngOnDestroy(): void {
         },
         animationDuration: 300,
         animationDurationUpdate: 300,
+      },
+      toolbox: {
+        feature: { saveAsImage: { show: true } },
+        iconStyle: {
+          borderColor: '#fff',
+          borderWidth: 1,
+          borderType: 'solid',
+          shadowColor: '#000',
+          shadowBlur: 10,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+        },
       },
       series: [
         {

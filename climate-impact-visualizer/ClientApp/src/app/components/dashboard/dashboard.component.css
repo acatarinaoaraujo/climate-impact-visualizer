@@ -3,7 +3,6 @@
   flex-direction: column;
   gap: 24px;
   margin-top: 64px;
-  color: var(--gray-400) !important;
 }
 
 .dashboard-header {
@@ -76,23 +75,36 @@ mat-form-field {
 
 .row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 16px;
+  margin-top: 10px;
 }
 
 .card {
-  flex: 1 1 calc(50% - 16px);
+  flex: 1 1 50%;
+  min-width: 0;
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.08);
   padding: 16px;
-  min-height: 300px;
+  flex-direction: column;
   display: flex;
-  align-items: center;
   justify-content: center;
   color: var(--gray-400) !important;
 }
 
+.card-title {
+  text-align: center;
+  font-size: 1.0rem;
+  font-weight: 400;
+  margin-bottom: 19px;
+  color: var(--gray-700) !important;
+}
+
 @media (max-width: 900px) {
+  .row {
+    flex-wrap: wrap;
+  }
+
   .card {
     flex: 1 1 100%;
   }

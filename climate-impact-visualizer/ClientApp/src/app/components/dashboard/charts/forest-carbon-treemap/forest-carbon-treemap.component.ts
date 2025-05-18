@@ -1,9 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { API_LINKS } from '../../../../shared/constants';
@@ -44,6 +39,8 @@ export class ForestCarbonTreemapComponent implements AfterViewInit {
       next: (response: any[]) => {
         const children = response
           .map((country) => {
+            if (country.country === 'Euro Area') return null;
+
             const indicator = country.indicators.find(
               (ind: any) => ind.name === 'Carbon Stocks In Forests'
             );
@@ -53,14 +50,13 @@ export class ForestCarbonTreemapComponent implements AfterViewInit {
             const value2008 = indicator.yearlyData['F2008'];
             if (value2018 == null || value2008 == null) return null;
 
-            const rateOfChange =
-              ((value2018 - value2008) / value2008) * 100;
+            const rateOfChange = ((value2018 - value2008) / value2008) * 100;
 
             return {
               name: country.country,
               value: parseFloat(value2018.toFixed(2)),
               rateOfChange: parseFloat(rateOfChange.toFixed(2)),
-              density: value2018, // placeholder for density
+              density: value2018,
             };
           })
           .filter((item) => item !== null)
@@ -71,16 +67,15 @@ export class ForestCarbonTreemapComponent implements AfterViewInit {
         const min = Math.min(...children.map((d) => d!.value));
 
         const treeData = children.map((item) => ({
-  name: item!.name,
-  value: item!.value,
-  rateOfChange: item!.rateOfChange,
-  density: item!.density,
-  label: {
-    show: true,
-    formatter: `{b}\n${item!.value} Mt`,
-  },
-}));
-
+          name: item!.name,
+          value: item!.value,
+          rateOfChange: item!.rateOfChange,
+          density: item!.density,
+          label: {
+            show: true,
+            formatter: `{b}\n${item!.value} Mt`,
+          },
+        }));
 
         this.chartOptions = {
           tooltip: {
@@ -98,17 +93,30 @@ export class ForestCarbonTreemapComponent implements AfterViewInit {
               return `<strong>${name}</strong>`;
             },
           },
+          toolbox: {
+            feature: { saveAsImage: { show: true } },
+            iconStyle: {
+              borderColor: '#fff',
+              borderWidth: 1,
+              borderType: 'solid',
+              shadowColor: '#000',
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowOffsetY: 0,
+            },
+          },
           visualMap: {
             type: 'continuous',
             min,
             max,
             inRange: {
-              color: ['#e0f3db', '#a8ddb5', '#43a2ca', '#006d2c'],
+              color: ['#abc9a3', '#66ad78', '#43a2ca', '#006d2c'],
             },
             calculable: true,
             orient: 'horizontal',
             left: 'center',
-            bottom: 20,
+            bottom: -8,
+
             text: ['High', 'Low'],
           },
           series: [

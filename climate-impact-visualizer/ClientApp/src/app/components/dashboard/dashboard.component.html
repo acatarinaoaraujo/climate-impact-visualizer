@@ -1,14 +1,24 @@
 <div class="container">
   <div class="dashboard-header">
     <h1>Climate Impact Dashboard</h1>
-    <p>Understand how climate change affects countries around the world through interactive data.</p>
+    <p>
+      Understand how climate change affects countries around the world through
+      interactive data.
+    </p>
   </div>
 
   <div class="dashboard-intro">
     <ul>
-      <li><strong>Select</strong> a country and year to explore climate insights.</li>
-      <li><strong>Switch tabs</strong> to navigate between Energy, Emissions, and Economic Risk.</li>
-      <li><strong>Hover</strong> over charts for more context and interactivity.</li>
+      <li>
+        <strong>Select</strong> a country and year to explore climate insights.
+      </li>
+      <li>
+        <strong>Switch tabs</strong> to navigate between Energy, Emissions, and
+        Economic Risk.
+      </li>
+      <li>
+        <strong>Hover</strong> over charts for more context and interactivity.
+      </li>
     </ul>
   </div>
 
@@ -26,7 +36,9 @@
       <mat-form-field appearance="outline">
         <mat-label>Year</mat-label>
         <mat-select [(value)]="selectedYear">
-          <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -36,16 +48,23 @@
         <div class="dashboard-grid">
           <div class="row">
             <div class="card">
-              <app-renewable-multiline-chart [selectedCountryCode]="selectedCountryCode"></app-renewable-multiline-chart>
+              <div class="card-title">Yearly Energy Use by Type</div>
+              <app-renewable-multiline-chart
+                [selectedCountryCode]="selectedCountryCode"
+              ></app-renewable-multiline-chart>
             </div>
             <div class="card">
-              <app-renewable-bar-race></app-renewable-bar-race>
+              <div class="card-title">Emissions Flow by Economic Role</div>
+              <app-emissions-sankey
+                [selectedCountryCode]="selectedCountryCode"
+              ></app-emissions-sankey>
             </div>
           </div>
 
           <div class="row">
             <div class="card">
-              <app-emissions-sankey [selectedCountryCode]="selectedCountryCode"></app-emissions-sankey>
+              <div class="card-title">Top 10 Countries Energy Type</div>
+              <app-renewable-bar-race></app-renewable-bar-race>
             </div>
           </div>
         </div>
@@ -55,10 +74,17 @@
         <div class="dashboard-grid">
           <div class="row">
             <div class="card">
+              <div class="card-title">Forest Carbon Stock Density by Country</div>
               <app-forest-carbon-treemap></app-forest-carbon-treemap>
             </div>
+
+          </div>
+          <div class="row">
             <div class="card">
-              <app-income-loss-radar [selectedCountryCode]="selectedCountryCode"></app-income-loss-radar>
+              <div class="card-title">Emissions Flow by Economic Role</div>
+              <app-income-loss-radar
+                [selectedCountryCode]="selectedCountryCode"
+              ></app-income-loss-radar>
             </div>
           </div>
         </div>

@@ -109,6 +109,19 @@ export class EmissionsSankeyComponent implements OnChanges, AfterViewInit {
         ];
 
         this.chartOptions = {
+          toolbox: {
+            feature: { saveAsImage: { show: true } },
+            iconStyle: {
+              borderColor: '#fff',
+              borderWidth: 1,
+              borderType: 'solid',
+              shadowColor: '#000',
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowOffsetY: 0
+            },
+
+          },
           tooltip: {
             trigger: 'item',
             triggerOn: 'mousemove',

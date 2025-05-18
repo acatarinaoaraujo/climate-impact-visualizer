@@ -5,7 +5,7 @@ import {
   SimpleChanges,
   ElementRef,
   ViewChild,
-  AfterViewInit
+  AfterViewInit,
 } from '@angular/core';
 import * as echarts from 'echarts';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ import { INCOME_TYPES, API_LINKS } from '../../../../shared/constants';
 @Component({
   selector: 'app-income-loss-radar',
   templateUrl: './income-loss-radar.component.html',
-  styleUrls: ['./income-loss-radar.component.css']
+  styleUrls: ['./income-loss-radar.component.css'],
 })
 export class IncomeLossRadarComponent implements OnChanges, AfterViewInit {
   @Input() selectedCountryCode!: string;
@@ -34,42 +34,53 @@ export class IncomeLossRadarComponent implements OnChanges, AfterViewInit {
   }
 
   fetchAndRenderChart(countryCode: string): void {
-    this.http.get<any[]>(API_LINKS['income-loss']).subscribe(data => {
-      const countryData = data.find(d => d.isO2 === countryCode);
+    this.http.get<any[]>(API_LINKS['income-loss']).subscribe((data) => {
+      const countryData = data.find((d) => d.isO2 === countryCode);
       if (!countryData) {
         this.chart.clear();
         return;
       }
 
-      // Filter out "Total GDP Risk"
-      const filteredIncomeTypes = INCOME_TYPES.filter(name => name !== 'Total GDP Risk');
+      const filteredIncomeTypes = INCOME_TYPES.filter(
+        (name) => name !== 'Total GDP Risk'
+      );
 
-      const indicators = filteredIncomeTypes.map(name => ({ text: name }));
+      const indicators = filteredIncomeTypes.map((name) => ({ text: name }));
 
-      const series = filteredIncomeTypes.map(type => {
-        const yearData = countryData.variables.find((v: any) => v.name === type)?.yearlyData || {};
+      const series = filteredIncomeTypes.map((type) => {
+        const yearData =
+          countryData.variables.find((v: any) => v.name === type)?.yearlyData ||
+          {};
         const value = yearData['F2024'] ?? 0;
         return {
-          value: indicators.map(ind => ind.text === type ? value : 0),
+          value: indicators.map((ind) => (ind.text === type ? value : 0)),
           name: type,
           areaStyle: {
-            opacity: 0.1
+            opacity: 0.1,
           },
           lineStyle: {
-            width: 2
-          }
+            width: 2,
+          },
         };
       });
 
       const option: echarts.EChartsOption = {
-        title: {
-          text: 'Income Loss & Economic Risks',
-          left: 'center'
-        },
         tooltip: {},
         legend: {
           top: 30,
-          data: filteredIncomeTypes
+          data: filteredIncomeTypes,
+        },
+        toolbox: {
+          feature: { saveAsImage: { show: true } },
+          iconStyle: {
+            borderColor: '#fff',
+            borderWidth: 1,
+            borderType: 'solid',
+            shadowColor: '#000',
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowOffsetY: 0,
+          },
         },
         radar: {
           indicator: indicators,
@@ -78,25 +89,25 @@ export class IncomeLossRadarComponent implements OnChanges, AfterViewInit {
           splitNumber: 4,
           axisName: {
             color: '#428BD4',
-            formatter: '{value}'
+            formatter: '{value}',
           },
           splitLine: {
-            lineStyle: { color: 'rgba(211, 253, 250, 0.8)' }
+            lineStyle: { color: 'rgba(211, 253, 250, 0.8)' },
           },
           splitArea: {
             areaStyle: {
               color: ['#77EADF', '#26C3BE', '#64AFE9', '#428BD4'],
               shadowColor: 'rgba(0, 0, 0, 0.2)',
-              shadowBlur: 10
-            }
-          }
+              shadowBlur: 10,
+            },
+          },
         },
         series: [
           {
             type: 'radar',
-            data: series
-          }
-        ]
+            data: series,
+          },
+        ],
       };
 
       this.chart.setOption(option);

@@ -74,11 +74,11 @@ export class RenewableMultilineChartComponent
         }
 
         const colorMap: { [key: string]: string } = {
-          'Fossil Fuels': '#d73027', // red
-          'Solar Energy': '#fdae61', // orange
-          'Wind Energy': '#91bfdb', // light blue
-          'Hydropower (excl. Pumped Storage)': '#4575b4', // dark blue
-          Bioenergy: '#1a9850', // green
+          'Fossil Fuels': '#d73027',
+          'Solar Energy': '#fdae61',
+          'Wind Energy': '#91bfdb',
+          'Hydropower (excl. Pumped Storage)': '#4575b4',
+          Bioenergy: '#1a9850',
         };
 
         const series: SeriesOption[] = ENERGY_TYPES.map(
@@ -110,7 +110,7 @@ export class RenewableMultilineChartComponent
         this.chartOptions = {
           title: { text: '' },
           tooltip: { trigger: 'axis' },
-          color: ENERGY_TYPES.map((type) => colorMap[type]), // set global color palette
+          color: ENERGY_TYPES.map((type) => colorMap[type]),
           legend: {
             data: ENERGY_TYPES,
             textStyle: {
@@ -125,28 +125,36 @@ export class RenewableMultilineChartComponent
                 'Fossil Fuels': 'Fossil',
                 'Solar Energy': 'Solar',
                 'Wind Energy': 'Wind',
-                'Hydropower (excl. Pumped Storage)': 'Hydro (no Pump)',
+                'Hydropower (excl. Pumped Storage)': 'Hydro',
                 Bioenergy: 'Bio',
               };
               return abbreviations[name] || name;
             },
           },
           grid: {
-              top: '15%',
-  bottom: '5%',
-  left: '5%',
-  right: '5%',
+            top: '20%',
+            bottom: '5%',
+            right: '25%',
             containLabel: true,
             show: true,
             borderColor: '#ccc',
             borderWidth: 1,
-            shadowColor: 'rgba(0, 0, 0, 0.1)',
+            shadowColor: 'rgba(158, 157, 157, 0.1)',
             shadowBlur: 10,
             shadowOffsetX: 0,
             shadowOffsetY: 0,
           },
           toolbox: {
-            feature: { saveAsImage: {} },
+            feature: { saveAsImage: { show: true } },
+            iconStyle: {
+              borderColor: '#fff',
+              borderWidth: 1,
+              borderType: 'solid',
+              shadowColor: '#000',
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowOffsetY: 0,
+            },
           },
           xAxis: {
             type: 'category',
