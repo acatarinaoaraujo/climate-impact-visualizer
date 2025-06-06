@@ -10,3 +10,6 @@ Backend/.elasticbeanstalk/
 *.user
 *.vs/
 *.log
+
+DEPLOYMENT_NOTES.md
+
