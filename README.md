@@ -6,49 +6,45 @@ A full-stack application built with **ASP.NET** and **Angular** that visualizes 
 
 ## Purpose
 
-To help users—researchers, policymakers, and the public—understand a country’s progress on climate-related metrics through visualizations and explainable insights. This tool enables:
+To help users understand a country’s progress on climate-related metrics through visualizations and explainable insights. This tool enables:
 
 - Interactive globe-based navigation of country-level data.
 - Dynamic graphs reflecting renewable energy adoption, environmental impact, and economic risks.
-- Integration with an LLM (coming soon) for natural language explanations of trends.
+- Integration with an LLM for natural language explanations of trends.
 
 ---
 
 ## 📌 Roadmap
 
-- ✅ Initial Angular frontend with globe view  
+- ✅ Initial Angular frontend with Three.JS Globe.gl view  
 - ✅ ASP.NET backend fetching IMF data  
-- 🔜 LLM integration for text-based insights  
-- 🔜 PostgreSQL or MongoDB support for persistent storage  
-- 🔜 Dockerized setup  
-- 🔜 Additional visualizations and UI polish  
+- ✅ LLM (Mistral 7b) integration for text-based insights  
+- 🔜 PostgreSQL or MongoDB support for persistent storage
+- ✅ Additional visualizations and UI polish  
 
 ---
 
-## 📊 Data & Formulas
+## Data & Formulas
 
 #### Key Formulas
 
 **Rate of Change**  
 `Rate of Change = ((Value at year N - Value at year N-1) / Value at year N-1) × 100`
 
-### 🌞 Renewable Energy
+### [Renewable Energy](https://climatedata.imf.org/pages/transition-to-low-carbon-economy#tr3) 
 
-- **Years**: 2020 - 2023  
 - **Unit**: Gigawatt-hours (GWh)
 
 #### Energy Types
 
-- 🔴 **Fossil Fuels (Non-Renewable)** 
-- ☀️ **Solar**
-- 🌬️ **Wind**  
-- 🌊 **Hydropower**  
-- 🌱 **Bioenergy**
+- **Fossil Fuels (Non-Renewable)** 
+- **Solar**
+- **Wind**  
+- **Hydropower**  
+- **Bioenergy**
 ---
 
-### 🌲 Forest and Carbon
-
-- **Years**: 1992 - 2022  
+### [Forest and Carbon](https://climatedata.imf.org/pages/mitigation#mi6)
 
 #### Indicators
 
@@ -57,9 +53,7 @@ To help users—researchers, policymakers, and the public—understand a country
 - Index of Forest Extent  
 ---
 
-### 🌪️ Climate Disasters
-
-- **Years**: 1980 - 2024  
+### [Climate Disasters](https://climatedata.imf.org/datasets/b13b69ee0dde43a99c811f592af4e821_0/about)
 
 #### Indicators
 
@@ -70,9 +64,7 @@ To help users—researchers, policymakers, and the public—understand a country
 - Wildfire  
 ---
 
-### 🏭 Emissions
-
-- **Years**: 1995 - 2021  
+### [Emissions](https://climatedata.imf.org/datasets/7ba962035bb548bb9893add2b5491896/explore  )
 
 #### Indicators
 
@@ -82,9 +74,7 @@ To help users—researchers, policymakers, and the public—understand a country
 - Final Domestic Demand  
 ---
 
-### 💸 Income Loss
-
-- **Years**: 2023 - 2040  
+### [Income Loss](https://climatedata.imf.org/datasets/b0fe73a0430b47a6bb2723e5ac3231ff/explore)
 
 #### Indicators
 
@@ -118,11 +108,11 @@ ng serve
 ```
 
 ## Architecture Overview
-Frontend (Angular) <--> Backend (ASP.NET Core API) <--> [Planned] Database (PostgreSQL) / LLM / Docker
+Frontend (Angular) <--> Backend (ASP.NET Core API) <--> [Planned] Database (PostgreSQL) / LLM 
 
 ### Frontend
 Developed in Angular 17.
-Interactive globe-based data visualizations using WebGL.
+Interactive globe-based data visualizations using ThreeJS Globe.gl.
 Sidebar filters for country, indicator, year, and data type.
 Modal and chart components for detail views.
 
@@ -133,13 +123,9 @@ Rate of change calculation and share logic handled server-side.
 Planned feature: integrate PostgreSQL for historical data caching.
 
 ### LLM Integration
-Integrate an open-source LLM (e.g., LLama.cpp or similar) to provide:
+Integrated an open-source LLM (Mistral 7B) using OpenRouter to provide:
 Summaries for selected country indicators.
 Explainability and contextual information in natural language.
-
-### Docker
-Dockerfile for unified backend/frontend containerization.
-Compose setup for local development and deployment.
 
 ## 📄 License
 This project is for educational and demonstration purposes and is not affiliated with the IMF. 
